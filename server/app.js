@@ -6,24 +6,30 @@ var path = require('path');
 var cors = require('cors');
 var history = require('connect-history-api-fallback');
 
+require('dotenv/config');
+
+mongoose.set('useFindAndModify', false);    //needed to avoid warning
+
 var camelsController = require('./controllers/camels');
 
 // Variables
-var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animalDevelopmentDB';
-var port = process.env.PORT || 3000;
+var mongoURI = process.env.GROUP_DB || 'mongodb://localhost:27017/animalDevelopmentDB';
+    //GROUP_DB is in an env file that has the entire database address with database name animalProductionDB, own username and password
+var port = process.env.PORT || 3001;
 
-// Connect to MongoDB
-mongoose.connect(mongoURI, { useNewUrlParser: true }, function(err) {
+// Connect to MongoDB 
+mongoose.connect(mongoURI, { useNewUrlParser: true , useUnifiedTopology: true } ,function(err) {
     if (err) {
-        console.error(`Failed to connect to MongoDB with URI: ${mongoURI}`);
+        console.error(`Failed to connect to MongoDB with provided database URI`);
         console.error(err.stack);
         process.exit(1);
     }
-    console.log(`Connected to MongoDB with URI: ${mongoURI}`);
+    console.log(`Connected to MongoDB with provided URI`);
 });
 
 // Create Express app
 var app = express();
+
 // Parse requests of content-type 'application/json'
 app.use(bodyParser.json());
 // HTTP request logger
@@ -36,6 +42,7 @@ app.use(cors());
 app.get('/api', function(req, res) {
     res.json({'message': 'Welcome to your DIT341 backend ExpressJS project!'});
 });
+
 app.use('/api/camels', camelsController);
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
