@@ -7,4 +7,4 @@ var userSchema = new Schema({
     type: {type: Boolean}
 });
 
-module.exports = mongoose.model('users', userSchema);
+module.exports = mongoose.model('User', userSchema);

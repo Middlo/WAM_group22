@@ -11,4 +11,4 @@ var taskSchema = new Schema({
     remminder: {type: Number}
 });
 
-module.exports = mongoose.model('tasks', taskSchema);
+module.exports = mongoose.model('Task', taskSchema);

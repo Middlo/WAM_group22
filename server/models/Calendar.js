@@ -7,4 +7,4 @@ var calendarSchema = new Schema({
     viewType: { type: Number }, //how to display the calender
 });
 
-module.exports = mongoose.model('calendars', calendarSchema);
+module.exports = mongoose.model('Calendar', calendarSchema);

@@ -5,4 +5,4 @@ var queueSchema = new Schema({
     //task.id
 });
 
-module.exports = mongoose.model('queues', queueSchema);
+module.exports = mongoose.model('Queue', queueSchema);
