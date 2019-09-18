@@ -1,11 +1,12 @@
 var mongoose = require('mongoose');
-var CamelName = require('../models/CamelName');
+//var Customer = require('../models/Customer');
 var Schema = mongoose.Schema;
 
 var camelSchema = new Schema({
+    //_id: Schema.Types.ObjectId,
     color: { type: String },
     position: { type: Number },
-    names: {type: []}
+    customers: [{ type: Schema.Types.ObjectId, ref: 'Customer' }]
 });
 
-module.exports = mongoose.model('camels', camelSchema);
+module.exports = mongoose.model('Camel', camelSchema);
