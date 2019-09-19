@@ -129,32 +129,43 @@ router.delete('/', function(req, res, next) {
 
 // Create a new customer
 router.post('/:camelId/customers', function(req, res, next) {
+    try {
+        var id = req.params.camelId;
 
-    var id = req.params.camelId;
+        Camel.findById(id, function(err, camel) {
+            if (err) { return next(err); }
+            if (camel === null) {
+                return res.status(404).json({'message': 'The Camel is not registered'});
+            }
 
-    Camel.findById(id, function(err, camel) {
-        if (err) { return next(err); }
-        if (camel === null) {
-            return res.status(404).json({'message': 'The Camel is not registered'});
-        }
+            if(req.body.fullName){
+                const newCustomer = new Customer({
+                    _id: new mongoose.Types.ObjectId(),
+                    fullName: req.body.fullName
+                });
+        
+                newCustomer.save(function(err2, addedCustomer){
+                    if (err2) { return next(err2)};
+                    addedCustomer.camel = camel._id;
+                    camel.customers.push(addedCustomer);
+                    camel.save();
+                    res.status(201).json(camel);
+                });
 
-        if(req.body.fullName){
-            const newCustomer = new Customer({
-                _id: new mongoose.Types.ObjectId(),
-                fullName: req.body.fullName
-            });
+                /*Customer.findOne({color : "Blue"}).populate('camel').exec(function(err3, cust){
+                    if (err3) { return next(err2)};
+                    console.log("The parent camel's color is " + res.json(cust));
+                })*/
+            } else {
+                res.json('The request data does not have valid keys or is empty');
+            } 
+
+        }).populate().exec();
+
+    } catch (e) {
+        res.json({ 'message': e });
+    }
     
-            newCustomer.save(function(err2, addedCustomer){
-                if (err2) { return next(err2)};
-                camel.customers.push(addedCustomer);
-                camel.save();
-                res.status(201).json(camel);
-            });
-        } else {
-            res.json('The request data does not have valid keys or is empty');
-        } 
-
-    });
 });
     
         
@@ -203,11 +214,22 @@ router.delete('/:camelId/customers/:customerId', function(req, res, next) {
         if (camel === null) {
             return res.status(404).json({'message': 'The Camel is not registered'});
         }
-        Customer.deleteMany({_id : cusId}, function(err2, foundCustomer) {
+        Customer.findById({_id : cusId}, function(err2, foundCustomer) {
             if (err2) { return next(err2); }
             if (foundCustomer === null) {
                 return res.status(404).json({'message': 'Customer is not registered for the Camel'});
             }
+
+            var updatedCustomers = [];
+            
+            for(var i = 0; i < camel.customers.length;i++){
+                if(!(camel.customers[i] == cusId)){
+                    updatedCustomers.push(camel.customers[i]);
+                    
+                }    
+            }
+
+            camel.customers = updatedCustomers;
             camel.save();
             res.status(201).json(camel);
         });
@@ -215,7 +237,7 @@ router.delete('/:camelId/customers/:customerId', function(req, res, next) {
 });
 
 
-// Delete all customers of a camel (REVISION Needed)
+// Delete all customers of a camel
 router.delete('/:camelId/customers', function(req, res, next) {
     var camId = req.params.camelId;
 
@@ -231,22 +253,12 @@ router.delete('/:camelId/customers', function(req, res, next) {
             if(camel.customers.length == 0)
                 return res.json({'message': 'There are no Customers to remove'});
             else{
-                for(var i = 0; i < camel.customers.length; i++){
-                    Customer.findByIdAndRemove({_id: camel.customers[i]._id}, function(err3){
-                        if (err3) { return next(err3); }
-                    });
-                }
+                camel.customers = [];
+                camel.save();
                 res.json('Existing Customers are removed');
             }
         }
-        /*Customer.deleteMany({_id : cusId}, function(err2, foundCustomer) {
-            if (err2) { return next(err2); }
-            if (foundCustomer === null) {
-                return res.status(404).json({'message': 'Customer is not registered for the Camel'});
-            }
-            camel.save();
-            res.status(201).json(camel);
-        });*/
+
     });
 });
 
