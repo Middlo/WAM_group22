@@ -11,6 +11,8 @@ require('dotenv/config');
 mongoose.set('useFindAndModify', false);    //needed to avoid warning
 
 var camelsController = require('./controllers/camels');
+var tasksController = require('./controllers/tasks');
+var notesController = require('./controllers/notes');
 
 // Variables
 var mongoURI = process.env.GROUP_DB || 'mongodb://localhost:27017/animalDevelopmentDB';
@@ -44,6 +46,8 @@ app.get('/api', function(req, res) {
 });
 
 app.use('/api/camels', camelsController);
+app.use('/api/tasks', tasksController);
+app.use('/api/notes', notesController);
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {

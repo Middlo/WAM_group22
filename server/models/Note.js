@@ -2,8 +2,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var noteSchema = new Schema({
-    taskID: { type: Number },
-    noteText: { type: String }
+    //_id: Schema.Types.ObjectId,
+    //taskID: { type: Number },
+    topic: { type: String },
+    textContent: { type: String },
+    lastUpdated: { type: Date, default: Date.now } // format example "2019-11-12T14:39:00.000Z"
 });
 
 module.exports = mongoose.model('Note', noteSchema);

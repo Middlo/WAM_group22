@@ -3,15 +3,20 @@ var mongoose = require('mongoose');
 var router = express.Router();
 var Camel = require('../models/Camel');
 var Customer = require('../models/Customer');
-var allCamels = [];
 
 // Create a new camel
 router.post('/', function(req, res, next) {
-    var camel = new Camel(req.body);
-    camel.save(function(err) {
-        if (err) { return next(err); }
-        res.status(201).json(camel);
-    });
+
+    if (req.body.color || req.body.position || req.body.customers){
+        var camel = new Camel(req.body);
+        camel.save(function(err) {
+            if (err) { return next(err); }
+            res.status(201).json(camel);
+        });    
+    } else {
+        res.json('The request data does not have valid keys or is empty');
+    }
+    
 });
 
 // Return list of all camels
@@ -39,7 +44,7 @@ router.get('/:camelId', function(req, res, next) {
     });
 });
 
-// Update a camel with a given ID
+// Update a whole camel with a given ID
 router.put('/:camelId', function(req, res, next) {
     var id = req.params.camelId;
     Camel.findById(id, function(err, camel) {
@@ -47,37 +52,53 @@ router.put('/:camelId', function(req, res, next) {
         if (camel == null) {
             return res.status(404).json({"message": "Camel not found"});
         }
-        camel.color = req.body.color;
-        camel.position = req.body.position;
-        camel.save();
-        res.json(camel);
+
+        if(req.body.color || req.body.position || req.body.customers){
+            camel.color = req.body.color;
+            camel.position = req.body.position;
+            camel.customers = req.body.customers;
+    
+            camel.save();
+            res.json(camel);
+        } else {
+            res.json('The request data does not have valid keys or is empty');
+        }
+        
     });
 });
 
 
-//Patch a camel with a given ID
+// Patch a camel with a given ID
 router.patch('/:camelId', function(req, res, next) {
     var id = req.params.camelId;
     Camel.findById(id, function(err, camel) {
         if (err) { return next(err); }
         if (camel == null) {
-            return res.status(404).json({"message": "Camel not found"});
+            return res.status(404).json({"message": "Camel is not found"});
         }
-        camel.color = (req.body.color || camel.color);
-        camel.position = (req.body.position || camel.position);
-        camel.save();
-        res.json(camel);
+
+        if(req.body.color || req.body.position || req.body.customers){
+            camel.color = (req.body.color || camel.color);
+            camel.position = (req.body.position || camel.position);
+            camel.customers = (req.body.customers || camel.customers);
+    
+            camel.save();
+            res.json(camel);
+        } else {
+            res.json('The request data does not have valid keys or is empty');
+        }
+        
     });
 });
 
 
-//Delete a camel with a given ID
+// Delete a camel with a given ID
 router.delete('/:camelId', function(req, res, next) {
     var id = req.params.camelId;
     Camel.findOneAndDelete({_id: id}, function(err, camel) {
         if (err) { return next(err); }
         if (camel === null) {
-            return res.status(404).json({'message': 'Camel not found'});
+            return res.status(404).json({'message': 'Camel is not found'});
         }
         res.json(camel);
     });
@@ -92,7 +113,7 @@ router.delete('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (camels.length === 0 && removable){
-            res.json('There are no camels to be deleted');
+            res.json('There are no Camels to be deleted');
         } else {
             removable = 0;
 
@@ -101,31 +122,38 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.json('All camels are removed');
+            res.json('All Camels are removed');
         }
     });
 });
 
 // Create a new customer
 router.post('/:camelId/customers', function(req, res, next) {
+
     var id = req.params.camelId;
 
     Camel.findById(id, function(err, camel) {
         if (err) { return next(err); }
         if (camel === null) {
-            return res.status(404).json({'message': 'The camel is not registered'});
+            return res.status(404).json({'message': 'The Camel is not registered'});
         }
-        const newCustomer = new Customer({
-            _id: new mongoose.Types.ObjectId(),
-            fullName: req.body.fullName
-          });
 
-        newCustomer.save(function(err2, addedCustomer){
-            if (err2) { return next(err2)};
-            camel.customers.push(addedCustomer);
-            camel.save();
-            res.status(201).json(camel);
-        });
+        if(req.body.fullName){
+            const newCustomer = new Customer({
+                _id: new mongoose.Types.ObjectId(),
+                fullName: req.body.fullName
+            });
+    
+            newCustomer.save(function(err2, addedCustomer){
+                if (err2) { return next(err2)};
+                camel.customers.push(addedCustomer);
+                camel.save();
+                res.status(201).json(camel);
+            });
+        } else {
+            res.json('The request data does not have valid keys or is empty');
+        } 
+
     });
 });
     
@@ -137,9 +165,9 @@ router.get('/:camelId/customers', function(req, res, next) {
     Camel.findById(id, function(err, camel) {
         if (err) { return next(err); }
         if (camel === null) {
-            return res.status(404).json({'message': 'The camel is not registered'});
+            return res.status(404).json({'message': 'The Camel is not registered'});
         } else if (camel.customers.length === 0)
-            return res.status(201).json({'message': 'The camel has yet not a registered customer'});
+            return res.status(201).json({'message': 'The Camel has yet not a registered Customer'});
         res.status(201).json(camel.customers);
     });
 });
@@ -153,7 +181,7 @@ router.get('/:camelId/customers/:customerId', function(req, res, next) {
     Camel.findById(camId, function(err, camel) {
         if (err) { return next(err); }
         if (camel === null) {
-            return res.status(404).json({'message': 'The camel is not registered'});
+            return res.status(404).json({'message': 'The Camel is not registered'});
         }
         Customer.findById({_id : cusId}, function(err2, foundCustomer) {
             if (err2) { return next(err2); }
@@ -165,7 +193,7 @@ router.get('/:camelId/customers/:customerId', function(req, res, next) {
     });
 });
 
-// Delete a specific customer of a camel
+// Delete a specific customer of a camel (REVISION Needed)
 router.delete('/:camelId/customers/:customerId', function(req, res, next) {
     var camId = req.params.camelId;
     var cusId = req.params.customerId;
@@ -173,7 +201,7 @@ router.delete('/:camelId/customers/:customerId', function(req, res, next) {
     Camel.findById(camId, function(err, camel) {
         if (err) { return next(err); }
         if (camel === null) {
-            return res.status(404).json({'message': 'The camel is not registered'});
+            return res.status(404).json({'message': 'The Camel is not registered'});
         }
         Customer.deleteMany({_id : cusId}, function(err2, foundCustomer) {
             if (err2) { return next(err2); }
@@ -201,14 +229,14 @@ router.delete('/:camelId/customers', function(req, res, next) {
         } else {
             removable = 0;
             if(camel.customers.length == 0)
-                return res.json({'message': 'There are no customers to remove'});
+                return res.json({'message': 'There are no Customers to remove'});
             else{
                 for(var i = 0; i < camel.customers.length; i++){
                     Customer.findByIdAndRemove({_id: camel.customers[i]._id}, function(err3){
                         if (err3) { return next(err3); }
                     });
                 }
-                res.json('Existing customers are removed');
+                res.json('Existing Customers are removed');
             }
         }
         /*Customer.deleteMany({_id : cusId}, function(err2, foundCustomer) {

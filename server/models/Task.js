@@ -3,11 +3,11 @@ var Schema = mongoose.Schema;
 
 var taskSchema = new Schema({
     //userID: { type: String, required: true },
-    taskID: { type: Number, required: true },
+    //_id: Schema.Types.ObjectId,
     taskTitle: { type: String },
     taskDescription: { type: String },
     importanceLevel: { type: Number },
-    deadline: { type: Date },
+    deadline: { type: Date },   // format example "2019-11-12T14:39:00.000Z"
     remminder: {type: Number}
 });
 
