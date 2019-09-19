@@ -180,6 +180,7 @@ router.get('/:noteId/items/:itemId', function(req, res, next) {
     });
 });
 
+
 // Delete a specific item of a note
 router.delete('/:noteId/items/:itemId', function(req, res, next) {
     var notId = req.params.noteId;
@@ -190,11 +191,20 @@ router.delete('/:noteId/items/:itemId', function(req, res, next) {
         if (note === null) {
             return res.status(404).json({'message': 'The note is not registered'});
         }
-        Item.deleteMany({_id : itmId}, function(err2, foundItem) {
+        Item.findById({_id : itmId}, function(err2, foundItem) {
             if (err2) { return next(err2); }
             if (foundItem === null) {
                 return res.status(404).json({'message': 'Item is not registered for the Note'});
             }
+            var updatedItems = [];
+            
+            for(var i = 0; i < note.items.length;i++){
+                if(!(note.items[i] == itmId)){
+                    updatedItems.push(note.items[i]);
+                }    
+            }
+
+            note.items = updatedItems;
             note.save();
             res.status(201).json(note);
         });
@@ -202,7 +212,7 @@ router.delete('/:noteId/items/:itemId', function(req, res, next) {
 });
 
 
-// Delete all items of a note (REVISION Needed)
+// Delete all items of a note
 router.delete('/:noteId/items', function(req, res, next) {
     var notId = req.params.noteId;
 
@@ -218,22 +228,11 @@ router.delete('/:noteId/items', function(req, res, next) {
             if(note.items.length == 0)
                 return res.json({'message': 'There are no items to remove'});
             else{
-                for(var i = 0; i < note.items.length; i++){
-                    Item.findByIdAndRemove({_id: note.items[i]._id}, function(err3){
-                        if (err3) { return next(err3); }
-                    });
-                }
+                note.items = [];
+                note.save();
                 res.json('Existing items are removed');
             }
         }
-        /*Item.deleteMany({_id : cusId}, function(err2, foundItem) {
-            if (err2) { return next(err2); }
-            if (foundItem === null) {
-                return res.status(404).json({'message': 'Item is not registered for the Note'});
-            }
-            note.save();
-            res.status(201).json(note);
-        });
     });
 });
 */

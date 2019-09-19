@@ -204,7 +204,7 @@ router.get('/:camelId/customers/:customerId', function(req, res, next) {
     });
 });
 
-// Delete a specific customer of a camel (REVISION Needed)
+// Delete a specific customer of a camel
 router.delete('/:camelId/customers/:customerId', function(req, res, next) {
     var camId = req.params.camelId;
     var cusId = req.params.customerId;
@@ -225,7 +225,6 @@ router.delete('/:camelId/customers/:customerId', function(req, res, next) {
             for(var i = 0; i < camel.customers.length;i++){
                 if(!(camel.customers[i] == cusId)){
                     updatedCustomers.push(camel.customers[i]);
-                    
                 }    
             }
 

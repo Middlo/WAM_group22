@@ -189,11 +189,20 @@ router.delete('/:taskId/items/:itemId', function(req, res, next) {
         if (task === null) {
             return res.status(404).json({'message': 'The Task is not registered'});
         }
-        Item.deleteMany({_id : itmId}, function(err2, foundItem) {
+        Item.findById({_id : itmId}, function(err2, foundItem) {
             if (err2) { return next(err2); }
             if (foundItem === null) {
                 return res.status(404).json({'message': 'Item is not registered for the Task'});
             }
+            var updatedItems = [];
+            
+            for(var i = 0; i < task.items.length;i++){
+                if(!(task.items[i] == itmId)){
+                    updatedItems.push(task.items[i]);
+                }    
+            }
+
+            task.items = updatedItems;
             task.save();
             res.status(201).json(task);
         });
@@ -201,7 +210,7 @@ router.delete('/:taskId/items/:itemId', function(req, res, next) {
 });
 
 
-// Delete all items of a task (REVISION Needed)
+// Delete all items of a task
 router.delete('/:taskId/items', function(req, res, next) {
     var tasId = req.params.taskId;
 
@@ -217,22 +226,11 @@ router.delete('/:taskId/items', function(req, res, next) {
             if(task.items.length == 0)
                 return res.json({'message': 'There are no Items to remove'});
             else{
-                for(var i = 0; i < task.items.length; i++){
-                    Item.findByIdAndRemove({_id: task.items[i]._id}, function(err3){
-                        if (err3) { return next(err3); }
-                    });
-                }
-                res.json('Existing items are removed');
+                task.items = [];
+                task.save();
+                res.json('Existing Items are removed');
             }
         }
-        /*Item.deleteMany({_id : tasId}, function(err2, foundItem) {
-            if (err2) { return next(err2); }
-            if (foundItem === null) {
-                return res.status(404).json({'message': 'Item is not registered for the Task'});
-            }
-            task.save();
-            res.status(201).json(task);
-        });
     });
 });
 */
