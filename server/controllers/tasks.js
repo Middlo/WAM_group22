@@ -141,28 +141,28 @@ router.delete('/', function(req, res, next) {
 router.post('/:taskId/reminders', function(req, res, next) {
     var id = req.params.taskId;
 
-    Task.findById(id, function(err, task) {
+    Task.findById(id, function(err, foundTask) {
         if (err) { return next(err); }
-        if (task === null) {
+        if (foundTask === null) {
             return res.status(404).json({'message': 'The Task is not registered'});
         }
-        const newReminder = new Reminder({
-            _id: new mongoose.Types.ObjectId(),
-            
-            taskTitle: req.body.taskTitle,
-            taskDescription: req.body.taskDescription,
-            importanceLevel: req.body.importanceLevel,
-            deadline: req.body.deadline,
-            remminder: req.body.remminder
+        if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+            const newReminder = new Reminder({
+                _id: new mongoose.Types.ObjectId(),
+                topic: req.body.topic,
+                targetMoment: req.body.targetMoment,
+                remindBefore: req.body.remindBefore
+            });
 
-          });
-
-        newReminder.save(function(err2, addedReminder){
-            if (err2) { return next(err2)};
-            task.reminders.push(addedReminder);
-            task.save();
-            res.status(201).json(task);
-        });
+            newReminder.save(function(err2, addedReminder){
+                if (err2) { return next(err2)};
+                foundTask.reminders.push(addedReminder);
+                foundTask.save();
+                res.status(201).json(foundTask);
+            });
+        } else {
+            res.json('The request data does not have valid keys or is empty');
+        } 
     });
 });
     
@@ -171,13 +171,13 @@ router.post('/:taskId/reminders', function(req, res, next) {
 router.get('/:taskId/reminders', function(req, res, next) {
     var id = req.params.taskId;
 
-    Task.findById(id, function(err, task) {
+    Task.findById(id, function(err, foundTask) {
         if (err) { return next(err); }
-        if (task === null) {
+        if (foundTask === null) {
             return res.status(404).json({'message': 'The Task is not registered'});
-        } else if (task.reminders.length === 0)
+        } else if (foundTask.reminders.length === 0)
             return res.status(201).json({'message': 'The Task has yet not a registered Reminder'});
-        res.status(201).json(task.reminders);
+        res.status(201).json(foundTask.reminders);
     });
 });
 
@@ -207,9 +207,9 @@ router.delete('/:taskId/reminders/:reminderId', function(req, res, next) {
     var tasId = req.params.taskId;
     var remId = req.params.reminderId;
 
-    Task.findById(tasId, function(err, task) {
+    Task.findById(tasId, function(err, foundTask) {
         if (err) { return next(err); }
-        if (task === null) {
+        if (foundTask === null) {
             return res.status(404).json({'message': 'The Task is not registered'});
         }
         Reminder.findById({_id : remId}, function(err2, foundReminder) {
@@ -219,15 +219,15 @@ router.delete('/:taskId/reminders/:reminderId', function(req, res, next) {
             }
             var updatedReminders = [];
             
-            for(var i = 0; i < task.reminders.length;i++){
-                if(!(task.reminders[i] == remId)){
-                    updatedReminders.push(task.reminders[i]);
+            for(var i = 0; i < foundTask.reminders.length;i++){
+                if(!(foundTask.reminders[i] == remId)){
+                    updatedReminders.push(foundTask.reminders[i]);
                 }    
             }
 
-            task.reminders = updatedReminders;
-            task.save();
-            res.status(201).json(task);
+            foundTask.reminders = updatedReminders;
+            foundTask.save();
+            res.status(201).json(foundTask);
         });
     });
 });

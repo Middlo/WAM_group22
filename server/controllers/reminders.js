@@ -54,7 +54,7 @@ router.put('/:reminderId', function(req, res, next) {
             return res.status(404).json({"message": "Reminder not found"});
         }
 
-        if(req.body.topic || req.body.targerMoment || req.body.remindBefore){
+        if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
 
             reminder.topic = req.body.topic;
             reminder.targerMoment = req.body.targerMoment;
@@ -79,10 +79,10 @@ router.patch('/:reminderId', function(req, res, next) {
             return res.status(404).json({"message": "Reminder is not found"});
         }
 
-        if(req.body.topic || req.body.targerMoment || req.body.remindBefore){
+        if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
 
             reminder.topic = (req.body.topic || reminder.topic);
-            reminder.targerMoment = (req.body.targerMoment || reminder.targerMoment);
+            reminder.targetMoment = (req.body.targetMoment || reminder.targetMoment);
             reminder.remindBefore = (req.body.remindBefore || reminder.remindBefore);
     
             reminder.save();

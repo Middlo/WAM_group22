@@ -133,30 +133,27 @@ router.post('/:camelId/customers', function(req, res, next) {
     try {
         var id = req.params.camelId;
 
-        Camel.findById(id, function(err, camel) {
+        Camel.findById(id, function(err, foundCamel) {
             if (err) { return next(err); }
-            if (camel === null) {
+            if (foundCamel === null) {
                 return res.status(404).json({'message': 'The Camel is not registered'});
             }
 
-            if(req.body.fullName){
+            if(req.body.fullName || req.body.camel){
                 const newCustomer = new Customer({
                     _id: new mongoose.Types.ObjectId(),
-                    fullName: req.body.fullName
+                    fullName: req.body.fullName,
+                    camel : foundCamel._id
                 });
         
                 newCustomer.save(function(err2, addedCustomer){
                     if (err2) { return next(err2)};
-                    addedCustomer.camel = camel._id;
-                    camel.customers.push(addedCustomer);
-                    camel.save();
-                    res.status(201).json(camel);
+                    addedCustomer.camel = foundCamel._id;
+                    foundCamel.customers.push(addedCustomer);
+                    foundCamel.save();
+                    res.status(201).json(foundCamel);
                 });
 
-                /*Customer.findOne({color : "Blue"}).populate('camel').exec(function(err3, cust){
-                    if (err3) { return next(err2)};
-                    console.log("The parent camel's color is " + res.json(cust));
-                })*/
             } else {
                 res.json('The request data does not have valid keys or is empty');
             } 
@@ -174,13 +171,13 @@ router.post('/:camelId/customers', function(req, res, next) {
 router.get('/:camelId/customers', function(req, res, next) {
     var id = req.params.camelId;
 
-    Camel.findById(id, function(err, camel) {
+    Camel.findById(id, function(err, foundCamel) {
         if (err) { return next(err); }
-        if (camel === null) {
+        if (foundCamel === null) {
             return res.status(404).json({'message': 'The Camel is not registered'});
-        } else if (camel.customers.length === 0)
+        } else if (foundCamel.customers.length === 0)
             return res.status(201).json({'message': 'The Camel has yet not a registered Customer'});
-        res.status(201).json(camel.customers);
+        res.status(201).json(foundCamel.customers);
     });
 });
 
@@ -190,9 +187,9 @@ router.get('/:camelId/customers/:customerId', function(req, res, next) {
     var camId = req.params.camelId;
     var cusId = req.params.customerId;
 
-    Camel.findById(camId, function(err, camel) {
+    Camel.findById(camId, function(err, foundCamel) {
         if (err) { return next(err); }
-        if (camel === null) {
+        if (foundCamel === null) {
             return res.status(404).json({'message': 'The Camel is not registered'});
         }
         Customer.findById({_id : cusId}, function(err2, foundCustomer) {
@@ -210,9 +207,9 @@ router.delete('/:camelId/customers/:customerId', function(req, res, next) {
     var camId = req.params.camelId;
     var cusId = req.params.customerId;
 
-    Camel.findById(camId, function(err, camel) {
+    Camel.findById(camId, function(err, foundCamel) {
         if (err) { return next(err); }
-        if (camel === null) {
+        if (foundCamel === null) {
             return res.status(404).json({'message': 'The Camel is not registered'});
         }
         Customer.findById({_id : cusId}, function(err2, foundCustomer) {
@@ -223,15 +220,15 @@ router.delete('/:camelId/customers/:customerId', function(req, res, next) {
 
             var updatedCustomers = [];
             
-            for(var i = 0; i < camel.customers.length;i++){
-                if(!(camel.customers[i] == cusId)){
-                    updatedCustomers.push(camel.customers[i]);
+            for(var i = 0; i < foundCamel.customers.length;i++){
+                if(!(foundCamel.customers[i] == cusId)){
+                    updatedCustomers.push(foundCamel.customers[i]);
                 }    
             }
 
-            camel.customers = updatedCustomers;
-            camel.save();
-            res.status(201).json(camel);
+            foundCamel.customers = updatedCustomers;
+            foundCamel.save();
+            res.status(201).json(foundCamel);
         });
     });
 });
@@ -243,18 +240,18 @@ router.delete('/:camelId/customers', function(req, res, next) {
 
     var removable = 1; //to limit the display of a no camel msg after removals
 
-    Camel.findById(camId, function(err, camel) {
+    Camel.findById(camId, function(err, foundCamel) {
         if (err) { 
             return next(err); 
-        } else if (camel.length === 0 && removable) {
+        } else if (foundCamel.length === 0 && removable) {
             return res.status(404).json({'message': 'Camel not found'});
         } else {
             removable = 0;
-            if(camel.customers.length == 0)
+            if(foundCamel.customers.length == 0)
                 return res.json({'message': 'There are no Customers to remove'});
             else{
-                camel.customers = [];
-                camel.save();
+                foundCamel.customers = [];
+                foundCamel.save();
                 res.json('Existing Customers are removed');
             }
         }

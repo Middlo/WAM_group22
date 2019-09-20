@@ -3,10 +3,11 @@ var Schema = mongoose.Schema;
 
 var reminderSchema = new Schema({
     //userID: { type: String, required: true },
+    _id: Schema.Types.ObjectId,
     userId: Schema.Types.ObjectId,
     topic: { type: String },
-    targerMoment: { type: Date },
-    remindBefore: { type: [Number] },
+    targetMoment: { type: Date },
+    remindBefore: { type: Number },
 });
 
 module.exports = mongoose.model('Reminder', reminderSchema);
