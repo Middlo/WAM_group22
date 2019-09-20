@@ -7,7 +7,8 @@ var Customer = require('../models/Customer');
 // Create a new reminder
 router.post('/', function(req, res, next) {
 
-    if (req.body.color || req.body.position || req.body.customers){
+    if(req.body.topic || req.body.targerMoment || req.body.remindBefore){
+
         var reminder = new Reminder(req.body);
         reminder.save(function(err) {
             if (err) { return next(err); }
@@ -53,10 +54,11 @@ router.put('/:reminderId', function(req, res, next) {
             return res.status(404).json({"message": "Reminder not found"});
         }
 
-        if(req.body.color || req.body.position || req.body.customers){
-            reminder.color = req.body.color;
-            reminder.position = req.body.position;
-            reminder.customers = req.body.customers;
+        if(req.body.topic || req.body.targerMoment || req.body.remindBefore){
+
+            reminder.topic = req.body.topic;
+            reminder.targerMoment = req.body.targerMoment;
+            reminder.remindBefore = req.body.remindBefore;
     
             reminder.save();
             res.json(reminder);
@@ -77,10 +79,11 @@ router.patch('/:reminderId', function(req, res, next) {
             return res.status(404).json({"message": "Reminder is not found"});
         }
 
-        if(req.body.color || req.body.position || req.body.customers){
-            reminder.color = (req.body.color || reminder.color);
-            reminder.position = (req.body.position || reminder.position);
-            reminder.customers = (req.body.customers || reminder.customers);
+        if(req.body.topic || req.body.targerMoment || req.body.remindBefore){
+
+            reminder.topic = (req.body.topic || reminder.topic);
+            reminder.targerMoment = (req.body.targerMoment || reminder.targerMoment);
+            reminder.remindBefore = (req.body.remindBefore || reminder.remindBefore);
     
             reminder.save();
             res.json(reminder);
@@ -139,7 +142,7 @@ router.post('/:reminderId/items', function(req, res, next) {
         }
         const newItem = new Item({
             _id: new mongoose.Types.ObjectId(),
-            fullName: req.body.fullName
+            //fullName: req.body.fullName
           });
 
         newItem.save(function(err2, addedItem){

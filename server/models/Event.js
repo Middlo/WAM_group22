@@ -6,7 +6,7 @@ var eventSchema = new Schema({
     //id: { type: String },
     userId: Schema.Types.ObjectId,
     title: { type: Number },
-    description: { type: description},
+    description: { type: String},
     startDate: {type: Date},
     endDate: {type: Date}
 

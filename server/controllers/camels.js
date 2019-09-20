@@ -54,6 +54,7 @@ router.put('/:camelId', function(req, res, next) {
         }
 
         if(req.body.color || req.body.position || req.body.customers){
+            
             camel.color = req.body.color;
             camel.position = req.body.position;
             camel.customers = req.body.customers;

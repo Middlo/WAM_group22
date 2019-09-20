@@ -9,7 +9,7 @@ var taskSchema = new Schema({
     taskDescription: { type: String },
     importanceLevel: { type: Number },
     deadline: { type: Date },   // format example "2019-11-12T14:39:00.000Z"
-    remminder: {type: Number}
+    remminder: { type: Schema.Types.ObjectId, ref: 'Customer' }
 });
 
 module.exports = mongoose.model('Task', taskSchema);

@@ -5,7 +5,7 @@ var Calendar = require('../models/Calendar');
 
 // Create a new calendar
 router.post('/', function(req, res, next) {
-    if(req.body.topic || req.body.textContent){
+    if((req.body.currentMonth || req.body.currentDate || req.body.viewType)){
         var calendar = new Calendar(req.body);
         calendar.save(function(err) {
             if (err) { return next(err); }
@@ -50,9 +50,11 @@ router.put('/:calendarId', function(req, res, next) {
             return res.status(404).json({"message": "Calendar is not found"});
         }
 
-        if(req.body.topic || req.body.textContent){
-            calendar.topic = req.body.topic
-            calendar.textContent = req.body.textContent;
+        if(req.body.currentMonth || req.body.currentDate || req.body.viewType){
+
+            calendar.currentMonth = req.body.currentMonth
+            calendar.currentDate = req.body.currentDate;
+            calendar.viewType = req.body.viewType;
 
             calendar.save();
             res.json(calendar);
@@ -71,10 +73,12 @@ router.patch('/:calendarId', function(req, res, next) {
             return res.status(404).json({"message": "calendar is not found"});
         }
 
-        if(req.body.topic || req.body.textContent){
-            calendar.topic = (req.body.topic || calendar.topic);
-            calendar.textContent = (req.body.textContent || calendar.textContent);
-            
+        if(req.body.currentMonth || req.body.currentDate || req.body.viewType){
+
+            calendar.currentMonth = (req.body.currentMonth || calendar.currentMonth);
+            calendar.currentDate = (req.body.currentDate || calendar.currentDate);
+            calendar.viewType = (req.body.viewType || calendar.viewType);
+
             calendar.save();
             res.json(calendar);
         } else {

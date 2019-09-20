@@ -2,15 +2,19 @@ var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
 var Task = require('../models/Task');
-//var Item = require('../models/Item');
+var Reminder = require('../models/Reminder');
 
 // Create a new task
 router.post('/', function(req, res, next) {
-    var task = new Task(req.body);
-    task.save(function(err) {
-        if (err) { return next(err); }
-        res.status(201).json(task);
-    });
+    if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel || req.body.deadline|| req.body.remminder){
+        var task = new Task(req.body);
+        task.save(function(err) {
+            if (err) { return next(err); }
+            res.status(201).json(task);
+        });
+    } else {
+        res.json('The request data does not have valid keys or is empty');
+    }
 });
 
 
@@ -50,14 +54,20 @@ router.put('/:taskId', function(req, res, next) {
             return res.status(404).json({"message": "Task not found"});
         }
 
-        task.taskTitle = req.body.taskTitle;
-        task.taskDescription = req.body.taskDescription;
-        task.importanceLevel = req.body.importanceLevel;
-        task.deadline = req.body.deadline;
-        task.remminder = req.body.remminder;
+        if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel || req.body.deadline|| req.body.remminder){
+            
+            task.taskTitle = req.body.taskTitle;
+            task.taskDescription = req.body.taskDescription;
+            task.importanceLevel = req.body.importanceLevel;
+            task.deadline = req.body.deadline;
+            task.remminder = req.body.remminder;
 
-        task.save();
-        res.json(task);
+            task.save();
+            res.json(task);
+        } else {
+            res.json('The request data does not have valid keys or is empty');
+        }
+        
     });
 });
 
@@ -71,14 +81,22 @@ router.patch('/:taskId', function(req, res, next) {
             return res.status(404).json({"message": "Task is not found"});
         }
 
-        task.taskTitle = (req.body.taskTitle || task.taskTitle);
-        task.taskDescription = (req.body.taskDescription || task.taskDescription);
-        task.importanceLevel = (req.body.importanceLevel || task.importanceLevel);
-        task.deadline = (req.body.deadline || task.deadline);
-        task.remminder = (req.body.remminder || task.remminder);
+        if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel || req.body.deadline|| req.body.remminder){
 
-        task.save();
-        res.json(task);
+            task.taskTitle = (req.body.taskTitle || task.taskTitle);
+            task.taskDescription = (req.body.taskDescription || task.taskDescription);
+            task.importanceLevel = (req.body.importanceLevel || task.importanceLevel);
+            task.deadline = (req.body.deadline || task.deadline);
+            task.remminder = (req.body.remminder || task.remminder);
+
+            task.save();
+            res.json(task);
+            
+        } else {
+            res.json('The request data does not have valid keys or is empty');
+        }
+
+        
     });
 });
 
@@ -119,9 +137,8 @@ router.delete('/', function(req, res, next) {
 });
 
 
-/*
-// Create a new item
-router.post('/:taskId/items', function(req, res, next) {
+// Create a new reminder
+router.post('/:taskId/reminders', function(req, res, next) {
     var id = req.params.taskId;
 
     Task.findById(id, function(err, task) {
@@ -129,14 +146,20 @@ router.post('/:taskId/items', function(req, res, next) {
         if (task === null) {
             return res.status(404).json({'message': 'The Task is not registered'});
         }
-        const newItem = new Item({
+        const newReminder = new Reminder({
             _id: new mongoose.Types.ObjectId(),
-            fullName: req.body.fullName
+            
+            taskTitle: req.body.taskTitle,
+            taskDescription: req.body.taskDescription,
+            importanceLevel: req.body.importanceLevel,
+            deadline: req.body.deadline,
+            remminder: req.body.remminder
+
           });
 
-        newItem.save(function(err2, addedItem){
+        newReminder.save(function(err2, addedReminder){
             if (err2) { return next(err2)};
-            task.items.push(addedItem);
+            task.reminders.push(addedReminder);
             task.save();
             res.status(201).json(task);
         });
@@ -144,65 +167,65 @@ router.post('/:taskId/items', function(req, res, next) {
 });
     
         
-// Return list of all items of a task
-router.get('/:taskId/items', function(req, res, next) {
+// Return list of all reminders of a task
+router.get('/:taskId/reminders', function(req, res, next) {
     var id = req.params.taskId;
 
     Task.findById(id, function(err, task) {
         if (err) { return next(err); }
         if (task === null) {
             return res.status(404).json({'message': 'The Task is not registered'});
-        } else if (task.items.length === 0)
-            return res.status(201).json({'message': 'The Task has yet not a registered Item'});
-        res.status(201).json(task.items);
+        } else if (task.reminders.length === 0)
+            return res.status(201).json({'message': 'The Task has yet not a registered Reminder'});
+        res.status(201).json(task.reminders);
     });
 });
 
 
-// Return a specific item of a task
-router.get('/:taskId/items/:itemId', function(req, res, next) {
+// Return a specific reminder of a task
+router.get('/:taskId/reminders/:reminderId', function(req, res, next) {
     var tasId = req.params.taskId;
-    var itmId = req.params.itemId;
+    var remId = req.params.reminderId;
 
     Task.findById(tasId, function(err, task) {
         if (err) { return next(err); }
         if (task === null) {
             return res.status(404).json({'message': 'The Task is not registered'});
         }
-        Item.findById({_id : itmId}, function(err2, foundItem) {
+        Reminder.findById({_id : remId}, function(err2, foundReminder) {
             if (err2) { return next(err2); }
-            if (foundItem === null) {
-                return res.status(404).json({'message': 'Item is not registered for the Task'});
+            if (foundReminder === null) {
+                return res.status(404).json({'message': 'Reminder is not registered for the Task'});
             }
-            res.status(201).json(foundItem);
+            res.status(201).json(foundReminder);
         });
     });
 });
 
-// Delete a specific item of a task
-router.delete('/:taskId/items/:itemId', function(req, res, next) {
+// Delete a specific reminder of a task
+router.delete('/:taskId/reminders/:reminderId', function(req, res, next) {
     var tasId = req.params.taskId;
-    var itmId = req.params.itemId;
+    var remId = req.params.reminderId;
 
     Task.findById(tasId, function(err, task) {
         if (err) { return next(err); }
         if (task === null) {
             return res.status(404).json({'message': 'The Task is not registered'});
         }
-        Item.findById({_id : itmId}, function(err2, foundItem) {
+        Reminder.findById({_id : remId}, function(err2, foundReminder) {
             if (err2) { return next(err2); }
-            if (foundItem === null) {
-                return res.status(404).json({'message': 'Item is not registered for the Task'});
+            if (foundReminder === null) {
+                return res.status(404).json({'message': 'Reminder is not registered for the Task'});
             }
-            var updatedItems = [];
+            var updatedReminders = [];
             
-            for(var i = 0; i < task.items.length;i++){
-                if(!(task.items[i] == itmId)){
-                    updatedItems.push(task.items[i]);
+            for(var i = 0; i < task.reminders.length;i++){
+                if(!(task.reminders[i] == remId)){
+                    updatedReminders.push(task.reminders[i]);
                 }    
             }
 
-            task.items = updatedItems;
+            task.reminders = updatedReminders;
             task.save();
             res.status(201).json(task);
         });
@@ -210,8 +233,8 @@ router.delete('/:taskId/items/:itemId', function(req, res, next) {
 });
 
 
-// Delete all items of a task
-router.delete('/:taskId/items', function(req, res, next) {
+// Delete all reminders of a task
+router.delete('/:taskId/reminders', function(req, res, next) {
     var tasId = req.params.taskId;
 
     var removable = 1; //to limit the display of a no task msg after removals
@@ -223,16 +246,15 @@ router.delete('/:taskId/items', function(req, res, next) {
             return res.status(404).json({'message': 'Task is not found'});
         } else {
             removable = 0;
-            if(task.items.length == 0)
-                return res.json({'message': 'There are no Items to remove'});
+            if(task.reminders.length == 0)
+                return res.json({'message': 'There are no Reminders to remove'});
             else{
-                task.items = [];
+                task.reminders = [];
                 task.save();
-                res.json('Existing Items are removed');
+                res.json('Existing Reminders are removed');
             }
         }
     });
 });
-*/
 
 module.exports = router;

@@ -51,6 +51,7 @@ router.put('/:noteId', function(req, res, next) {
         }
 
         if(req.body.topic || req.body.textContent){
+
             note.topic = req.body.topic
             note.textContent = req.body.textContent;
 
@@ -73,6 +74,7 @@ router.patch('/:noteId', function(req, res, next) {
         }
 
         if(req.body.topic || req.body.textContent){
+
             note.topic = (req.body.topic || note.topic);
             note.textContent = (req.body.textContent || note.textContent);
             
@@ -132,7 +134,7 @@ router.post('/:noteId/items', function(req, res, next) {
         }
         const newItem = new Item({
             _id: new mongoose.Types.ObjectId(),
-            fullName: req.body.fullName
+            //fullName: req.body.fullName
           });
 
         newItem.save(function(err2, addedItem){

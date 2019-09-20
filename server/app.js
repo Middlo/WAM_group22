@@ -9,7 +9,6 @@ var history = require('connect-history-api-fallback');
 require('dotenv/config');
 
 mongoose.set('useFindAndModify', false);    //needed to avoid warning
-mongoose.set('useUnifiedTopology', true);
 
 var camelsController = require('./controllers/camels');
 var tasksController = require('./controllers/tasks');
@@ -17,6 +16,8 @@ var notesController = require('./controllers/notes');
 var usersController = require('./controllers/users');
 var calendarsController = require('./controllers/calendars');
 var remindersController = require('./controllers/reminders');
+var eventsController = require('./controllers/events');
+var queuesController = require('./controllers/queues');
 
 // Variables
 var mongoURI = process.env.GROUP_DB || 'mongodb://localhost:27017/animalDevelopmentDB';
@@ -55,6 +56,8 @@ app.use('/api/notes', notesController);
 app.use('/api/users', usersController);
 app.use('/api/calendars', calendarsController);
 app.use('/api/reminders', remindersController);
+app.use('/api/events', eventsController);
+app.use('/api/queues', queuesController);
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {
