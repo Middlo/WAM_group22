@@ -7,9 +7,11 @@ var Customer = require('../models/Customer');
 // Create a new reminder
 router.post('/', function(req, res, next) {
 
-    if(req.body.topic || req.body.targerMoment || req.body.remindBefore){
+    if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
 
         var reminder = new Reminder(req.body);
+        reminder._id = new mongoose.Types.ObjectId();
+        
         reminder.save(function(err) {
             if (err) { return next(err); }
             res.status(201).json(reminder);
@@ -57,7 +59,7 @@ router.put('/:reminderId', function(req, res, next) {
         if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
 
             reminder.topic = req.body.topic;
-            reminder.targerMoment = req.body.targerMoment;
+            reminder.targetMoment = req.body.targetMoment;
             reminder.remindBefore = req.body.remindBefore;
     
             reminder.save();

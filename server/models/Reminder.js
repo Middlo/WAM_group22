@@ -7,7 +7,7 @@ var reminderSchema = new Schema({
     userId: Schema.Types.ObjectId,
     topic: { type: String },
     targetMoment: { type: Date },
-    remindBefore: { type: Number },
+    remindBefore: { type: String },
 });
 
 module.exports = mongoose.model('Reminder', reminderSchema);

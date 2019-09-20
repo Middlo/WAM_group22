@@ -5,7 +5,7 @@ var Note = require('../models/Note');
 
 // Create a new note
 router.post('/', function(req, res, next) {
-    if(req.body.topic || req.body.textContent){
+    if(req.body.topic || req.body.textContent || req.body.lastUpdated){
         var note = new Note(req.body);
         note.save(function(err) {
             if (err) { return next(err); }
@@ -50,10 +50,11 @@ router.put('/:noteId', function(req, res, next) {
             return res.status(404).json({"message": "Note is not found"});
         }
 
-        if(req.body.topic || req.body.textContent){
+        if(req.body.topic || req.body.textContent || req.body.lastUpdated){
 
             note.topic = req.body.topic
             note.textContent = req.body.textContent;
+            note.lastUpdated = req.body.lastUpdated;
 
             note.save();
             res.json(note);
@@ -73,10 +74,11 @@ router.patch('/:noteId', function(req, res, next) {
             return res.status(404).json({"message": "Note is not found"});
         }
 
-        if(req.body.topic || req.body.textContent){
+        if(req.body.topic || req.body.textContent || req.body.lastUpdated){
 
             note.topic = (req.body.topic || note.topic);
             note.textContent = (req.body.textContent || note.textContent);
+            note.lastUpdated = (req.body.lastUpdated || note.lastUpdated);
             
             note.save();
             res.json(note);

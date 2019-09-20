@@ -5,7 +5,7 @@ var User = require('../models/User');
 
 // Create a new user
 router.post('/', function(req, res, next) {
-    if(req.body.username || req.body.username || req.body.type){
+    if(req.body.username || req.body.password || req.body.userType){
         var user = new User(req.body);
         user.save(function(err) {
             if (err) { return next(err); }
@@ -50,11 +50,11 @@ router.put('/:userId', function(req, res, next) {
             return res.status(404).json({"message": "User is not found"});
         }
 
-        if(req.body.username || req.body.password || req.body.type){
+        if(req.body.username || req.body.password || req.body.userType){
 
             user.username = req.body.username;
             user.password = req.body.password;
-            user.type = req.body.type;
+            user.userType = req.body.userType;
 
             user.save();
             res.json(user);
@@ -73,11 +73,11 @@ router.patch('/:userId', function(req, res, next) {
             return res.status(404).json({"message": "User is not found"});
         }
 
-        if(req.body.username || req.body.password || req.body.type){
+    if(req.body.username || req.body.password || req.body.userType){
             
             user.username = (req.body.username || user.username);
             user.password = (req.body.password || user.password);
-            user.type = (req.body.type || user.type);
+            user.userType = (req.body.userType || user.userType);
             
             user.save();
             res.json(user);
