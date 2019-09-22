@@ -9,10 +9,10 @@ router.post('/', function(req, res, next) {
         var calendar = new Calendar(req.body);
         calendar.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json(calendar);
+            res.status(201).json({"message" : 'Calendar is Successfully created'});
         });
     } else {
-        res.json('The request data does not have valid keys or is empty');
+        res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
     }
 });
 
@@ -22,9 +22,9 @@ router.get('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (calendars.length === 0)
-            res.json('There are no calendars registered');
+            res.status(200).json({"message" : 'There are no calendars registered'});
         else {
-            res.json({'calendars': calendars});
+            res.status(200).json({'Calendars': calendars});
         }
     });
 });
@@ -37,7 +37,7 @@ router.get('/:calendarId', function(req, res, next) {
         if (calendar === null) {
             return res.status(404).json({'message': 'Calendar is not found'});
         }
-        res.status(201).json(calendar);
+        res.status(200).json(calendar);
     });
 });
 
@@ -57,9 +57,9 @@ router.put('/:calendarId', function(req, res, next) {
             calendar.viewType = req.body.viewType;
 
             calendar.save();
-            res.json(calendar);
+            res.status(200).json({"message" : 'Calendar is successfully updated (put)', calendar});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
     });
 });
@@ -80,9 +80,9 @@ router.patch('/:calendarId', function(req, res, next) {
             calendar.viewType = (req.body.viewType || calendar.viewType);
 
             calendar.save();
-            res.json(calendar);
+            res.status(200).json({"message" : 'Calendar successfully updated (patch)', calendar});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
     });
 });
@@ -95,7 +95,7 @@ router.delete('/:calendarId', function(req, res, next) {
         if (calendar === null) {
             return res.status(404).json({'message': 'Calendar is not found'});
         }
-        res.json(calendar);
+        res.status(200).json({"message" : 'Calendar is successfully removed'});
     });
 });
 
@@ -107,7 +107,7 @@ router.delete('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (calendars.length === 0 && removable){
-            res.json('There are no Calendars to be deleted');
+            res.status(204).json('There are no Calendars to be deleted');
         } else {
             removable = 0;
 
@@ -116,7 +116,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.json('All Calendars are removed');
+            res.status(200).json('All Calendars are removed');
         }
     });
 });

@@ -11,11 +11,10 @@ router.post('/', function(req, res, next) {
         var event = new Event(req.body);
         event.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json(event);
-        });
-            
+            res.status(201).json({"message" : 'Event Successfully created'});
+        });   
     } else {
-        res.json('The request data does not have valid keys or is empty');
+        res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
     }
     
 });
@@ -27,9 +26,9 @@ router.get('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (events.length === 0)
-            res.json('There are no Events registered');
+            res.status(200).json({"message" : 'There are no Events registered'});
         else {
-            res.json({'events': events});
+            res.status(200).json({'events': events});
         }
     });
 });
@@ -43,7 +42,7 @@ router.get('/:eventId', function(req, res, next) {
         if (event === null) {
             return res.status(404).json({'message': 'Event not found'});
         }
-        res.status(201).json(event);
+        res.status(200).json(event);
     });
 });
 
@@ -65,10 +64,9 @@ router.put('/:eventId', function(req, res, next) {
             event.endDate = req.body.endDate;
 
             event.save();
-            res.json(event);
-
+            res.status(200).json({"message" : 'Event successfully updated (put)', event});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
         
     });
@@ -84,13 +82,20 @@ router.patch('/:eventId', function(req, res, next) {
             return res.status(404).json({"message": "Event is not found"});
         }
 
-        event.title = (req.body.title || event.title);
-        event.description = (req.body.description || event.description);
-        event.startDate = (req.body.startDate || event.startDate);
-        event.endDate = (req.body.endDate || event.endDate);
+        if(req.body.title || req.body.description || req.body.startDate || 
+            req.body.endDate){
 
-        event.save();
-        res.json(event);
+            event.title = (req.body.title || event.title);
+            event.description = (req.body.description || event.description);
+            event.startDate = (req.body.startDate || event.startDate);
+            event.endDate = (req.body.endDate || event.endDate);
+    
+            event.save();
+            res.status(200).json({"message" : 'Event successfully updated (patch)', event});
+        } else {
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
+        }
+        
     });
 });
 
@@ -103,7 +108,7 @@ router.delete('/:eventId', function(req, res, next) {
         if (event === null) {
             return res.status(404).json({'message': 'Event is not found'});
         }
-        res.json(event);
+        res.status(200).json({"message" : 'Event successfully removed'});
     });
 });
 
@@ -116,7 +121,7 @@ router.delete('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (events.length === 0 && removable){
-            res.json('There are no Events to be deleted');
+            res.status(204).json({"message" : 'There are no Events to be deleted'});
         } else {
             removable = 0;
 
@@ -125,7 +130,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.json('All Events are removed');
+            res.status(200).json({"message" :'All Events are successfully removed'});
         }
     });
 });
@@ -140,19 +145,23 @@ router.post('/:eventId/reminders', function(req, res, next) {
         if (event === null) {
             return res.status(404).json({'message': 'The Event is not registered'});
         }
-        const newReminder = new Reminder({
-            _id: new mongoose.Types.ObjectId(),
-            topic: req.body.topic,
-            targerMoment: req.body.targerMoment,
-            remindBefore: req.body.remindBefore
-          });
+        if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+            const newReminder = new Reminder({
+                _id: new mongoose.Types.ObjectId(),
+                topic: req.body.topic,
+                targerMoment: req.body.targerMoment,
+                remindBefore: req.body.remindBefore
+            });
 
-        newReminder.save(function(err2, addedReminder){
-            if (err2) { return next(err2)};
-            event.reminders.push(addedReminder);
-            event.save();
-            res.status(201).json(event);
-        });
+            newReminder.save(function(err2, addedReminder){
+                if (err2) { return next(err2)};
+                event.reminders.push(addedReminder);
+                event.save();
+                res.status(201).json({"message": ("Reminder " + addedReminder._id + " is registered to Task " + event._id)});
+            });
+        } else {
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
+        } 
     });
 });
     
@@ -166,8 +175,8 @@ router.get('/:eventId/reminders', function(req, res, next) {
         if (event === null) {
             return res.status(404).json({'message': 'The Event is not registered'});
         } else if (event.reminders.length === 0)
-            return res.status(201).json({'message': 'The Event has yet not a registered Reminder'});
-        res.status(201).json(event.reminders);
+            return res.status(204).json({'message': 'The Event has yet not a registered Reminder'});
+        res.status(200).json({"reminders": event.reminders});
     });
 });
 
@@ -187,7 +196,77 @@ router.get('/:eventId/reminders/:reminderId', function(req, res, next) {
             if (foundReminder === null) {
                 return res.status(404).json({'message': 'Reminder is not registered for the Event'});
             }
-            res.status(201).json(foundReminder);
+            res.status(200).json({"reminders": foundReminder});
+        });
+    });
+});
+
+
+// Update part of specific reminder of a event
+router.patch('/:eventId/reminders/:reminderId', function(req, res, next) {
+    var evtId = req.params.eventId;
+    var remId = req.params.reminderId;
+
+    Event.findById(evtId, function(err, foundEvent) {
+        if (err) { return next(err); }
+        if (foundEvent === null) {
+            return res.status(404).json({'message': 'The Event is not registered'});
+        }
+        Reminder.findById({_id : remId}, function(err2, foundReminder) {
+            if (err2) { return next(err2); }
+            if (foundReminder === null) {
+                return res.status(404).json({'message': 'Reminder is not registered for the Event'});
+            }
+
+            if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+
+                foundReminder.topic = req.body.topic;
+                foundReminder.targetMoment = req.body.targetMoment;
+                foundReminder.remindBefore = req.body.remindBefore;
+        
+                foundReminder.save();
+                foundEvent.save();
+                res.status(200).json({"message" : 'Reminder detail successfully updated (patch)', "updated reminder" : foundReminder});
+                
+            } else {
+                res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
+            }
+
+        });
+    });
+});
+
+
+// Update whole of specific reminder of a event
+router.put('/:eventId/reminders/:reminderId', function(req, res, next) {
+    var evtId = req.params.eventId;
+    var remId = req.params.reminderId;
+
+    Event.findById(evtId, function(err, foundEvent) {
+        if (err) { return next(err); }
+        if (foundEvent === null) {
+            return res.status(404).json({'message': 'The Event is not registered'});
+        }
+        Reminder.findById({_id : remId}, function(err2, foundReminder) {
+            if (err2) { return next(err2); }
+            if (foundReminder === null) {
+                return res.status(404).json({'message': 'Reminder is not registered for the Event'});
+            }
+
+            if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+
+                foundReminder.topic = req.body.topic;
+                foundReminder.targetMoment = req.body.targetMoment;
+                foundReminder.remindBefore = req.body.remindBefore;
+        
+                foundReminder.save();
+                foundEvent.save();
+                res.status(200).json({"message" : 'Reminder detail successfully updated (put)', "updated reminder" : foundReminder});
+                
+            } else {
+                res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
+            }
+
         });
     });
 });
@@ -218,7 +297,7 @@ router.delete('/:eventId/reminders/:reminderId', function(req, res, next) {
 
             event.reminders = updatedReminders;
             event.save();
-            res.status(201).json(event);
+            res.status(200).json({"updated reminders" : event.reminders});
         });
     });
 });
@@ -238,11 +317,11 @@ router.delete('/:eventId/reminders', function(req, res, next) {
         } else {
             removable = 0;
             if(event.reminders.length == 0)
-                return res.json({'message': 'There are no Reminders to remove'});
+                return res.status(204).json({'message': 'There are no Reminders to remove'});
             else{
                 event.reminders = [];
                 event.save();
-                res.json('Existing Reminders are removed');
+                res.status(200).json('All Reminders are removed');
             }
         }
     });

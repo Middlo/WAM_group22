@@ -6,14 +6,15 @@ var Reminder = require('../models/Reminder');
 
 // Create a new task
 router.post('/', function(req, res, next) {
-    if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel || req.body.deadline|| req.body.remminder){
+    if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel 
+        || req.body.deadline|| req.body.remminder){
         var task = new Task(req.body);
         task.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json(task);
+            res.status(201).json({"message" : 'Task Successfully created'});
         });
     } else {
-        res.json('The request data does not have valid keys or is empty');
+        res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
     }
 });
 
@@ -24,9 +25,9 @@ router.get('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (tasks.length === 0)
-            res.json('There are no Tasks registered');
+            res.status(200).json({"message" : 'There are no Tasks registered'});
         else {
-            res.json({'tasks': tasks});
+            res.status(200).json({'Tasks': tasks});
         }
     });
 });
@@ -40,7 +41,7 @@ router.get('/:taskId', function(req, res, next) {
         if (task === null) {
             return res.status(404).json({'message': 'Task not found'});
         }
-        res.status(201).json(task);
+        res.status(200).json(task);
     });
 });
 
@@ -54,7 +55,8 @@ router.put('/:taskId', function(req, res, next) {
             return res.status(404).json({"message": "Task not found"});
         }
 
-        if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel || req.body.deadline|| req.body.remminder){
+        if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel 
+            || req.body.deadline|| req.body.remminder){
             
             task.taskTitle = req.body.taskTitle;
             task.taskDescription = req.body.taskDescription;
@@ -63,9 +65,9 @@ router.put('/:taskId', function(req, res, next) {
             task.remminder = req.body.remminder;
 
             task.save();
-            res.json(task);
+            res.status(200).json({"message" : 'Task successfully updated (put)', task});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
         
     });
@@ -81,7 +83,8 @@ router.patch('/:taskId', function(req, res, next) {
             return res.status(404).json({"message": "Task is not found"});
         }
 
-        if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel || req.body.deadline|| req.body.remminder){
+        if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel || 
+            req.body.deadline|| req.body.remminder){
 
             task.taskTitle = (req.body.taskTitle || task.taskTitle);
             task.taskDescription = (req.body.taskDescription || task.taskDescription);
@@ -90,10 +93,10 @@ router.patch('/:taskId', function(req, res, next) {
             task.remminder = (req.body.remminder || task.remminder);
 
             task.save();
-            res.json(task);
-            
+            res.status(200).json({"message" : 'Task successfully updated (patch)', task});
+        
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
 
         
@@ -109,7 +112,7 @@ router.delete('/:taskId', function(req, res, next) {
         if (task === null) {
             return res.status(404).json({'message': 'Task is not found'});
         }
-        res.json(task);
+        res.status(200).json({"message" : 'Task successfully removed'});
     });
 });
 
@@ -122,7 +125,7 @@ router.delete('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (tasks.length === 0 && removable){
-            res.json('There are no Tasks to be deleted');
+            res.status(204).json({"message" : 'There are no Tasks to be deleted'});
         } else {
             removable = 0;
 
@@ -131,7 +134,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.json('All Tasks are removed');
+            res.status(200).json({"message" :'All Tasks are successfully removed'});
         }
     });
 });
@@ -158,10 +161,10 @@ router.post('/:taskId/reminders', function(req, res, next) {
                 if (err2) { return next(err2)};
                 foundTask.reminders.push(addedReminder);
                 foundTask.save();
-                res.status(201).json(foundTask);
+                res.status(201).json({"message": ("Reminder " + addedReminder._id + " is registered to Task " + foundTask._id)});
             });
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         } 
     });
 });
@@ -176,8 +179,8 @@ router.get('/:taskId/reminders', function(req, res, next) {
         if (foundTask === null) {
             return res.status(404).json({'message': 'The Task is not registered'});
         } else if (foundTask.reminders.length === 0)
-            return res.status(201).json({'message': 'The Task has yet not a registered Reminder'});
-        res.status(201).json(foundTask.reminders);
+            return res.status(204).json({'message': 'The Task has yet not a registered Reminder'});
+        res.status(200).json({"reminders": foundTask.reminders});
     });
 });
 
@@ -197,10 +200,78 @@ router.get('/:taskId/reminders/:reminderId', function(req, res, next) {
             if (foundReminder === null) {
                 return res.status(404).json({'message': 'Reminder is not registered for the Task'});
             }
-            res.status(201).json(foundReminder);
+            res.status(200).json({"reminders": foundReminder});
         });
     });
 });
+
+
+// Update part of specific reminder of a task
+router.patch('/:taskId/reminders/:reminderId', function(req, res, next) {
+    var tasId = req.params.taskId;
+    var remId = req.params.reminderId;
+
+    Task.findById(tasId, function(err, foundTask) {
+        if (err) { return next(err); }
+        if (foundTask === null) {
+            return res.status(404).json({'message': 'The Task is not registered'});
+        }
+        Reminder.findById({_id : remId}, function(err2, foundReminder) {
+            if (err2) { return next(err2); }
+            if (foundReminder === null) {
+                return res.status(404).json({'message': 'Reminder is not registered for the Task'});
+            }
+
+            if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+
+                foundReminder.topic = (req.body.topic || foundReminder.topic);
+                foundReminder.targetMoment = (req.body.targetMoment || foundReminder.targetMoment);
+                foundReminder.remindBefore = (req.body.remindBefore || foundReminder.remindBefore);
+        
+                foundReminder.save();
+                foundTask.save();
+                res.status(200).json({"message" : 'Reminder detail successfully updated (patch)', "updated reminder" : foundReminder});
+            } else {
+                res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
+            }
+        });
+    });
+});
+
+
+// Update whole of specific reminder of a task
+router.put('/:taskId/reminders/:reminderId', function(req, res, next) {
+    var tasId = req.params.taskId;
+    var remId = req.params.reminderId;
+
+    Task.findById(tasId, function(err, foundTask) {
+        if (err) { return next(err); }
+        if (foundTask === null) {
+            return res.status(404).json({'message': 'The Task is not registered'});
+        }
+        Reminder.findById({_id : remId}, function(err2, foundReminder) {
+            if (err2) { return next(err2); }
+            if (foundReminder === null) {
+                return res.status(404).json({'message': 'Reminder is not registered for the Task'});
+            }
+
+            if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+
+                foundReminder.topic = req.body.topic;
+                foundReminder.targetMoment = req.body.targetMoment;
+                foundReminder.remindBefore = req.body.remindBefore;
+        
+                foundReminder.save();
+                foundTask.save();
+                res.status(200).json({"message" : 'Reminder detail successfully updated (put)', "updated reminder" : foundReminder});
+            } else {
+                res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
+            }
+
+        });
+    });
+});
+
 
 // Delete a specific reminder of a task
 router.delete('/:taskId/reminders/:reminderId', function(req, res, next) {
@@ -227,7 +298,7 @@ router.delete('/:taskId/reminders/:reminderId', function(req, res, next) {
 
             foundTask.reminders = updatedReminders;
             foundTask.save();
-            res.status(201).json(foundTask);
+            res.status(200).json({"updated reminders" : foundTask.reminders});
         });
     });
 });
@@ -247,11 +318,11 @@ router.delete('/:taskId/reminders', function(req, res, next) {
         } else {
             removable = 0;
             if(task.reminders.length == 0)
-                return res.json({'message': 'There are no Reminders to remove'});
+                return res.status(204).json({'message': 'There are no Reminders to remove'});
             else{
                 task.reminders = [];
                 task.save();
-                res.json('Existing Reminders are removed');
+                res.status(200).json('All Reminders are successfully removed');
             }
         }
     });

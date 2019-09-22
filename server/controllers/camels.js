@@ -11,23 +11,23 @@ router.post('/', function(req, res, next) {
         var camel = new Camel(req.body);
         camel.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json(camel);
+            res.status(201).json({"message" : 'Camel Successfully created'});
         });    
     } else {
-        res.json('The request data does not have valid keys or is empty');
+        res.status(400).json({"message" : 'The request data does not have valid keys or is empty'});
     }
     
 });
 
 // Return list of all camels
 router.get('/', function(req, res, next) {
-    Camel.find(function(err, camels) {
+    Camel.find(function(err, foundCamels) {
         if (err) { 
             return next(err); 
-        } else if (camels.length === 0)
-            res.json('There are no camels registered');
+        } else if (foundCamels.length === 0)
+            res.status(200).json({"message" : 'There are no camels registered'});
         else {
-            res.json({'camels': camels});
+            res.status(200).json({'Camels': foundCamels});
         }
     });
 });
@@ -40,7 +40,7 @@ router.get('/:camelId', function(req, res, next) {
         if (camel === null) {
             return res.status(404).json({'message': 'Camel not found'});
         }
-        res.status(201).json(camel);
+        res.status(200).json(camel);
     });
 });
 
@@ -60,9 +60,9 @@ router.put('/:camelId', function(req, res, next) {
             camel.customers = req.body.customers;
     
             camel.save();
-            res.json(camel);
+            res.status(200).json({"message" : 'Camel successfully updated (put)', camel});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
         
     });
@@ -79,14 +79,15 @@ router.patch('/:camelId', function(req, res, next) {
         }
 
         if(req.body.color || req.body.position || req.body.customers){
+
             camel.color = (req.body.color || camel.color);
             camel.position = (req.body.position || camel.position);
             camel.customers = (req.body.customers || camel.customers);
     
             camel.save();
-            res.json(camel);
+            res.status(200).json({"message" : 'Camel successfully updated (patch)', camel});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
         
     });
@@ -101,7 +102,7 @@ router.delete('/:camelId', function(req, res, next) {
         if (camel === null) {
             return res.status(404).json({'message': 'Camel is not found'});
         }
-        res.json(camel);
+        res.status(200).json({"message" : 'Camel successfully removed'});
     });
 });
 
@@ -114,7 +115,7 @@ router.delete('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (camels.length === 0 && removable){
-            res.json('There are no Camels to be deleted');
+            res.status(204).json('There are no Camels to be deleted');
         } else {
             removable = 0;
 
@@ -123,10 +124,11 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.json('All Camels are removed');
+            res.status(200).json({"message" : 'All Camels are successfully removed'});
         }
     });
 });
+
 
 // Create a new customer
 router.post('/:camelId/customers', function(req, res, next) {
@@ -136,10 +138,10 @@ router.post('/:camelId/customers', function(req, res, next) {
         Camel.findById(id, function(err, foundCamel) {
             if (err) { return next(err); }
             if (foundCamel === null) {
-                return res.status(404).json({'message': 'The Camel is not registered'});
+                return res.status(404).json({'message': 'Camel is not registered'});
             }
 
-            if(req.body.fullName || req.body.camel){
+            if(req.body.fullName){
                 const newCustomer = new Customer({
                     _id: new mongoose.Types.ObjectId(),
                     fullName: req.body.fullName,
@@ -148,20 +150,19 @@ router.post('/:camelId/customers', function(req, res, next) {
         
                 newCustomer.save(function(err2, addedCustomer){
                     if (err2) { return next(err2)};
-                    addedCustomer.camel = foundCamel._id;
                     foundCamel.customers.push(addedCustomer);
                     foundCamel.save();
-                    res.status(201).json(foundCamel);
+                    res.status(201).json({"message": ("Customer " + addedCustomer.fullName + " is registered to Camel " + foundCamel._id)});
                 });
 
             } else {
-                res.json('The request data does not have valid keys or is empty');
+                res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
             } 
 
         }).populate().exec();
 
     } catch (e) {
-        res.json({ 'message': e });
+        res.status(404).json({ 'message': e });
     }
     
 });
@@ -176,8 +177,8 @@ router.get('/:camelId/customers', function(req, res, next) {
         if (foundCamel === null) {
             return res.status(404).json({'message': 'The Camel is not registered'});
         } else if (foundCamel.customers.length === 0)
-            return res.status(201).json({'message': 'The Camel has yet not a registered Customer'});
-        res.status(201).json(foundCamel.customers);
+            return res.status(204).json({'message': 'The Camel has yet not have a registered Customer'});
+        res.status(200).json(foundCamel.customers);
     });
 });
 
@@ -197,7 +198,73 @@ router.get('/:camelId/customers/:customerId', function(req, res, next) {
             if (foundCustomer === null) {
                 return res.status(404).json({'message': 'Customer is not registered for the Camel'});
             }
-            res.status(201).json(foundCustomer);
+            res.status(200).json(foundCustomer);
+        });
+    });
+});
+
+
+// Update part of specific customer of a camel
+router.patch('/:camelId/customers/:customerId', function(req, res, next) {
+    var camId = req.params.camelId;
+    var cusId = req.params.customerId;
+
+    Camel.findById(camId, function(err, foundCamel) {
+        if (err) { return next(err); }
+        if (foundCamel === null) {
+            return res.status(404).json({'message': 'The Camel is not registered'});
+        }
+        Customer.findById({_id : cusId}, function(err2, foundCustomer) {
+            if (err2) { return next(err2); }
+            if (foundCustomer === null) {
+                return res.status(404).json({'message': 'Customer is not registered for the Camel'});
+            }
+
+            if(req.body.fullName){
+    
+                foundCustomer.fullName = (req.body.fullName || foundCustomer.fullName);
+                
+                foundCustomer.save();
+                foundCamel.save();
+                res.status(200).json({"message" : 'Customer detail successfully updated (patch)', "updated customer" : foundCustomer});
+                
+            } else {
+                res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
+            }
+
+        });
+    });
+});
+
+
+// Update whole of specific customer of a camel
+router.put('/:camelId/customers/:customerId', function(req, res, next) {
+    var camId = req.params.camelId;
+    var cusId = req.params.customerId;
+
+    Camel.findById(camId, function(err, foundCamel) {
+        if (err) { return next(err); }
+        if (foundCamel === null) {
+            return res.status(404).json({'message': 'The Camel is not registered'});
+        }
+        Customer.findById({_id : cusId}, function(err2, foundCustomer) {
+            if (err2) { return next(err2); }
+            if (foundCustomer === null) {
+                return res.status(404).json({'message': 'Customer is not registered for the Camel'});
+            }
+
+            if(req.body.fullName){
+    
+                foundCustomer.fullName = req.body.fullName;
+                
+                foundCustomer.save();
+                foundCamel.save();
+                res.status(200).json({"message" : 'Customer detail successfully updated (put)', "updated customer" : foundCustomer});
+                
+            } else {
+                res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
+            }
+
         });
     });
 });
@@ -228,7 +295,7 @@ router.delete('/:camelId/customers/:customerId', function(req, res, next) {
 
             foundCamel.customers = updatedCustomers;
             foundCamel.save();
-            res.status(201).json(foundCamel);
+            res.status(200).json(foundCamel);
         });
     });
 });
@@ -248,11 +315,11 @@ router.delete('/:camelId/customers', function(req, res, next) {
         } else {
             removable = 0;
             if(foundCamel.customers.length == 0)
-                return res.json({'message': 'There are no Customers to remove'});
+                return res.status(204).json({'message': 'There are no Customers to remove'});
             else{
                 foundCamel.customers = [];
                 foundCamel.save();
-                res.json('Existing Customers are removed');
+                res.status(200).json('Existing Customers are successfully removed');
             }
         }
 

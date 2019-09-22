@@ -9,10 +9,10 @@ router.post('/', function(req, res, next) {
         var note = new Note(req.body);
         note.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json(note);
+            res.status(201).json({"message" : 'Note is Successfully created'});
         });
     } else {
-        res.json('The request data does not have valid keys or is empty');
+        res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
     }
 });
 
@@ -22,9 +22,9 @@ router.get('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (notes.length === 0)
-            res.json('There are no Notes registered');
+            res.status(200).json({"message" : 'There are no Notes registered'});
         else {
-            res.json({'notes': notes});
+            res.status(200).json({'Notes': notes});
         }
     });
 });
@@ -37,7 +37,7 @@ router.get('/:noteId', function(req, res, next) {
         if (note === null) {
             return res.status(404).json({'message': 'Note is not found'});
         }
-        res.status(201).json(note);
+        res.status(200).json(note);
     });
 });
 
@@ -57,9 +57,9 @@ router.put('/:noteId', function(req, res, next) {
             note.lastUpdated = req.body.lastUpdated;
 
             note.save();
-            res.json(note);
+            res.status(200).json({"message" : 'Note is successfully updated (put)', note});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
     });
 });
@@ -81,9 +81,9 @@ router.patch('/:noteId', function(req, res, next) {
             note.lastUpdated = (req.body.lastUpdated || note.lastUpdated);
             
             note.save();
-            res.json(note);
+            res.status(200).json({"message" : 'Note is successfully updated (patch)', note});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
     });
 });
@@ -97,7 +97,7 @@ router.delete('/:noteId', function(req, res, next) {
         if (note === null) {
             return res.status(404).json({'message': 'Note is not found'});
         }
-        res.json(note);
+        res.status(200).json({"message" : 'Note is successfully removed'});
     });
 });
 
@@ -110,7 +110,7 @@ router.delete('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (notes.length === 0 && removable){
-            res.json('There are no Notes to be deleted');
+            res.status(204).json({"message" :'There are no Notes to be deleted'});
         } else {
             removable = 0;
 
@@ -119,7 +119,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.json('All Notes are removed');
+            res.status(200).json({"message" : 'All Notes are removed'});
         }
     });
 });
@@ -230,11 +230,11 @@ router.delete('/:noteId/items', function(req, res, next) {
         } else {
             removable = 0;
             if(note.items.length == 0)
-                return res.json({'message': 'There are no items to remove'});
+                return res.status(204).json({'message': 'There are no items to remove'});
             else{
                 note.items = [];
                 note.save();
-                res.json('Existing items are removed');
+                res.status(200).json('All items are removed');
             }
         }
     });

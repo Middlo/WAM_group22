@@ -9,10 +9,10 @@ router.post('/', function(req, res, next) {
         var user = new User(req.body);
         user.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json(user);
+            res.status(201).json({"message" : 'User is Successfully created'});
         });
     } else {
-        res.json('The request data does not have valid keys or is empty');
+        res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
     }
 });
 
@@ -22,9 +22,9 @@ router.get('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (users.length === 0)
-            res.json('There are no Users registered');
+            res.status(200).json({"message" : 'There are no Users registered'});
         else {
-            res.json({'users': users});
+            res.status(200).json({'Users': users});
         }
     });
 });
@@ -37,7 +37,7 @@ router.get('/:userId', function(req, res, next) {
         if (user === null) {
             return res.status(404).json({'message': 'User is not found'});
         }
-        res.status(201).json(user);
+        res.status(200).json(user);
     });
 });
 
@@ -57,9 +57,9 @@ router.put('/:userId', function(req, res, next) {
             user.userType = req.body.userType;
 
             user.save();
-            res.json(user);
+            res.status(200).json({"message" : 'User is successfully updated (put)', user});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
     });
 });
@@ -80,9 +80,9 @@ router.patch('/:userId', function(req, res, next) {
             user.userType = (req.body.userType || user.userType);
             
             user.save();
-            res.json(user);
+            res.status(200).json({"message" : 'User is successfully updated (patch)', user});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
     });
 });
@@ -95,7 +95,7 @@ router.delete('/:userId', function(req, res, next) {
         if (user === null) {
             return res.status(404).json({'message': 'User is not found'});
         }
-        res.json(user);
+        res.status(200).json({"message" : 'User successfully removed'});
     });
 });
 
@@ -107,7 +107,7 @@ router.delete('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (users.length === 0 && removable){
-            res.json('There are no Users to be deleted');
+            res.status(204).json({"message" : 'There are no Users to be deleted'});
         } else {
             removable = 0;
 
@@ -116,7 +116,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.json('All Users are removed');
+            res.status(200).json({"message" : 'All Users are removed'});
         }
     });
 });

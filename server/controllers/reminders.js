@@ -14,10 +14,10 @@ router.post('/', function(req, res, next) {
         
         reminder.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json(reminder);
+            res.status(201).json({"message" : 'Reminder Successfully created'});
         });    
     } else {
-        res.json('The request data does not have valid keys or is empty');
+        res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
     }
     
 });
@@ -28,9 +28,9 @@ router.get('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (reminders.length === 0)
-            res.json('There are no reminders registered');
+        res.status(200).json({"message" : 'There are no Reminders registered'});
         else {
-            res.json({'reminders': reminders});
+            res.status(200).json({'reminders': reminders});
         }
     });
 });
@@ -43,7 +43,7 @@ router.get('/:reminderId', function(req, res, next) {
         if (reminder === null) {
             return res.status(404).json({'message': 'Reminder not found'});
         }
-        res.status(201).json(reminder);
+        res.status(200).json(reminder);
     });
 });
 
@@ -63,11 +63,10 @@ router.put('/:reminderId', function(req, res, next) {
             reminder.remindBefore = req.body.remindBefore;
     
             reminder.save();
-            res.json(reminder);
+            res.status(200).json({"message" : 'Reminder successfully updated (put)', reminder});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
-        
     });
 });
 
@@ -88,9 +87,9 @@ router.patch('/:reminderId', function(req, res, next) {
             reminder.remindBefore = (req.body.remindBefore || reminder.remindBefore);
     
             reminder.save();
-            res.json(reminder);
+            res.status(200).json({"message" : 'Reminder successfully updated (patch)', reminder});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
         
     });
@@ -105,7 +104,7 @@ router.delete('/:reminderId', function(req, res, next) {
         if (reminder === null) {
             return res.status(404).json({'message': 'Reminder is not found'});
         }
-        res.json(reminder);
+        res.status(200).json({"message" : 'Reminder is successfully removed'});
     });
 });
 
@@ -118,7 +117,7 @@ router.delete('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (reminders.length === 0 && removable){
-            res.json('There are no Reminders to be deleted');
+            res.status(204).json({"message" : 'There are no Reminders to be deleted'});
         } else {
             removable = 0;
 
@@ -127,7 +126,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.json('All Reminders are removed');
+            res.status(200).json({"message" :'All Reminders are removed'});
         }
     });
 });
@@ -237,11 +236,11 @@ router.delete('/:reminderId/items', function(req, res, next) {
         } else {
             removable = 0;
             if(reminder.items.length == 0)
-                return res.json({'message': 'There are no Items to remove'});
+                return res.status(204).json({'message': 'There are no Items to remove'});
             else{
                 reminder.items = [];
                 reminder.save();
-                res.json('Existing Items are removed');
+                res.status(200).json('Existing Items are removed');
             }
         }
     });

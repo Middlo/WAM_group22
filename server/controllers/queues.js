@@ -9,10 +9,10 @@ router.post('/', function(req, res, next) {
         var queue = new Queue(req.body);
         queue.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json(queue);
+            res.status(201).json({"message" : 'Queue is Successfully created'});
         });
     } else {
-        res.json('The request data does not have valid keys or is empty');
+        res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
     }
 });
 
@@ -22,9 +22,9 @@ router.get('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (queues.length === 0)
-            res.json('There are no Queues registered');
+            res.status(200).json({"message" : 'There are no Queues registered'});
         else {
-            res.json({'queues': queues});
+            res.status(200).json({'Queues': queues});
         }
     });
 });
@@ -37,7 +37,7 @@ router.get('/:queueId', function(req, res, next) {
         if (queue === null) {
             return res.status(404).json({'message': 'Queue is not found'});
         }
-        res.status(201).json(queue);
+        res.status(200).json(queue);
     });
 });
 
@@ -55,9 +55,9 @@ router.put('/:queueId', function(req, res, next) {
             queue.elements = req.body.elements;
 
             queue.save();
-            res.json(queue);
+            res.status(200).json({"message" : 'Queue is successfully updated (put)', queue});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
     });
 });
@@ -76,9 +76,9 @@ router.patch('/:queueId', function(req, res, next) {
             queue.elements = (req.body.elements || queue.elements);
             
             queue.save();
-            res.json(queue);
+            res.status(200).json({"message" : 'Queue is successfully updated (patch)', queue});
         } else {
-            res.json('The request data does not have valid keys or is empty');
+            res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
     });
 });
@@ -91,7 +91,7 @@ router.delete('/:queueId', function(req, res, next) {
         if (queue === null) {
             return res.status(404).json({'message': 'Queue is not found'});
         }
-        res.json(queue);
+        res.status(200).json({"message" : 'Queue is successfully removed'});
     });
 });
 
@@ -103,7 +103,7 @@ router.delete('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (queues.length === 0 && removable){
-            res.json('There are no Queues to be deleted');
+            res.status(204).json({'message':'There are no Queues to be deleted'});
         } else {
             removable = 0;
 
@@ -112,7 +112,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.json('All Queues are removed');
+            res.status(200).json('All Queues are removed');
         }
     });
 });
