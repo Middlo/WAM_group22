@@ -298,7 +298,7 @@ router.delete('/:taskId/reminders/:reminderId', function(req, res, next) {
 
             foundTask.reminders = updatedReminders;
             foundTask.save();
-            res.status(200).json({"updated reminders" : foundTask.reminders});
+            res.status(200).json({"updated reminders list" : foundTask.reminders});
         });
     });
 });

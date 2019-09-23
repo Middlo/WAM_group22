@@ -157,7 +157,7 @@ router.post('/:eventId/reminders', function(req, res, next) {
                 if (err2) { return next(err2)};
                 event.reminders.push(addedReminder);
                 event.save();
-                res.status(201).json({"message": ("Reminder " + addedReminder._id + " is registered to Task " + event._id)});
+                res.status(201).json({"message": ("Reminder " + addedReminder._id + " is registered to Event " + event._id)});
             });
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
@@ -297,7 +297,7 @@ router.delete('/:eventId/reminders/:reminderId', function(req, res, next) {
 
             event.reminders = updatedReminders;
             event.save();
-            res.status(200).json({"updated reminders" : event.reminders});
+            res.status(200).json({"updated reminders list" : event.reminders});
         });
     });
 });
