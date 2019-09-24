@@ -11,7 +11,7 @@ router.post('/', function(req, res, next) {
         var camel = new Camel(req.body);
         camel.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json({"message" : 'Camel Successfully created'});
+            res.status(201).json(camel); //{"message" : 'Camel Successfully created'}
         });    
     } else {
         res.status(400).json({"message" : 'The request data does not have valid keys or is empty'});
@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
         } else if (foundCamels.length === 0)
             res.status(200).json({"message" : 'There are no camels registered'});
         else {
-            res.status(200).json({'Camels': foundCamels});
+            res.status(200).json({'camels': foundCamels});
         }
     });
 });
