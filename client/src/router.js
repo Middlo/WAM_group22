@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import Camels from './views/Camels.vue'
+import Calendars from './views/Calendars.vue'
+import Events from './views/Events.vue'
+import Tasks from './views/Tasks.vue'
 
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: process.env.GROUP_DB,
   routes: [
     {
       path: '/',
@@ -15,9 +17,19 @@ export default new Router({
       component: Home
     },
     {
-      path: '/camels',
-      name: 'camels',
-      component: Camels
+      path: '/calendars',
+      name: 'calendars',
+      component: Calendars
+    },
+    {
+      path: '/events',
+      name: 'events',
+      component: Events
+    },
+    {
+      path: '/tasks',
+      name: 'tasks',
+      component: Tasks
     }
   ]
 })

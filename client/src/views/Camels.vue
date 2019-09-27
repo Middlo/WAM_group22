@@ -64,7 +64,7 @@ export default {
       return Math.floor(Math.random() * max)
     },
     getRandomColor() {
-      var colors = ['orange', 'green', 'red', 'blue']
+      var colors = ['Orange', 'Green', 'Red', 'Blue', 'Yellow', 'Grey', 'Purple']
       var index = this.getRandomInt(colors.length)
       return colors[index]
     }

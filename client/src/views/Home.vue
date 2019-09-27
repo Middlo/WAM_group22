@@ -2,8 +2,10 @@
   <div>
     <b-jumbotron header="DIT341 Frontend" lead="Welcome to Your DIT341 Frontend Vue.js App">
       <p>Message from the server: {{ message }}</p>
-      <b-button variant="primary" href="/camels">List Camels</b-button>
+      <b-button variant="primary" href="/calendars">List of Calendars</b-button>
+      <b-button variant="primary" href="/events">List of Events</b-button>
     </b-jumbotron>
+
     <b-container>
       <b-row>
         <b-col><h1>Responsive BootstrapVue: <a href="https://bootstrap-vue.js.org/docs/components/layout/">Layout and Grid System</a></h1></b-col>
