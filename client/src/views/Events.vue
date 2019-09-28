@@ -3,7 +3,7 @@
     <h1>List of {{ events.length }} events</h1>
     <b-button type="button" class="createButton" @click="createEvent()">Create Event</b-button>
     <b-list-group>
-      <event-item v-for="event in events" :key="event._id" :event="event" @delete-event="deleteEvent" @show-reminder="showReminder"></event-item>
+      <event-item v-for="event in events" :key="event._id" :event="event" @delete-event="deleteEvent" @event-content-changed="getEvents"></event-item>
     </b-list-group>
   </div>
 </template>
@@ -46,18 +46,6 @@ export default {
         })
         .catch(error => {
           console.log(error)
-        })
-    },
-    showReminder(id) {
-      Api.get(`/events/${id}/reminders`)
-        .then(response => {
-          var currReminders = response.data.reminders
-          var amount = currReminders.length
-          var text
-          if (amount === 0) { text = 'There are no reminders' }
-          if (amount === 1) { text = 'There is 1 reminder' }
-          if (amount > 1) { text = 'There are ' + amount + ' reminders' }
-          console.log(text)
         })
     },
     createEvent() {

@@ -3,7 +3,7 @@
     <h1>List of {{ tasks.length }} tasks</h1>
     <b-button type="button" class="createButton" @click="createTask()">Create Task</b-button>
     <b-list-group>
-      <task-item v-for="task in tasks" :key="task._id" :task="task" @delete-task="deleteTask" @show-task-reminder="showTaskReminder"></task-item>
+      <task-item v-for="task in tasks" :key="task._id" :task="task" @delete-task="deleteTask" @task-content-changed="getTasks"></task-item>
     </b-list-group>
   </div>
 </template>
@@ -24,9 +24,9 @@ export default {
   },
   methods: {
     getTasks() {
-      Api.get('tasks')
+      Api.get('/tasks')
         .then(reponse => {
-          this.tasks = reponse.data.Tasks
+          this.tasks = reponse.data.tasks
         })
         .catch(error => {
           this.tasks = []
@@ -46,18 +46,6 @@ export default {
         })
         .catch(error => {
           console.log(error)
-        })
-    },
-    showTaskReminder(id) {
-      Api.get(`/tasks/${id}/reminders`)
-        .then(response => {
-          var currReminders = response.data.reminders
-          var amount = currReminders.length
-          var text
-          if (amount === 0) { text = 'There are no reminders' }
-          if (amount === 1) { text = 'There is 1 reminder' }
-          if (amount > 1) { text = 'There are ' + amount + ' reminder' }
-          console.log(text)
         })
     },
     createTask() {
