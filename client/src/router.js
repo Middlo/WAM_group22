@@ -4,6 +4,8 @@ import Home from './views/Home.vue'
 import Calendars from './views/Calendars.vue'
 import Events from './views/Events.vue'
 import Tasks from './views/Tasks.vue'
+import Login from './views/Login.vue'
+import Main from './views/Main.vue'
 
 Vue.use(Router)
 
@@ -30,6 +32,16 @@ export default new Router({
       path: '/tasks',
       name: 'tasks',
       component: Tasks
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/main',
+      name: 'main',
+      component: Main
     }
   ]
 })
