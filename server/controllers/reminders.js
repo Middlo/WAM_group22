@@ -43,7 +43,19 @@ router.get('/:reminderId', function(req, res, next) {
         if (reminder === null) {
             return res.status(404).json({'message': 'Reminder not found'});
         }
-        res.status(200).json(reminder);
+        res.status(200).json({"reminder": reminder});
+    });
+});
+
+// Return a reminders of an Entity
+router.get('/entityReminders/:entityId', function(req, res, next) {
+    var id = req.params.entityId;
+    Reminder.find({reminderFor : id}, function(err, foundReminder) {
+        if (err) { return next(err); }
+        if (foundReminder === null) {
+            return res.status(404).json({'message': 'Reminder not found'});
+        }
+        res.status(200).json({"reminder": foundReminder});
     });
 });
 
@@ -104,7 +116,7 @@ router.delete('/:reminderId', function(req, res, next) {
         if (reminder === null) {
             return res.status(404).json({'message': 'Reminder is not found'});
         }
-        res.status(200).json({"message" : 'Reminder is successfully removed'});
+        res.status(200).json({"message" : 'Success'});
     });
 });
 

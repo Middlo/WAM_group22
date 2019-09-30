@@ -3,32 +3,30 @@
           <b-list-group-item>
             <img alt="Event" src="../assets/event.jpg">
             Event title: {{ event.title }}  |
-            <b-button v-b-toggle.collapse1 variant="primary" data-parent="#accordion" @click="getReminders(event._id, event)">Details</b-button>
+            <b-button  variant="primary" @click="getReminders(event._id, event), showDetail(event._id)">Details</b-button>
             <b-button type="button" class="close" @click="$emit('delete-event', event._id)">&times;</b-button>
             <div class="collapsable">
-              <b-collapse id="collapse1" class="mt-2">
-                <b-card>
+              <b-card id="collapse1" v-show="events.allowPart1 === event._id">
+                <div>
                   <p class="card-text0">Event Code : {{ event._id }}</p>
                   <p class="card-text1">Description : {{ event.description }}</p>
                   <p class="card-text2">Start Date : {{ event.startDate }}</p>
                   <p class="card-text3">End Date: {{ event.endDate }}</p>
-                  <b-button v-b-toggle.collapse1-inner size="sm" @click="$emit('show-reminder', event._id)">Show Reminders</b-button>
+                  <b-button v-b-toggle.collapse1-inner size="sm">Reminder Details</b-button>
                   <b-collapse id="collapse1-inner" class="mt-2">
-                    <div class="eventReminders">
-                      <b-button type="button" class="createEventReminder" @click="createEventReminder(event._id), $emit('event-content-changed')">Create Reminder</b-button>
-                      <div>
-                        <b-list-group-item v-for="reminder in reminders" v-bind:key="reminder._id">
-                          <b-button type="button" class="close" @click="deleteEventReminder(event), $emit('event-content-changed')">&times;</b-button>
-                          <p class="card-text10">Reminder ID : {{ reminder._id }}</p>
-                          <p class="card-text11">Topic : {{ reminder.topic }}</p>
-                          <p class="card-text12">Target Moment : {{ reminder.targetMoment }}</p>
-                          <p class="card-text13">Remind Before : {{ reminder.remindBefore }}</p>
-                        </b-list-group-item>
-                      </div>
+                    <b-button type="button" class="createEventReminder" @click="createEventReminder(event._id), $emit('event-content-changed', event._id)">Create Reminder</b-button>
+                    <div>
+                      <b-list-group-item v-for="reminder in reminders" v-bind:key="reminder._id">
+                        <b-button type="button" class="close" @click="deleteEventReminder(event), $emit('event-content-changed', event._id)">&times;</b-button>
+                        <p class="card-text10">Reminder ID : {{ reminder._id }}</p>
+                        <p class="card-text11">Topic : {{ reminder.topic }}</p>
+                        <p class="card-text12">Target Moment : {{ reminder.targetMoment }}</p>
+                        <p class="card-text13">Remind Before : {{ reminder.remindBefore }}</p>
+                      </b-list-group-item>
                     </div>
                   </b-collapse>
-                </b-card>
-              </b-collapse>
+                </div>
+              </b-card>
             </div>
           </b-list-group-item>
         </div>
@@ -58,6 +56,8 @@ export default {
       Api.get('/events')
         .then(reponse => {
           this.events = reponse.data.events
+          this.events.allowPart1 = ''
+          this.events.allowPart2 = ''
         })
         .catch(error => {
           this.events = []
@@ -72,29 +72,34 @@ export default {
         Api.get(`events/${evtID}/reminders`)
           .then(reponse => {
             this.tempReminder = reponse.data.reminder
-            Api.get(`reminders/${reponse.data.reminder}`)
-              .then(reponse => {
-                var foundReminder = reponse.data.reminder
-                this.reminders = []
-                this.reminders.push(foundReminder)
-                foundReminderID = foundReminder._id
-              })
-              .catch(error => {
-                this.reminders = []
-                console.log(error)
-              })
-              .then(() => {
-                // This code is always executed (after success or error).
-              })
+            if (reponse.data.reminder) {
+              Api.get(`reminders/${reponse.data.reminder}`)
+                .then(reponse => {
+                  var foundReminder = reponse.data.reminder
+                  this.reminders = []
+                  this.reminders.push(foundReminder)
+                  foundReminderID = foundReminder._id
+                })
+                .catch(error => {
+                  this.reminders = []
+                  console.log(error)
+                })
+                .then(() => {
+                  // This code is always executed (after success or error).
+                })
+            } else { this.reminders = [] }
           })
           .catch(error => {
             this.tempReminder = ''
             console.log(error)
           })
           .then(() => {
-          // This code is always executed (after success or error).
+            // This code is always executed (after success or error).
           })
-      }
+      } else { this.reminders = [] }
+    },
+    showDetail(evtID) {
+      if (!this.events.allowPart1) { this.events.allowPart1 = evtID } else if (this.events.allowPart1 === evtID) { this.events.allowPart1 = '' } else { this.events.allowPart1 = evtID }
     },
     createEventReminder(evtID) {
       var newReminder = {
@@ -114,6 +119,7 @@ export default {
           console.log(error)
         })
         .then(() => {
+          this.getEvents()
         // This code is always executed (after success or error).
         })
     },
@@ -121,6 +127,7 @@ export default {
       Api.delete(`/reminders/${foundReminderID}`)
         .then(reponse => {
           if (reponse.data.message === 'Success') {
+            foundReminderID = ''
             var newEvent = {
               _id: currentEvent._id,
               userId: currentEvent.userId,
@@ -132,14 +139,15 @@ export default {
             Api.put(`events/${currentEvent._id}/`, newEvent)
               .then(reponse => {
                 if (reponse.data.event._id) {
-                  console.log('after reloding event ' + reponse.data.event._id)
-                  this.getEvents()
+                  // console.log('after reloding event ' + reponse.data.event._id)
+
                 }
               })
               .catch(error => {
                 console.log(error)
               })
               .then(() => {
+                this.getEvents()
               // This code is always executed (after success or error).
               })
           }
@@ -149,6 +157,7 @@ export default {
           console.log(error)
         })
         .then(() => {
+          this.getEvents()
           // This code is always executed (after success or error).
         })
     }
@@ -157,9 +166,6 @@ export default {
 </script>
 
 <style scoped>
-.collapsable {
-  background-color: rgb(197, 51, 51);
-}
 .img {
   width: 33px;
   margin-right: 10px;

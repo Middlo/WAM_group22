@@ -195,7 +195,7 @@ router.get('/:camelId/customers/:customerId', function(req, res, next) {
         }
         Customer.findById({_id : cusId}, function(err2, foundCustomer) {
             if (err2) { return next(err2); }
-            if (foundCustomer === null) {
+            if (foundCustomer === '') {
                 return res.status(404).json({'message': 'Customer is not registered for the Camel'});
             }
             res.status(200).json(foundCustomer);

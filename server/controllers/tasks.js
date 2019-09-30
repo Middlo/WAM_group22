@@ -7,11 +7,11 @@ var Reminder = require('../models/Reminder');
 // Create a new task
 router.post('/', function(req, res, next) {
     if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel 
-        || req.body.deadline|| req.body.remminder){
+        || req.body.deadline|| req.body.reminder){
         var task = new Task(req.body);
         task.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json({"message" : 'Task Successfully created'});
+            res.status(201).json(task);//json({"message" : 'Task Successfully created'});
         });
     } else {
         res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
         } else if (tasks.length === 0)
             res.status(200).json({"message" : 'There are no Tasks registered'});
         else {
-            res.status(200).json({'Tasks': tasks});
+            res.status(200).json({'tasks': tasks});
         }
     });
 });
@@ -56,16 +56,16 @@ router.put('/:taskId', function(req, res, next) {
         }
 
         if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel 
-            || req.body.deadline|| req.body.remminder){
+            || req.body.deadline|| req.body.reminder){
             
             task.taskTitle = req.body.taskTitle;
             task.taskDescription = req.body.taskDescription;
             task.importanceLevel = req.body.importanceLevel;
             task.deadline = req.body.deadline;
-            task.remminder = req.body.remminder;
+            task.reminder = req.body.reminder;
 
             task.save();
-            res.status(200).json({"message" : 'Task successfully updated (put)', task});
+            res.status(200).json({"task" : task}); // json({"message" : 'Task successfully updated (put)', task});
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
@@ -84,16 +84,16 @@ router.patch('/:taskId', function(req, res, next) {
         }
 
         if(req.body.taskTitle || req.body.taskDescription || req.body.importanceLevel || 
-            req.body.deadline|| req.body.remminder){
+            req.body.deadline|| req.body.reminder){
 
             task.taskTitle = (req.body.taskTitle || task.taskTitle);
             task.taskDescription = (req.body.taskDescription || task.taskDescription);
             task.importanceLevel = (req.body.importanceLevel || task.importanceLevel);
             task.deadline = (req.body.deadline || task.deadline);
-            task.remminder = (req.body.remminder || task.remminder);
+            task.reminder = (req.body.reminder || task.reminder);
 
             task.save();
-            res.status(200).json({"message" : 'Task successfully updated (patch)', task});
+            res.status(200).json({"task" : task}); // json({"message" : 'Task successfully updated (patch)', task});
         
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
@@ -151,17 +151,18 @@ router.post('/:taskId/reminders', function(req, res, next) {
         }
         if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
             const newReminder = new Reminder({
-                _id: new mongoose.Types.ObjectId(),
+                //_id: new mongoose.Types.ObjectId(),
                 topic: req.body.topic,
                 targetMoment: req.body.targetMoment,
-                remindBefore: req.body.remindBefore
+                remindBefore: req.body.remindBefore,
+                reminderFor: id
             });
 
             newReminder.save(function(err2, addedReminder){
                 if (err2) { return next(err2)};
-                foundTask.reminders.push(addedReminder);
+                foundTask.reminder = addedReminder;
                 foundTask.save();
-                res.status(201).json({"message": ("Reminder " + addedReminder._id + " is registered to Task " + foundTask._id)});
+                res.status(201).json({"task" : foundTask});// json({"message": ("Reminder " + addedReminder._id + " is registered to Task " + foundTask._id)});
             });
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
@@ -178,9 +179,9 @@ router.get('/:taskId/reminders', function(req, res, next) {
         if (err) { return next(err); }
         if (foundTask === null) {
             return res.status(404).json({'message': 'The Task is not registered'});
-        } else if (foundTask.reminders.length === 0)
-            return res.status(204).json({'message': 'The Task has yet not a registered Reminder'});
-        res.status(200).json({"reminders": foundTask.reminders});
+        } else/* if (foundTask.reminders.length === '')
+            return res.status(204).json({'message': 'The Task has yet not a registered Reminder'});*/
+        res.status(200).json({"reminder": foundTask.reminder});
     });
 });
 
@@ -222,12 +223,13 @@ router.patch('/:taskId/reminders/:reminderId', function(req, res, next) {
                 return res.status(404).json({'message': 'Reminder is not registered for the Task'});
             }
 
-            if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+            if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminder){
 
                 foundReminder.topic = (req.body.topic || foundReminder.topic);
                 foundReminder.targetMoment = (req.body.targetMoment || foundReminder.targetMoment);
                 foundReminder.remindBefore = (req.body.remindBefore || foundReminder.remindBefore);
-        
+                foundReminder.reminder = req.body.reminder
+
                 foundReminder.save();
                 foundTask.save();
                 res.status(200).json({"message" : 'Reminder detail successfully updated (patch)', "updated reminder" : foundReminder});
@@ -255,12 +257,13 @@ router.put('/:taskId/reminders/:reminderId', function(req, res, next) {
                 return res.status(404).json({'message': 'Reminder is not registered for the Task'});
             }
 
-            if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+            if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminder){
 
                 foundReminder.topic = req.body.topic;
                 foundReminder.targetMoment = req.body.targetMoment;
                 foundReminder.remindBefore = req.body.remindBefore;
-        
+                foundReminder.reminder = req.body.reminder
+                
                 foundReminder.save();
                 foundTask.save();
                 res.status(200).json({"message" : 'Reminder detail successfully updated (put)', "updated reminder" : foundReminder});
@@ -290,15 +293,13 @@ router.delete('/:taskId/reminders/:reminderId', function(req, res, next) {
             }
             var updatedReminders = [];
             
-            for(var i = 0; i < foundTask.reminders.length;i++){
-                if(!(foundTask.reminders[i] == remId)){
-                    updatedReminders.push(foundTask.reminders[i]);
-                }    
+            if(!(foundTask.reminder == remId)){
+                updatedReminders =foundTask.reminder;
             }
 
-            foundTask.reminders = updatedReminders;
+            foundTask.reminder = updatedReminders;
             foundTask.save();
-            res.status(200).json({"updated reminders list" : foundTask.reminders});
+            res.status(200).json({"updated reminders list" : foundTask.reminder});
         });
     });
 });
@@ -320,7 +321,7 @@ router.delete('/:taskId/reminders', function(req, res, next) {
             if(task.reminders.length == 0)
                 return res.status(204).json({'message': 'There are no Reminders to remove'});
             else{
-                task.reminders = [];
+                task.reminders = null;
                 task.save();
                 res.status(200).json('All Reminders are successfully removed');
             }

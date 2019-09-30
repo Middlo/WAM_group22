@@ -9,7 +9,7 @@ var eventSchema = new Schema({
     description: { type: String},
     startDate: {type: Date},
     endDate: {type: Date},
-    reminders: [{ type: Schema.Types.ObjectId, ref: 'Reminder' }]
+    reminder: { type: Schema.Types.ObjectId, ref: 'Reminder' }
 
 });
 

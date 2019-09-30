@@ -50,7 +50,7 @@ export default {
     },
     createTask() {
       var randomTask = {
-        taskTitle: 'test',
+        taskTitle: 'Testing the task',
         importanceLevel: 1
       }
       console.log(randomTask)
@@ -60,6 +60,9 @@ export default {
         })
         .catch(error => {
           console.log(error)
+        })
+        .then(() => {
+          // This code is always executed (after success or error).
         })
     }
   },

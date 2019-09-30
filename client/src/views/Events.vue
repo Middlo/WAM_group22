@@ -64,6 +64,9 @@ export default {
         .catch(error => {
           console.log(error)
         })
+        .then(() => {
+          // This code is always executed (after success or error).
+        })
     },
     getRandomInt(max) {
       var result = Math.floor(Math.random() * max)

@@ -11,7 +11,7 @@ router.post('/', function(req, res, next) {
         var event = new Event(req.body);
         event.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json({"message" : 'Event Successfully created'});
+            res.status(201).json(event);//json({"message" : 'Event Successfully created'});
         });   
     } else {
         res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
@@ -56,15 +56,16 @@ router.put('/:eventId', function(req, res, next) {
             return res.status(404).json({"message": "Event not found"});
         }
 
-        if(req.body.title || req.body.description || req.body.startDate ||  req.body.endDate){
+        if(req.body.title || req.body.description || req.body.startDate ||  req.body.endDate ||  req.body.reminder){
 
             event.title = req.body.title;
             event.description = req.body.description;
             event.startDate = req.body.startDate;
             event.endDate = req.body.endDate;
+            event.reminder = req.body.reminder;
 
             event.save();
-            res.status(200).json({"message" : 'Event successfully updated (put)', event});
+            res.status(200).json({"event" : event}); // json({"message" : 'Event successfully updated (put)', event});
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
@@ -83,15 +84,16 @@ router.patch('/:eventId', function(req, res, next) {
         }
 
         if(req.body.title || req.body.description || req.body.startDate || 
-            req.body.endDate){
+            req.body.endDate || req.body.remminder){
 
             event.title = (req.body.title || event.title);
             event.description = (req.body.description || event.description);
             event.startDate = (req.body.startDate || event.startDate);
             event.endDate = (req.body.endDate || event.endDate);
+            event.remminder = (req.body.remminder || event.remminder);
     
             event.save();
-            res.status(200).json({"message" : 'Event successfully updated (patch)', event});
+            res.status(200).json({"event" : event}); // json({"message" : 'Event successfully updated (patch)', event});
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
@@ -146,18 +148,19 @@ router.post('/:eventId/reminders', function(req, res, next) {
             return res.status(404).json({'message': 'The Event is not registered'});
         }
         if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
-            const newReminder = new Reminder({
-                _id: new mongoose.Types.ObjectId(),
+            var newReminder = new Reminder({
+                //_id: new mongoose.Types.ObjectId(),
                 topic: req.body.topic,
                 targerMoment: req.body.targerMoment,
-                remindBefore: req.body.remindBefore
+                remindBefore: req.body.remindBefore,
+                reminderFor: id
             });
 
             newReminder.save(function(err2, addedReminder){
                 if (err2) { return next(err2)};
-                event.reminders.push(addedReminder);
+                event.reminder = addedReminder;
                 event.save();
-                res.status(201).json({"message": ("Reminder " + addedReminder._id + " is registered to Event " + event._id)});
+                res.status(201).json({"event" : event}); // json({"message": ("Reminder " + addedReminder._id + " is registered to Event " + event._id)});
             });
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
@@ -174,9 +177,9 @@ router.get('/:eventId/reminders', function(req, res, next) {
         if (err) { return next(err); }
         if (event === null) {
             return res.status(404).json({'message': 'The Event is not registered'});
-        } else if (event.reminders.length === 0)
-            return res.status(204).json({'message': 'The Event has yet not a registered Reminder'});
-        res.status(200).json({"reminders": event.reminders});
+        } else /*if (event.reminders.length === null)
+            return res.status(204).json({'message': 'The Event has yet not a registered Reminder'}); */
+        res.status(200).json({"reminder": event.reminder});
     });
 });
 
@@ -218,12 +221,13 @@ router.patch('/:eventId/reminders/:reminderId', function(req, res, next) {
                 return res.status(404).json({'message': 'Reminder is not registered for the Event'});
             }
 
-            if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+            if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminder){
 
                 foundReminder.topic = req.body.topic;
                 foundReminder.targetMoment = req.body.targetMoment;
                 foundReminder.remindBefore = req.body.remindBefore;
-        
+                foundReminder.reminder = req.body.reminder
+
                 foundReminder.save();
                 foundEvent.save();
                 res.status(200).json({"message" : 'Reminder detail successfully updated (patch)', "updated reminder" : foundReminder});
@@ -253,12 +257,13 @@ router.put('/:eventId/reminders/:reminderId', function(req, res, next) {
                 return res.status(404).json({'message': 'Reminder is not registered for the Event'});
             }
 
-            if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+            if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminder){
 
                 foundReminder.topic = req.body.topic;
                 foundReminder.targetMoment = req.body.targetMoment;
                 foundReminder.remindBefore = req.body.remindBefore;
-        
+                foundReminder.reminder = req.body.reminder
+                
                 foundReminder.save();
                 foundEvent.save();
                 res.status(200).json({"message" : 'Reminder detail successfully updated (put)', "updated reminder" : foundReminder});
@@ -288,16 +293,14 @@ router.delete('/:eventId/reminders/:reminderId', function(req, res, next) {
                 return res.status(404).json({'message': 'Reminder is not registered for the Event'});
             }
             var updatedReminders = [];
-            
-            for(var i = 0; i < event.reminders.length;i++){
-                if(!(event.reminders[i] == remId)){
-                    updatedReminders.push(event.reminders[i]);
-                }    
+
+            if(!(event.reminder == remId)){
+                updatedReminders = event.reminder;
             }
 
-            event.reminders = updatedReminders;
+            event.reminder = updatedReminders;
             event.save();
-            res.status(200).json({"updated reminders list" : event.reminders});
+            res.status(200).json({"updated reminders list" : event.reminder});
         });
     });
 });
@@ -316,10 +319,10 @@ router.delete('/:eventId/reminders', function(req, res, next) {
             return res.status(404).json({'message': 'Event is not found'});
         } else {
             removable = 0;
-            if(event.reminders.length == 0)
+            if(event.reminder.length == 0)
                 return res.status(204).json({'message': 'There are no Reminders to remove'});
             else{
-                event.reminders = [];
+                event.reminder = null;
                 event.save();
                 res.status(200).json('All Reminders are removed');
             }

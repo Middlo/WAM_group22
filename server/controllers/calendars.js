@@ -9,7 +9,7 @@ router.post('/', function(req, res, next) {
         var calendar = new Calendar(req.body);
         calendar.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json({"message" : 'Calendar is Successfully created'});
+            res.status(201).json(calendar);//json({"message" : 'Calendar is Successfully created'});
         });
     } else {
         res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
