@@ -1,7 +1,46 @@
 <template>
     <div>
         <div class="queue">
-            <b-button>queue</b-button>
+            <h2>Queue</h2>
+            <b-card
+              title="Priority 1"
+              tag="article"
+              style="max-width: 20rem;"
+              class="mb-2"
+            >
+            <b-card-text>
+                Task details: Will look into the integration!
+            </b-card-text>
+
+            <b-button href="#" variant="primary">Clear Task</b-button>
+            </b-card>
+            <b-card
+              title="Priority 2"
+              tag="article"
+              style="max-width: 20rem;"
+              class="mb-2"
+            >
+            <b-card-text>
+                Task details: Will look into the integration!
+            </b-card-text>
+
+            <b-button href="#" variant="primary">Clear Task</b-button>
+            </b-card>
+            <b-card
+              title="Priority 3"
+              tag="article"
+              style="max-width: 20rem;"
+              class="mb-2"
+            >
+            <b-card-text>
+                Task details: Will look into the integration!
+            </b-card-text>
+
+            <b-button href="#" variant="primary">Clear Task</b-button>
+            </b-card>
+
+            <!-- Add a button "Show More" that shows more tasks in queue -->
+
         </div>
         <div class="calender">
             <b-container class="weekDays">
