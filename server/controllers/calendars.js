@@ -5,7 +5,7 @@ var Calendar = require('../models/Calendar');
 
 // Create a new calendar
 router.post('/', function(req, res, next) {
-    if((req.body.currentMonth || req.body.currentDate || req.body.viewType)){
+    if((req.body.targetDate)){
         var calendar = new Calendar(req.body);
         calendar.save(function(err) {
             if (err) { return next(err); }
@@ -24,7 +24,7 @@ router.get('/', function(req, res, next) {
         } else if (calendars.length === 0)
             res.status(200).json({"message" : 'There are no calendars registered'});
         else {
-            res.status(200).json({'Calendars': calendars});
+            res.status(200).json({'calendars': calendars});
         }
     });
 });
@@ -50,14 +50,13 @@ router.put('/:calendarId', function(req, res, next) {
             return res.status(404).json({"message": "Calendar is not found"});
         }
 
-        if(req.body.currentMonth || req.body.currentDate || req.body.viewType){
+        if(req.body.targetDate || req.body.viewType){
 
-            calendar.currentMonth = req.body.currentMonth
-            calendar.currentDate = req.body.currentDate;
+            calendar.targetDate = req.body.targetDate;
             calendar.viewType = req.body.viewType;
 
             calendar.save();
-            res.status(200).json({"message" : 'Calendar is successfully updated (put)', calendar});
+            res.status(200).json({"calendar" : calendar}); // json({"message" : 'Calendar is successfully updated (put)', calendar});
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
@@ -73,14 +72,13 @@ router.patch('/:calendarId', function(req, res, next) {
             return res.status(404).json({"message": "calendar is not found"});
         }
 
-        if(req.body.currentMonth || req.body.currentDate || req.body.viewType){
+        if(req.body.targetDate || req.body.viewType){
 
-            calendar.currentMonth = (req.body.currentMonth || calendar.currentMonth);
-            calendar.currentDate = (req.body.currentDate || calendar.currentDate);
+            calendar.targetDate = (req.body.targetDate || calendar.targetDate);
             calendar.viewType = (req.body.viewType || calendar.viewType);
 
             calendar.save();
-            res.status(200).json({"message" : 'Calendar successfully updated (patch)', calendar});
+            res.status(200).json({"calendar" : calendar}); // json({"message" : 'Calendar successfully updated (patch)', calendar});
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }

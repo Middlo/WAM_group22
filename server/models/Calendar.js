@@ -3,8 +3,7 @@ var Schema = mongoose.Schema;
 
 var calendarSchema = new Schema({
     //userId: Schema.Types.ObjectId,
-    currentMonth: { type: String },
-    currentDate: { type: String },
+    targetDate: { type: Date, required: true},
     viewType: { type: String } //how to display the calender
 });
 

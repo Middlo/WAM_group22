@@ -2,9 +2,14 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
+      <router-link to="/login">Login</router-link> |
+      <router-link to="/main">Main</router-link> |
       <router-link to="/calendars">Calendars</router-link> |
       <router-link to="/events">Events</router-link> |
-      <router-link to="/tasks">Tasks</router-link>
+      <router-link to="/tasks">Tasks</router-link> |
+      <router-link to="/notes">Notes</router-link> |
+      <router-link to="/Queues">Queues</router-link> |
+      <router-link to="/Reminders">Reminders</router-link>
     </div>
     <router-view/>
   </div>

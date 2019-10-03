@@ -2,7 +2,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
 var Queue = require('../models/Queue');
-var sort = req.require.date;
+//var sort = req.require.date;
 
 // Create a new queue
 router.post('/', function(req, res, next) {
@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
         } else if (queues.length === 0)
             res.status(200).json({"message" : 'There are no Queues registered'});
         else {
-            res.status(200).json({'Queues': queues});
+            res.status(200).json({'queues': queues});
         }
     });
 });
@@ -42,6 +42,7 @@ router.get('/:queueId', function(req, res, next) {
     });
 });
 
+/*
 if(sort){
     find({}).sort().exec(function(err, queues){
         if (err) {return next(err);}
@@ -53,13 +54,14 @@ if(sort){
                     } else if (queues.length === 0)
                         res.status(200).json({"message" : 'There are no Queues registered'});
                     else {
-                        res.status(200).json({'Queues': queues});
+                        res.status(200).json({'queues': queues});
                     }
                 });
             });
         }
     })
 };
+*/
 
 // Update a whole queue with a given ID
 router.put('/:queueId', function(req, res, next) {
@@ -75,7 +77,7 @@ router.put('/:queueId', function(req, res, next) {
             queue.elements = req.body.elements;
 
             queue.save();
-            res.status(200).json({"message" : 'Queue is successfully updated (put)', queue});
+            res.status(200).json({"queue" : queue}); // json({"message" : 'Queue is successfully updated (put)', queue});
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
@@ -96,7 +98,7 @@ router.patch('/:queueId', function(req, res, next) {
             queue.elements = (req.body.elements || queue.elements);
             
             queue.save();
-            res.status(200).json({"message" : 'Queue is successfully updated (patch)', queue});
+            res.status(200).json({"queue" : queue}); // json({"message" : 'Queue is successfully updated (patch)', queue});
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }

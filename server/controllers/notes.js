@@ -5,11 +5,12 @@ var Note = require('../models/Note');
 
 // Create a new note
 router.post('/', function(req, res, next) {
-    if(req.body.topic || req.body.textContent || req.body.lastUpdated){
+    if(req.body.topic || req.body.textContent){
         var note = new Note(req.body);
+        note.lastUpdated = new Date();
         note.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json({"message" : 'Note is Successfully created'});
+            res.status(201).json({"note" : note}); // json({"message" : 'Note is Successfully created'});
         });
     } else {
         res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
@@ -24,7 +25,7 @@ router.get('/', function(req, res, next) {
         } else if (notes.length === 0)
             res.status(200).json({"message" : 'There are no Notes registered'});
         else {
-            res.status(200).json({'Notes': notes});
+            res.status(200).json({'notes': notes});
         }
     });
 });
@@ -50,14 +51,14 @@ router.put('/:noteId', function(req, res, next) {
             return res.status(404).json({"message": "Note is not found"});
         }
 
-        if(req.body.topic || req.body.textContent || req.body.lastUpdated){
+        if(req.body.topic || req.body.textContent){
 
             note.topic = req.body.topic
             note.textContent = req.body.textContent;
-            note.lastUpdated = req.body.lastUpdated;
 
+            note.lastUpdated = new Date();
             note.save();
-            res.status(200).json({"message" : 'Note is successfully updated (put)', note});
+            res.status(200).json({"note" : note}); // json({"message" : 'Note is successfully updated (put)', note});
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
@@ -74,14 +75,14 @@ router.patch('/:noteId', function(req, res, next) {
             return res.status(404).json({"message": "Note is not found"});
         }
 
-        if(req.body.topic || req.body.textContent || req.body.lastUpdated){
+        if(req.body.topic || req.body.textContent){
 
             note.topic = (req.body.topic || note.topic);
             note.textContent = (req.body.textContent || note.textContent);
-            note.lastUpdated = (req.body.lastUpdated || note.lastUpdated);
             
+            note.lastUpdated = new Date();
             note.save();
-            res.status(200).json({"message" : 'Note is successfully updated (patch)', note});
+            res.status(200).json({"note" : note}); // json({"message" : 'Note is successfully updated (patch)', note});
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }

@@ -2,8 +2,9 @@
   <div class="calendars">
     <h1>List of {{ calendars.length }} calendars</h1>
     <b-button type="button" class="createButton" @click="createCalendar()">Create Calendar</b-button>
+    <b-button class="deleteButton" v-show="calendars.length" @click="deleteAllCalendars()">Delete All Calendars</b-button>
     <b-list-group>
-      <calendar-item v-for="calendar in calendars" :key="calendar._id" :calendar="calendar" @delete-calendar="deleteCalendar"></calendar-item>
+      <calendar-item v-for="calendar in calendars" :key="calendar._id" :calendar="calendar" @delete-calendar="deleteCalendar" @calendar-content-changed="getCalendars"></calendar-item>
     </b-list-group>
   </div>
 </template>
@@ -24,7 +25,7 @@ export default {
   },
   methods: {
     getCalendars() {
-      Api.get('calendars')
+      Api.get('/calendars')
         .then(reponse => {
           this.calendars = reponse.data.Calendars
         })
@@ -50,9 +51,10 @@ export default {
     },
     createCalendar() {
       var tempMonth = this.getRandomMonth()
+      var text = '2019-' + tempMonth + '-' + this.getRandomDay(tempMonth)
+
       var randomCalendar = {
-        currentMonth: tempMonth,
-        currentDate: this.getRandomDay(tempMonth)
+        targetDate: text
       }
       Api.post('/calendars', randomCalendar)
         .then(response => {
@@ -79,6 +81,17 @@ export default {
       } else if (calMonth === ('Nov' || 'Apr' || 'Jun' || 'Sep')) {
         return this.getRandomInt(30)
       } else { return this.getRandomInt(28) } // for simplicity max 28
+    },
+    deleteAllCalendars() {
+      Api.delete(`/calendars/`)
+        .then(response => {
+          console.log(response.data.message)
+          // console.log(response.data.message)
+          this.calendars = []
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   },
   components: {
@@ -94,6 +107,12 @@ a {
 }
 .createButton {
   margin-bottom: 1em;
+  background-color: rgb(59, 199, 89)
+}
+.deleteButton {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  background-color: rgb(226, 43, 128)
 }
 .calendars {
   margin-left: 5%;

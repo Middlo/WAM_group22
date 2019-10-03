@@ -7,14 +7,15 @@ var Customer = require('../models/Customer');
 // Create a new reminder
 router.post('/', function(req, res, next) {
 
-    if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+    if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminderFor){
 
         var reminder = new Reminder(req.body);
+        //
         reminder._id = new mongoose.Types.ObjectId();
         
         reminder.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json({"message" : 'Reminder Successfully created'});
+            res.status(201).json({"reminder" : reminder}); // json({"message" : 'Reminder Successfully created'});
         });    
     } else {
         res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
@@ -68,14 +69,15 @@ router.put('/:reminderId', function(req, res, next) {
             return res.status(404).json({"message": "Reminder not found"});
         }
 
-        if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+        if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminderFor){
 
             reminder.topic = req.body.topic;
             reminder.targetMoment = req.body.targetMoment;
             reminder.remindBefore = req.body.remindBefore;
+            reminder.reminderFor = req.body.reminderFor;
     
             reminder.save();
-            res.status(200).json({"message" : 'Reminder successfully updated (put)', reminder});
+            res.status(200).json({"reminder" : reminder}); // json({"message" : 'Reminder successfully updated (put)', reminder});
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }
@@ -92,14 +94,15 @@ router.patch('/:reminderId', function(req, res, next) {
             return res.status(404).json({"message": "Reminder is not found"});
         }
 
-        if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+        if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminderFor){
 
             reminder.topic = (req.body.topic || reminder.topic);
             reminder.targetMoment = (req.body.targetMoment || reminder.targetMoment);
             reminder.remindBefore = (req.body.remindBefore || reminder.remindBefore);
+            reminder.reminderFor = (req.body.reminderFor || reminder.reminderFor);
     
             reminder.save();
-            res.status(200).json({"message" : 'Reminder successfully updated (patch)', reminder});
+            res.status(200).json({"reminder" : reminder}); // json({"message" : 'Reminder successfully updated (patch)', reminder});
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
         }

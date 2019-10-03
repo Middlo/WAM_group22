@@ -6,6 +6,9 @@ import Events from './views/Events.vue'
 import Tasks from './views/Tasks.vue'
 import Login from './views/Login.vue'
 import Main from './views/Main.vue'
+import Notes from './views/Notes.vue'
+import Queues from './views/Queues.vue'
+import Reminders from './views/Reminders.vue'
 
 Vue.use(Router)
 
@@ -42,6 +45,21 @@ export default new Router({
       path: '/main',
       name: 'main',
       component: Main
+    },
+    {
+      path: '/notes',
+      name: 'notes',
+      component: Notes
+    },
+    {
+      path: '/queues',
+      name: 'queues',
+      component: Queues
+    },
+    {
+      path: '/reminders',
+      name: 'reminders',
+      component: Reminders
     }
   ]
 })

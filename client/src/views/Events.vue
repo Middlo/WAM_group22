@@ -2,6 +2,7 @@
   <div class="events">
     <h1>List of {{ events.length }} events</h1>
     <b-button type="button" class="createButton" @click="createEvent()">Create Event</b-button>
+    <b-button class="deleteButton" v-show="events.length" @click="deleteAllEvents()">Delete All Events</b-button>
     <b-list-group>
       <event-item v-for="event in events" :key="event._id" :event="event" @delete-event="deleteEvent" @event-content-changed="getEvents"></event-item>
     </b-list-group>
@@ -53,9 +54,10 @@ export default {
       var tempMonth = (this.getRandomInt(12) || 1)
       var tempDate = this.getRandomDay(tempMonth)
       var tempDay1 = tempYear + '-' + tempMonth + '-' + tempDate
-
       var randomEvent = {
-        startDate: new Date(tempDay1)
+        title: 'To be assigned',
+        startDate: new Date(tempDay1),
+        endDate: new Date(tempDay1) // for example
       }
       Api.post('/events', randomEvent)
         .then(response => {
@@ -81,6 +83,17 @@ export default {
       } else {
         return this.getRandomInt(28) // for simplicity max 28
       }
+    },
+    deleteAllEvents() {
+      Api.delete(`/events/`)
+        .then(response => {
+          console.log(response.data.message)
+          // console.log(response.data.message)
+          this.events = []
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   },
   components: {
@@ -96,6 +109,12 @@ a {
 }
 .createButton {
   margin-bottom: 1em;
+  background-color: rgb(59, 199, 89)
+}
+.deleteButton {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  background-color: rgb(226, 43, 128)
 }
 .events {
   margin-left: 5%;

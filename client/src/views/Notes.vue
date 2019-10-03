@@ -1,78 +1,73 @@
 <template>
-  <div class="tasks">
-    <h1>List of {{ tasks.length }} tasks</h1>
-    <b-button class="createButton" @click="createTask()">Create new Task</b-button>
-    <b-button class="deleteButton" v-show="tasks.length" @click="deleteAllTasks()">Delete All Tasks</b-button>
+  <div class="notes">
+    <h1>List of {{ notes.length }} notes</h1>
+    <b-button type="button" class="createButton" @click="createNote()">Create Note</b-button>
+    <b-button class="deleteButton" v-show="notes.length" @click="deleteAllNotes()">Delete All Notes</b-button>
     <b-list-group>
-      <task-item v-for="task in tasks" :key="task._id" :task="task" @delete-task="deleteTask" @task-content-changed="getTasks"></task-item>
+      <note-item v-for="note in notes" :key="note._id" :note="note" @delete-note="deleteNote" @note-content-changed="getNotes"></note-item>
     </b-list-group>
   </div>
 </template>
 
 <script>
 import { Api } from '@/Api'
-import TaskItem from '@/components/TaskItem'
+import NoteItem from '@/components/NoteItem'
 
 export default {
-  name: 'Tasks',
+  name: 'Notes',
   data() {
     return {
-      tasks: []
+      notes: []
     }
   },
   mounted() {
-    this.getTasks()
+    this.getNotes()
   },
   methods: {
-    getTasks() {
-      Api.get('/tasks')
+    getNotes() {
+      Api.get('/notes')
         .then(reponse => {
-          this.tasks = reponse.data.tasks
+          this.notes = reponse.data.notes
         })
         .catch(error => {
-          this.tasks = []
+          this.notes = []
           console.log(error)
         })
         .then(() => {
           // This code is always executed (after success or error).
         })
     },
-    deleteTask(id) {
-      Api.delete(`/tasks/${id}`)
+    deleteNote(id) {
+      Api.delete(`/notes/${id}`)
         .then(response => {
           console.log(response.data.message)
           // console.log(response.data.message)
-          var index = this.tasks.findIndex(task => task._id === id)
-          this.tasks.splice(index, 1)
+          var index = this.notes.findIndex(note => note._id === id)
+          this.notes.splice(index, 1)
         })
         .catch(error => {
           console.log(error)
         })
     },
-    createTask() {
-      var randomTask = {
-        taskTitle: 'Testing the task',
-        importanceLevel: '1',
-        deadline: '2020-01-01'
+    createNote() {
+      var randomNote = {
+        topic: 'To be edited',
+        textContent: 'This content needs edit'
       }
-      // console.log(randomTask)
-      Api.post('/tasks', randomTask)
+      Api.post('/notes', randomNote)
         .then(response => {
-          this.tasks.push(response.data)
+          this.notes.push(response.data)
         })
         .catch(error => {
           console.log(error)
         })
-        .then(() => {
-          // This code is always executed (after success or error).
-        })
     },
-    deleteAllTasks() {
-      Api.delete(`/tasks/`)
+    deleteAllNotes() {
+      Api.delete(`/notes/`)
         .then(response => {
           console.log(response.data.message)
           // console.log(response.data.message)
-          this.tasks = []
+          this.notes = []
         })
         .catch(error => {
           console.log(error)
@@ -80,7 +75,7 @@ export default {
     }
   },
   components: {
-    TaskItem
+    NoteItem
   }
 }
 </script>
@@ -92,14 +87,14 @@ a {
 }
 .createButton {
   margin-bottom: 1em;
-  background-color: blueviolet
+  background-color: rgb(59, 199, 89)
 }
 .deleteButton {
   margin-bottom: 1em;
   margin-left: 1em;
   background-color: rgb(226, 43, 128)
 }
-.tasks {
+.notes {
   margin-left: 5%;
   margin-right: 5%;
   margin-bottom: 2em;

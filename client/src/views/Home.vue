@@ -3,7 +3,7 @@
     <b-jumbotron header="DIT341 Frontend" lead="Welcome to Your DIT341 Frontend Vue.js App">
       <p>Message from the server: {{ message }}</p>
       <b-button variant="primary" href="/calendars">List of Calendars</b-button>
-      <b-button variant="primary" href="/events">List of Events</b-button>
+      <b-button class="eventsButton" variant="primary" href="/events">List of Events</b-button>
     </b-jumbotron>
 
     <b-container>
@@ -52,7 +52,10 @@ export default {
 .example-col {
   padding-top: .75rem;
   padding-bottom: .75rem;
-  background-color: whitesmoke;
+  background-color: rgb(25, 136, 99);
   border: 2px solid lightgray;
+}
+.eventsButton{
+  margin-left: 10pt
 }
 </style>

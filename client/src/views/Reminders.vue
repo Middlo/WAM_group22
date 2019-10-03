@@ -1,78 +1,72 @@
 <template>
-  <div class="tasks">
-    <h1>List of {{ tasks.length }} tasks</h1>
-    <b-button class="createButton" @click="createTask()">Create new Task</b-button>
-    <b-button class="deleteButton" v-show="tasks.length" @click="deleteAllTasks()">Delete All Tasks</b-button>
+  <div class="reminders">
+    <h1>List of {{ reminders.length }} reminders</h1>
+    <b-button type="button" class="createButton" @click="createReminder()">Create Reminder</b-button>
+    <b-button class="deleteButton" v-show="reminders.length" @click="deleteAllReminders()">Delete All Reminders</b-button>
     <b-list-group>
-      <task-item v-for="task in tasks" :key="task._id" :task="task" @delete-task="deleteTask" @task-content-changed="getTasks"></task-item>
+      <reminder-item v-for="reminder in reminders" :key="reminder._id" :reminder="reminder" @delete-reminder="deleteReminder" @reminder-content-changed="getReminders"></reminder-item>
     </b-list-group>
   </div>
 </template>
 
 <script>
 import { Api } from '@/Api'
-import TaskItem from '@/components/TaskItem'
+import ReminderItem from '@/components/ReminderItem'
 
 export default {
-  name: 'Tasks',
+  name: 'Reminders',
   data() {
     return {
-      tasks: []
+      reminders: []
     }
   },
   mounted() {
-    this.getTasks()
+    this.getReminders()
   },
   methods: {
-    getTasks() {
-      Api.get('/tasks')
+    getReminders() {
+      Api.get('/reminders')
         .then(reponse => {
-          this.tasks = reponse.data.tasks
+          this.reminders = reponse.data.reminders
         })
         .catch(error => {
-          this.tasks = []
+          this.reminders = []
           console.log(error)
         })
         .then(() => {
           // This code is always executed (after success or error).
         })
     },
-    deleteTask(id) {
-      Api.delete(`/tasks/${id}`)
+    deleteReminder(id) {
+      Api.delete(`/reminders/${id}`)
         .then(response => {
           console.log(response.data.message)
           // console.log(response.data.message)
-          var index = this.tasks.findIndex(task => task._id === id)
-          this.tasks.splice(index, 1)
+          var index = this.reminders.findIndex(reminder => reminder._id === id)
+          this.reminders.splice(index, 1)
         })
         .catch(error => {
           console.log(error)
         })
     },
-    createTask() {
-      var randomTask = {
-        taskTitle: 'Testing the task',
-        importanceLevel: '1',
-        deadline: '2020-01-01'
+    createReminder() {
+      var randomReminder = {
+        elements: 'To be edited'
       }
-      // console.log(randomTask)
-      Api.post('/tasks', randomTask)
+      Api.post('/reminders', randomReminder)
         .then(response => {
-          this.tasks.push(response.data)
+          this.reminders.push(response.data)
         })
         .catch(error => {
           console.log(error)
         })
-        .then(() => {
-          // This code is always executed (after success or error).
-        })
     },
-    deleteAllTasks() {
-      Api.delete(`/tasks/`)
+    deleteAllReminders() {
+      Api.delete(`/reminders/`)
         .then(response => {
           console.log(response.data.message)
           // console.log(response.data.message)
-          this.tasks = []
+          this.reminders = []
         })
         .catch(error => {
           console.log(error)
@@ -80,7 +74,7 @@ export default {
     }
   },
   components: {
-    TaskItem
+    ReminderItem
   }
 }
 </script>
@@ -92,14 +86,14 @@ a {
 }
 .createButton {
   margin-bottom: 1em;
-  background-color: blueviolet
+  background-color: rgb(59, 199, 89)
 }
 .deleteButton {
   margin-bottom: 1em;
   margin-left: 1em;
   background-color: rgb(226, 43, 128)
 }
-.tasks {
+.reminders {
   margin-left: 5%;
   margin-right: 5%;
   margin-bottom: 2em;

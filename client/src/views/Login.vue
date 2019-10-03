@@ -17,9 +17,9 @@
             ></b-form-input>
         </b-form-group>
 
-        <b-form-group 
-            id="input-group-2" 
-            label="Password:" 
+        <b-form-group
+            id="input-group-2"
+            label="Password:"
             label-for="input-2"
         >
             <b-form-input
@@ -29,7 +29,7 @@
             placeholder="Enter Password"
             ></b-form-input>
         </b-form-group>
-        
+
         <b-button type="login" variant="primary">Login</b-button>
         <b-button variant="danger" @click="onReset;showL = false">Register</b-button>
 
@@ -52,9 +52,9 @@
             ></b-form-input>
         </b-form-group>
 
-        <b-form-group 
-            id="input-group-4" 
-            label="Username:" 
+        <b-form-group
+            id="input-group-4"
+            label="Username:"
             label-for="input-4"
         >
             <b-form-input
@@ -65,9 +65,9 @@
             ></b-form-input>
         </b-form-group>
 
-        <b-form-group 
-            id="input-group-5" 
-            label="Password:" 
+        <b-form-group
+            id="input-group-5"
+            label="Password:"
             label-for="input-5"
         >
             <b-form-input
@@ -77,14 +77,14 @@
             placeholder="Enter Password"
             ></b-form-input>
         </b-form-group>
-        
+
         <b-button type="login" variant="primary">Register </b-button>
         <b-button variant="danger" @click="onReset;showL = true">Already Registered</b-button>
 
         <b-card class="mt-3" header="Form Data Result">
             <pre class="m-0">{{ form2 }}</pre>
         </b-card>
-    </b-form>   
+    </b-form>
   </div>
 </template>
 
@@ -96,17 +96,17 @@ export default {
   name: 'Login',
   data() {
     return {
-        message: '',
-        showL: true,
-        form1: {
-            username: '',
-            password: ''
-        },
-        form2: { 
-            email: '',
-            rUsername: '',
-            rPassword: ''
-        }
+      message: '',
+      showL: true,
+      form1: {
+        username: '',
+        password: ''
+      },
+      form2: {
+        email: '',
+        rUsername: '',
+        rPassword: ''
+      }
     }
   },
   mounted() {
@@ -123,20 +123,20 @@ export default {
         })
     },
     onLogin(evt) {
-        evt.preventDefault()
-        alert(JSON.stringify(this.form1))
+      evt.preventDefault()
+      alert(JSON.stringify(this.form1))
     },
     onRegister(evt) {
-        evt.preventDefault()
-        alert(JSON.stringify(this.form2))
+      evt.preventDefault()
+      alert(JSON.stringify(this.form2))
     },
     onReset(evt) {
-        evt.preventDefault()
-        this.form1.username = ''
-        this.form1.password = ''
-        this.form2.email = ''
-        this.form2.rUsername = ''
-        this.form2.rPassword = ''
+      evt.preventDefault()
+      this.form1.username = ''
+      this.form1.password = ''
+      this.form2.email = ''
+      this.form2.rUsername = ''
+      this.form2.rPassword = ''
     }
   }
 }

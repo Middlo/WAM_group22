@@ -1,41 +1,41 @@
 <template>
   <b-list-group-item class="mainCard">
-    <img alt="Calendar" src="../assets/calendar.jpg">
-    {{ calendar._id }} is on {{ calendar.targetDate.substring(0,10) }}
-    <b-button class="detailButton" variant="primary" @click="showCalDetail(calendar._id, calendar.targetDate.substring(0,10))">Details</b-button>
-    <b-button class="close" @click="$emit('delete-calendar', calendar._id)">&times;</b-button>
+    {{ note._id }} is last updated on {{ note.lastUpdated.substring(0,10) }}
+    <b-button class="detailButton" variant="primary" @click="showDetail(note._id)">Details</b-button>
+    <b-button class="close" @click="$emit('delete-note', note._id)">&times;</b-button>
     <div class="collapsable">
-      <b-card id="collapse1" class="firstCard" v-show="allowedItem === calendar._id">
+      <b-card id="collapse1" class="firstCard" v-show="allowedItem === note._id">
         <div>
-          <p class="card-text3">Calendar Code: {{ calendar._id }}</p>
+          <p class="card-text3">Note Code: {{ note._id }}</p>
           <b-form id=form1 class="form">
             <b-form-group
               id="input-group-1"
-              label="Calendar Date:"
+              label="Note topic:"
               label-for="input-1"
             >
               <b-form-input
                 id="input-1"
-                v-model="editform.targetDate"
+                v-model="editform.topic"
                 required
-                :placeholder="calendar.targetDate.substring(0,10)"
+                :placeholder="note.topic"
                 ></b-form-input>
             </b-form-group>
 
             <b-form-group
               id="input-group-2"
-              label="View type:"
+              label="Text Content:"
               label-for="input-2"
             >
               <b-form-input
                 id="input-2"
-                v-model="editform.viewType"
-                :placeholder="calendar.viewType"
+                v-model="editform.textContent"
+                :placeholder="note.textContent"
               ></b-form-input>
             </b-form-group>
+            <p class="card-text3">Last Updated: {{ note.lastUpdated.substring(0,10) }}</p>
           </b-form>
-          <b-button class="putButton" @click="putData (calendar._id, editform), $emit('calendar-content-changed', calendar._id)">Update Entirely</b-button>  |
-          <b-button class="patchButton" @click="patchData (calendar._id, editform), $emit('calendar-content-changed', calendar._id)">Update Partially</b-button>
+          <b-button class="putButton" @click="putData (note._id, editform), $emit('note-content-changed', note._id)">Update Entirely</b-button>  |
+          <b-button class="patchButton" @click="patchData (note._id, editform), $emit('note-content-changed', note._id)">Update Partially</b-button>
         </div>
       </b-card>
     </div>
@@ -47,44 +47,44 @@ import { Api } from '@/Api'
 var allowedItem = ''
 
 export default {
-  name: 'calendar-item',
-  props: ['calendar'],
+  name: 'note-item',
+  props: ['note'],
   data() {
     return {
-      calendars: [],
+      notes: [],
       allowedItem,
       editform: {
-        targetDate: '',
-        viewType: ''
+        topic: '',
+        textContent: ''
       }
     }
   },
   mounted() {
-    this.getCalendars()
+    this.getNotes()
   },
   methods: {
-    getCalendars() {
-      Api.get('/calendars')
+    getNotes() {
+      Api.get('/notes')
         .then(reponse => {
-          this.calendars = reponse.data.calendars
+          this.notes = reponse.data.notes
         })
         .catch(error => {
-          this.calendars = []
+          this.notes = []
           console.log(error)
         })
         .then(() => {
           // This code is always executed (after success or error).
         })
     },
-    showCalDetail(calID, tarDate) {
+    showDetail(calID) {
       if (!this.allowedItem) { this.allowedItem = calID } else if (this.allowedItem === calID) { this.allowedItem = '' } else { this.allowedItem = calID }
       // console.log('collapse display allowed for : ' + this.allowedItem)
     },
     putData(id, form) {
       // console.log('put is requested with ' + form + ' for ' + id)
-      Api.put(`/calendars/${id}/`, form)
+      Api.put(`/notes/${id}/`, form)
         .then(reponse => {
-          if (reponse.data.calendar._id) {
+          if (reponse.data.note._id) {
             // console.log('after reloding event ' + reponse.data.event._id)
 
           } else {
@@ -95,15 +95,15 @@ export default {
           console.log(error)
         })
         .then(() => {
-          this.getCalendars()
+          this.getNotes()
           // This code is always executed (after success or error).
         })
     },
     patchData(id, form) {
       // console.log('patch is requested with ' + form + ' for ' + id)
-      Api.patch(`/calendars/${id}/`, form)
+      Api.patch(`/notes/${id}/`, form)
         .then(reponse => {
-          if (reponse.data.calendar._id) {
+          if (reponse.data.note._id) {
             // console.log('after reloding event ' + reponse.data.event._id)
 
           } else { console.log(reponse.data.message) }
@@ -112,7 +112,7 @@ export default {
           console.log(error)
         })
         .then(() => {
-          this.getCalendars()
+          this.getNotes()
           // This code is always executed (after success or error).
         })
     }
@@ -126,11 +126,11 @@ img {
   margin-right: 10px;
 }
 .mainCard{
-  background-color: rgb(235, 116, 185);
+  background-color: rgb(116, 118, 235);
   margin-bottom: 5px;
 }
 .detailButton{
-  background-color: rgb(43, 116, 226);
+  background-color: rgb(13, 55, 117);
   margin-left: 10px;
   margin-bottom: 10px;
 }
