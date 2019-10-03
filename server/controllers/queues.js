@@ -2,6 +2,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
 var Queue = require('../models/Queue');
+var sort = req.require.date;
 
 // Create a new queue
 router.post('/', function(req, res, next) {
@@ -40,6 +41,25 @@ router.get('/:queueId', function(req, res, next) {
         res.status(200).json(queue);
     });
 });
+
+if(sort){
+    find({}).sort().exec(function(err, queues){
+        if (err) {return next(err);}
+        else {
+            router.get('/', function(req, res, next) {
+                Queue.find(function(err, queues) {
+                    if (err) { 
+                        return next(err); 
+                    } else if (queues.length === 0)
+                        res.status(200).json({"message" : 'There are no Queues registered'});
+                    else {
+                        res.status(200).json({'Queues': queues});
+                    }
+                });
+            });
+        }
+    })
+};
 
 // Update a whole queue with a given ID
 router.put('/:queueId', function(req, res, next) {
