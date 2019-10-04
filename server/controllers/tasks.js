@@ -313,13 +313,13 @@ router.delete('/:taskId/reminders', function(req, res, next) {
         } else {
             removable = 0;
             
-            Reminder.findByIdAndRemove({reminderFor : evtId}, function(err2, removedReminder) {
+            Reminder.deleteMany({reminderFor : tasId}, function(err2, removedReminder) {
                 if (err2) { return next(err2); }
-                if(removedReminder)
+                if(removedReminder){
                     res.status(200).json('All Reminders are removed');
-                else
+                } else {
                     return res.status(204).json({'message': 'There are no Reminders to remove'});
-                
+                }
             });
         }
     });

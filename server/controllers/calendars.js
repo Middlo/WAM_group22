@@ -114,7 +114,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.status(200).json('All Calendars are removed');
+            res.status(200).json({"message" :'All Calendars are removed'});
         }
     });
 });

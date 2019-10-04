@@ -201,7 +201,11 @@ router.post('/:eventId/reminders', function(req, res, next) {
                 remindBefore: req.body.remindBefore,
                 reminderFor: id
             });
-            res.status(201).json({"reminder" : newReminder});
+            
+            newReminder.save(function(err,addedReminder){
+                if (err) { return next(err)};
+                res.status(201).json({"reminder" : newReminder});
+            })
 
         } else {
             res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
@@ -222,7 +226,10 @@ router.get('/:eventId/reminders', function(req, res, next) {
             return res.status(204).json({'message': 'The Event has yet not a registered Reminder'}); */
             Reminder.find({reminderFor : id}, function(err, foundReminders) {
                 if (err) { return next(err); }
-                res.status(200).json({"reminders": foundReminders});
+                if(foundReminders)
+                    res.status(200).json({"reminders": foundReminders});
+                else 
+                    res.status(204).json({"message": "there are no reminders"});
             })
         
         }
@@ -358,7 +365,7 @@ router.delete('/:eventId/reminders', function(req, res, next) {
         } else {
             removable = 0;
             
-            Reminder.findByIdAndRemove({reminderFor : evtId}, function(err2, removedReminder) {
+            Reminder.deleteMany({reminderFor : evtId}, function(err2, removedReminder) {
                 if (err2) { return next(err2); }
                 if(removedReminder)
                     res.status(200).json('All Reminders are removed');
