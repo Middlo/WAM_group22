@@ -1,12 +1,25 @@
 {
 	"info": {
 		"_postman_id": "fb20807d-42d2-4ecd-a942-09da002d2575",
-		"name": "submission",
+		"name": "server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Post task A",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a6bf4442-327c-4a4b-91e3-47b0512fec77",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"task1\", jsonData.task._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -27,11 +40,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks",
+					"raw": "{{host}}/api/tasks",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks"
@@ -42,6 +54,19 @@
 		},
 		{
 			"name": "Post task B",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c54ac75c-5c44-46a4-8fcc-7fb01d5df635",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"task2\", jsonData.task._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -62,11 +87,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks",
+					"raw": "{{host}}/api/tasks",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks"
@@ -77,6 +101,19 @@
 		},
 		{
 			"name": "Post task C",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57711ed2-56ec-4d0d-9018-ea8089daf50e",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"task2\", jsonData.task._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -97,11 +134,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks/",
+					"raw": "{{host}}/api/tasks/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks",
@@ -122,13 +158,19 @@
 					{
 						"key": "Content-Type",
 						"name": "Content-Type",
-						"value": "application/json",
+						"value": "application/x-www-form-urlencoded",
 						"type": "text"
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "",
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "taskTitle",
+							"value": "Cycling",
+							"type": "text"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -136,14 +178,26 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks",
+					"raw": "{{host}}/api/tasks/?",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
-						"tasks"
+						"tasks",
+						""
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "3",
+							"disabled": true
+						},
+						{
+							"key": "taskTitle",
+							"value": "Cycling",
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -151,6 +205,18 @@
 		},
 		{
 			"name": "Get a task 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1e8ada48-5f59-4a8a-b21a-363cfaea56a4",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -174,15 +240,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks/5d84b684a6ad9d21542ad49c",
+					"raw": "{{host}}/api/tasks/{{task1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks",
-						"5d84b684a6ad9d21542ad49c"
+						"{{task1}}"
 					]
 				}
 			},
@@ -213,15 +278,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks/5d84b690a6ad9d21542ad49d",
+					"raw": "{{host}}/api/tasks/{{task2}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks",
-						"5d84b690a6ad9d21542ad49d"
+						"{{task2}}"
 					]
 				}
 			},
@@ -229,6 +293,19 @@
 		},
 		{
 			"name": "Post reminder to task M",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6d02f1bc-4a08-4707-ac0e-69f31bfaf8e4",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"tsk reminder 1\", jsonData.reminder._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -241,7 +318,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"topic\": \"prepare tools\"\n}",
+					"raw": "{\n\t\"topic\": \"wake\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -249,16 +326,16 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks/5d84b684a6ad9d21542ad49c/reminders",
+					"raw": "{{host}}/api/tasks/{{task1}}/reminders/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks",
-						"5d84b684a6ad9d21542ad49c",
-						"reminders"
+						"{{task1}}",
+						"reminders",
+						""
 					]
 				}
 			},
@@ -266,6 +343,19 @@
 		},
 		{
 			"name": "Post reminder to task N",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e3241169-8f66-4113-8c4f-05af906624be",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"tsk reminder 2\", jsonData.reminder._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -286,23 +376,23 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks/5d84cbb8bfc45f04b4efd838/reminders",
+					"raw": "{{host}}/api/tasks/{{task2}}/reminders/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks",
-						"5d84cbb8bfc45f04b4efd838",
-						"reminders"
+						"{{task2}}",
+						"reminders",
+						""
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get reminder of task F",
+			"name": "Get reminders of task F",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -326,15 +416,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks/5d84b684a6ad9d21542ad49c/reminders",
+					"raw": "{{host}}/api/tasks/{{task1}}/reminders",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks",
-						"5d84b684a6ad9d21542ad49c",
+						"{{task1}}",
 						"reminders"
 					]
 				}
@@ -366,23 +455,23 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks/5d84cbb8bfc45f04b4efd838/reminders",
+					"raw": "{{host}}/api/tasks/{{task2}}/reminders/{{tsk reminder 1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks",
-						"5d84cbb8bfc45f04b4efd838",
-						"reminders"
+						"{{task2}}",
+						"reminders",
+						"{{tsk reminder 1}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Delete reminder of task X",
+			"name": "Delete A reminder of task X",
 			"request": {
 				"method": "DELETE",
 				"header": [
@@ -403,32 +492,31 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks/5d84b690a6ad9d21542ad49d/reminders/5d84b6bda6ad9d21542ad49e",
+					"raw": "{{host}}/api/tasks/{{task2}}/reminders/{{tsk reminder 1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks",
-						"5d84b690a6ad9d21542ad49d",
+						"{{task2}}",
 						"reminders",
-						"5d84b6bda6ad9d21542ad49e"
+						"{{tsk reminder 1}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Delete reminder of task Y",
+			"name": "Delete A reminder of task Y",
 			"request": {
 				"method": "DELETE",
 				"header": [
 					{
 						"key": "Content-Type",
 						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
+						"type": "text",
+						"value": "application/json"
 					}
 				],
 				"body": {
@@ -441,26 +529,38 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks/5d84cbb8bfc45f04b4efd838/reminders/5d84ccc0bfc45f04b4efd83a",
+					"raw": "{{host}}/api/tasks/{{task1}}/reminders/{{tsk reminder 2}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks",
-						"5d84cbb8bfc45f04b4efd838",
+						"{{task1}}",
 						"reminders",
-						"5d84ccc0bfc45f04b4efd83a"
+						"{{tsk reminder 2}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Remove all reminders of a task",
+			"name": "Post new reminder to task M",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b22daedd-741e-46e2-8b76-9bfbef30aa07",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"tsk reminder 1\", jsonData.reminder._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
-				"method": "DELETE",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -471,7 +571,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"topic\": \"call the kids\"\n}",
+					"raw": "{\n\t\"topic\": \"sleep\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -479,16 +579,66 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/tasks/5d84b684a6ad9d21542ad49c/reminders",
+					"raw": "{{host}}/api/tasks/{{task1}}/reminders/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"tasks",
-						"5d84b684a6ad9d21542ad49c",
-						"reminders"
+						"{{task1}}",
+						"reminders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post new reminder to task N",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b364e876-f34e-435c-8749-c848d0103700",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"tsk reminder 2\", jsonData.reminder._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"topic\": \"check all departments\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/tasks/{{task2}}/reminders/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"tasks",
+						"{{task2}}",
+						"reminders",
+						""
 					]
 				}
 			},
@@ -496,6 +646,19 @@
 		},
 		{
 			"name": "Post notes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2713dc95-fbd4-4049-8738-65215c3aa6d5",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"note1\", jsonData.note._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -516,11 +679,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/notes",
+					"raw": "{{host}}/api/notes",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"notes"
@@ -531,18 +693,37 @@
 		},
 		{
 			"name": "Get all notes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"topic\": \"my cat\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:3001/api/notes",
+					"raw": "{{host}}/api/notes/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
-						"notes"
+						"notes",
+						""
 					]
 				}
 			},
@@ -573,123 +754,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/notes/5d84d2f9ee5fab2c788dd343",
+					"raw": "{{host}}/api/notes/{{note1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"notes",
-						"5d84d2f9ee5fab2c788dd343"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Put a note",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"textContent\": \"How was my day\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/notes/5d84992184a6bb2cf0d14ca4",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"notes",
-						"5d84992184a6bb2cf0d14ca4"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Patch a note",
-			"request": {
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"lastUpdated\": \"2012-03-05 23:40:22\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/notes/5d84992184a6bb2cf0d14ca4",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"notes",
-						"5d84992184a6bb2cf0d14ca4"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete a note",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"lastUpdated\": \"2012-03-05 23:40:22\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/notes/5d84992184a6bb2cf0d14ca4",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"notes",
-						"5d84992184a6bb2cf0d14ca4"
+						"{{note1}}"
 					]
 				}
 			},
@@ -717,11 +789,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/notes",
+					"raw": "{{host}}/api/notes",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"notes"
@@ -731,7 +802,20 @@
 			"response": []
 		},
 		{
-			"name": "Post a calendar",
+			"name": "Post new note",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "23973475-f956-46fa-9f59-f064f96902e2",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"note1\", jsonData.note._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -744,7 +828,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"viewType\": \"Landscape 1\"\n}",
+					"raw": "{\n\t\"textContent\": \"Gardening\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -752,11 +836,127 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/calendars/",
+					"raw": "{{host}}/api/notes",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
+					"path": [
+						"api",
+						"notes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put a note",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"textContent\": \"How was my day\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/notes/{{note1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"notes",
+						"{{note1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch a note",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"topic\": \"my dog\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/notes/{{note1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"notes",
+						"{{note1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post a calendar",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "78fd7d79-1ed4-45a4-ab1d-19e15774e66f",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"calendar1\", jsonData.calendar._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"targetDate\": \"2019-01-22\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/calendars/",
+					"host": [
+						"{{host}}"
+					],
 					"path": [
 						"api",
 						"calendars",
@@ -791,11 +991,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/calendars/",
+					"raw": "{{host}}/api/calendars/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"calendars",
@@ -830,123 +1029,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/calendars/5d84dfbbc7ad753cf0e399c8",
+					"raw": "{{host}}/api/calendars/{{calendar1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"calendars",
-						"5d84dfbbc7ad753cf0e399c8"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete  all calendars",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"viewType\": \"Landscape 2\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/calendars/",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"calendars",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Patch  a calendar",
-			"request": {
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"currentMonth\": \"September\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/calendars/5d84d3deee5fab2c788dd346",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"calendars",
-						"5d84d3deee5fab2c788dd346"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Put  a calendar",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"currentMonth\": \"October\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/calendars/5d84d3deee5fab2c788dd346",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"calendars",
-						"5d84d3deee5fab2c788dd346"
+						"{{calendar1}}"
 					]
 				}
 			},
@@ -974,22 +1064,69 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/calendars/5d84d3deee5fab2c788dd346",
+					"raw": "{{host}}/api/calendars/{{calendar1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"calendars",
-						"5d84d3deee5fab2c788dd346"
+						"{{calendar1}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Post an event",
+			"name": "Delete  all calendars",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"viewType\": \"Landscape 2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/calendars/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"calendars",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post new calendar",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fa8d39bb-864f-428d-8ace-92126c834e07",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"calendar1\", jsonData.calendar._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1002,7 +1139,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\": \"Climate Conference\",\n    \"description\": \"Geretha is invited\"\n}",
+					"raw": "{\n\t\"targetDate\": \"2019-01-22\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1010,14 +1147,132 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/events",
+					"raw": "{{host}}/api/calendars/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
-						"events"
+						"calendars",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch  a calendar",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"viewType\": \"landscape\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/calendars/{{calendar1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"calendars",
+						"{{calendar1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put  a calendar",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"targetDate\": \"2020-12-12\",\n\t\"viewType\": \"portrait\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/calendars/{{calendar1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"calendars",
+						"{{calendar1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post an event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ee3d75f0-42d2-4ddf-b350-9b7a94cef1cd",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"evt1\", jsonData.event._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Opening Ceremony\",\n\t\"startDate\" : \"2019-12-12\",\n\t\"endDate\": \"2020-01-10\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/events/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"events",
+						""
 					]
 				}
 			},
@@ -1040,7 +1295,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\": \"Climate Conference\",\n    \"description\": \"Geretha is invited\"\n}",
+					"raw": "{\n\t\"importanceLevel\": 3\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1048,11 +1303,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/events",
+					"raw": "{{host}}/api/events",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"events"
@@ -1086,51 +1340,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/events/5d84b88bbfc45f04b4efd831",
+					"raw": "{{host}}/api/events/{{evt1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"events",
-						"5d84b88bbfc45f04b4efd831"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete one event",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"title\": \"Climate Conference\",\n    \"description\": \"Geretha is invited\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/events/5d84b88bbfc45f04b4efd831",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"events",
-						"5d84b88bbfc45f04b4efd831"
+						"{{evt1}}"
 					]
 				}
 			},
@@ -1158,15 +1375,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/events/5d84b898bfc45f04b4efd832",
+					"raw": "{{host}}/api/events/{{evt1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"events",
-						"5d84b898bfc45f04b4efd832"
+						"{{evt1}}"
 					]
 				}
 			},
@@ -1186,7 +1402,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\": \"Camping on  the mountain\",\n\t\"startDate\": \"2020-07-11 14:30\"\n    \n}",
+					"raw": "{\n\t\"title\": \"Camping on  the mountain\",\n\t\"startDate\": \"2020-01-01 14:30\",\n\t\"endDate\": \"2020-01-20 14:30\"\n    \n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1194,57 +1410,34 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/events/5d84b898bfc45f04b4efd832",
+					"raw": "{{host}}/api/events/{{evt1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"events",
-						"5d84b898bfc45f04b4efd832"
+						"{{evt1}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Delete all events",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
+			"name": "Post a reminder to an event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ef555d7-a824-4fb9-8bef-f743b94c126e",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"remdr1\", jsonData.reminder._id);"
+						],
+						"type": "text/javascript"
 					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"title\": \"Camping on  the mountain\",\n\t\"startDate\": \"2020-07-11 14:30\"\n    \n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/events",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"events"
-					]
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Post a queue",
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1257,7 +1450,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"elements\": \"Activity 2\"\n}",
+					"raw": "{\n\t\"topic\": \"Transportation 2\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1265,85 +1458,15 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/queues",
+					"raw": "{{host}}/api/events/{{evt1}}/reminders/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
-						"queues"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete a queue",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"elements\": \"Activity 2\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/queues/5d84d6e7ee5fab2c788dd349",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"queues",
-						"5d84d6e7ee5fab2c788dd349"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete all queues",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"elements\": \"Activity 2\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/queues/",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"queues",
+						"events",
+						"{{evt1}}",
+						"reminders",
 						""
 					]
 				}
@@ -1351,7 +1474,210 @@
 			"response": []
 		},
 		{
-			"name": "Patch a queue",
+			"name": "Get a reminder of an event",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"topic\": \"Transportation\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/events/{{evt1}}/reminders/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"{{evt1}}",
+						"reminders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get reminders of an event",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"topic\": \"Transportation\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/events/{{evt1}}/reminders",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"{{evt1}}",
+						"reminders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a reminder of an event",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"targetMoment\": \"2019-10-10 14:25\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/events/{{evt1}}/reminders/{{remdr1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"{{evt1}}",
+						"reminders",
+						"{{remdr1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete all reminders of an event",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"targetMoment\": \"2019-10-10 14:25\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/events/{{evt1}}/reminders/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"{{evt1}}",
+						"reminders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post a reminder to an event Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7a0492a2-0b21-4a99-9b15-39b844cbda4c",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"remdr1\", jsonData.reminder._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"topic\": \"Transportation\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/events/{{evt1}}/reminders/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"events",
+						"{{evt1}}",
+						"reminders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch a reminder of an event",
 			"request": {
 				"method": "PATCH",
 				"header": [
@@ -1364,7 +1690,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"elements\": \"Activity 3\"\n}",
+					"raw": "{\n\t\"topic\": \"Transportation to hotel\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1372,22 +1698,23 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/queues/5d84d726ee5fab2c788dd34b",
+					"raw": "{{host}}/api/events/{{evt1}}/reminders/{{remdr1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
-						"queues",
-						"5d84d726ee5fab2c788dd34b"
+						"events",
+						"{{evt1}}",
+						"reminders",
+						"{{remdr1}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Put a queue",
+			"name": "Put a reminder of an event",
 			"request": {
 				"method": "PUT",
 				"header": [
@@ -1400,7 +1727,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"elements\": \"Activity 4\"\n}",
+					"raw": "{\n\t\"targetMoment\": \"2019-10-10 14:25\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1408,15 +1735,63 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/queues/5d84d726ee5fab2c788dd34b",
+					"raw": "{{host}}/api/events/{{evt1}}/reminders/{{remdr1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
-						"queues",
-						"5d84d726ee5fab2c788dd34b"
+						"events",
+						"{{evt1}}",
+						"reminders",
+						"{{remdr1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post a queue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "399157cc-7dbf-4550-be4c-31925791cbc3",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"que1\", jsonData.queue._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"elements\": \"Activity 9\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/queues",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"queues"
 					]
 				}
 			},
@@ -1447,15 +1822,102 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/queues/",
+					"raw": "{{host}}/api/queues/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"queues",
 						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all queues sorted desc",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"elements\": \"Activity 4\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/queues/?elements=desc",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"queues",
+						""
+					],
+					"query": [
+						{
+							"key": "elements",
+							"value": "desc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all queues sorted asc",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"elements\": \"Activity 4\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/queues/?elements=asc",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"queues",
+						""
+					],
+					"query": [
+						{
+							"key": "elements",
+							"value": "asc"
+						}
 					]
 				}
 			},
@@ -1486,15 +1948,249 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/queues/5d84d71fee5fab2c788dd34a",
+					"raw": "{{host}}/api/queues/{{que1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"queues",
-						"5d84d71fee5fab2c788dd34a"
+						"{{que1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a queue",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"elements\": \"Activity 2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/queues/{{que1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"queues",
+						"{{que1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete all queues",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"elements\": \"Activity 2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/queues/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"queues",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post a new queue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "920d1564-4110-422a-96c7-4a979f9f4d81",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"que1\", jsonData.queue._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"elements\": \"Activity 3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/queues",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"queues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch a queue",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"elements\": \"Activity 3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/queues/{{que1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"queues",
+						"{{que1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put a queue",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"elements\": \"Activity 4\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/queues/{{que1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"queues",
+						"{{que1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post a reminder",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1eccc60a-013e-4d5d-ab6f-e4fb1d66a716",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"remdr3\", jsonData.reminder._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"topic\": \"Sleeping Earlier\",\n\t\"targetMoment\": \"2019-12-29 21:05\",\n\t\"remindBefore\": \"Dinner\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/reminders/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"reminders",
+						""
 					]
 				}
 			},
@@ -1525,35 +2221,36 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/reminders/",
+					"raw": "{{host}}/api/reminders",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
-						"reminders",
-						""
+						"reminders"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Post a reminder",
+			"name": "Get single reminder",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [
 					{
 						"key": "Content-Type",
 						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
+						"type": "text",
+						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"targetMoment\": \"2019-12-12 15:15\"\n}",
+					"raw": "{\n\t\"elements\": \"Activity 4\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1561,15 +2258,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/reminders/",
+					"raw": "{{host}}/api/reminders/{{remdr3}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"reminders",
-						""
+						"{{remdr3}}"
 					]
 				}
 			},
@@ -1597,126 +2293,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/reminders/5d8493b184ea723500b21d2d",
+					"raw": "{{host}}/api/reminders/{{remdr3}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"reminders",
-						"5d8493b184ea723500b21d2d"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete sigle reminder",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"targetMoment\": \"2019-12-12 15:15\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/reminders/5d849f48e0fa0c3858905c78",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"reminders",
-						"5d849f48e0fa0c3858905c78"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Patch a reminder",
-			"request": {
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"remindBefore\": \"2019-12-12 15:15\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/reminders/5d849f48e0fa0c3858905c78",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"reminders",
-						"5d849f48e0fa0c3858905c78"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Put a reminder",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"topic\": \"Movie making\",\n\t\"remindBefore\": \"The millenium\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/reminders/5d849f48e0fa0c3858905c78",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"reminders",
-						"5d849f48e0fa0c3858905c78"
+						"{{remdr3}}"
 					]
 				}
 			},
@@ -1744,11 +2328,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/reminders/",
+					"raw": "{{host}}/api/reminders/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"reminders",
@@ -1759,7 +2342,20 @@
 			"response": []
 		},
 		{
-			"name": "Post a user",
+			"name": "Post new reminder",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2d8cd4c9-3a7a-465f-8ba1-5b9617c3579c",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"remdr3\", jsonData.reminder._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1772,7 +2368,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"eyuell\",\n\t\"password\": \"student\"\n}",
+					"raw": "{\n\t\"topic\": \"Sleeping Earlier\",\n\t\"targetMoment\": \"2019-12-29 21:05\",\n\t\"remindBefore\": \"Dinner\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1780,14 +2376,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/users/",
+					"raw": "{{host}}/api/reminders/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
-						"users",
+						"reminders",
 						""
 					]
 				}
@@ -1795,12 +2390,9 @@
 			"response": []
 		},
 		{
-			"name": "Get all users",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
+			"name": "Patch a reminder",
 			"request": {
-				"method": "GET",
+				"method": "PATCH",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -1811,7 +2403,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"james\",\n\t\"password\": \"wakanda\"\n}",
+					"raw": "{\n\t\"topic\": \"Making the bead\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1819,11 +2411,93 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/users/",
+					"raw": "{{host}}/api/reminders/{{remdr3}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
+					"path": [
+						"api",
+						"reminders",
+						"{{remdr3}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put a reminder",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"topic\": \"Movie making\",\n\t\"remindBefore\": \"The millenium\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/reminders/{{remdr3}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"reminders",
+						"{{remdr3}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post a user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cefd7089-a7dc-433b-8025-3273beaeeaf1",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"usr1\", jsonData.user._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"eyuell\",\n\t\"password\": \"student\",\n\t\"email\": \"someone@world.com\",\n\t\"birthDate\": \"not known\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/users/",
+					"host": [
+						"{{host}}"
+					],
 					"path": [
 						"api",
 						"users",
@@ -1858,87 +2532,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/users/5d84dd173b464d3b80cb17bf",
+					"raw": "{{host}}/api/users/{{usr1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"users",
-						"5d84dd173b464d3b80cb17bf"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Patch a user",
-			"request": {
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\n\t\"password\": \"wakanda\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/users/5d84dd173b464d3b80cb17bf",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"users",
-						"5d84dd173b464d3b80cb17bf"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Put a user",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\n\t\"userType\": \"registered\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3001/api/users/5d84dd173b464d3b80cb17bf",
-					"host": [
-						"localhost"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"users",
-						"5d84dd173b464d3b80cb17bf"
+						"{{usr1}}"
 					]
 				}
 			},
@@ -1966,24 +2567,74 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/users/5d84dd173b464d3b80cb17bf",
+					"raw": "{{host}}/api/users/{{usr1}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"users",
-						"5d84dd173b464d3b80cb17bf"
+						"{{usr1}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Delete all users",
+			"name": "Post new user ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cefd7089-a7dc-433b-8025-3273beaeeaf1",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"usr1\", jsonData.user._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
-				"method": "DELETE",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"eyuell\",\n\t\"password\": \"student\",\n\t\"email\": \"someone@world.com\",\n\t\"birthDate\": \"not known\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/users/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all users",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -1994,7 +2645,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\n\t\"userType\": \"registered\"\n}",
+					"raw": "{\n\t\"username\": \"james\",\n\t\"password\": \"wakanda\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -2002,15 +2653,84 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/users/",
+					"raw": "{{host}}/api/users/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3001",
 					"path": [
 						"api",
 						"users",
 						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch a user",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n\t\"password\": \"wakanda\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/users/{{usr1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{usr1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put a user",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"eyuell\",\n\t\"password\": \"teacher\",\n\t\"email\": \"someone@world.com\",\n\t\"birthDate\": \"not known\",\n\t\"userType\": \"registered\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/users/{{usr1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{usr1}}"
 					]
 				}
 			},

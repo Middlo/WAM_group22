@@ -20,18 +20,27 @@ var eventsController = require('./controllers/events');
 var queuesController = require('./controllers/queues');
 
 // Variables
-var mongoURI = process.env.GROUP_DB || 'mongodb://localhost:27017/animalDevelopmentDB';
-    //GROUP_DB is in an env file that has the entire database address with database name animalProductionDB, own username and password
+var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animalsDevelopmentDB';
+    //MONGODB_URI is in an env file that has the entire database address with database name animalProductionDB, own username and password
 var port = process.env.PORT || 3001;
+
+var uriTxt = mongoURI.charAt(10);
+var providedURI;
+
+if(uriTxt === 'l')  //part of 'mongodb://localhost'
+    providedURI = 'with local MongoDB URI';
+
+if(uriTxt === 'v')  //part of 'mongodb+srv'
+    providedURI = 'with remote DB URI';
 
 // Connect to MongoDB 
 mongoose.connect(mongoURI, { useNewUrlParser: true , useUnifiedTopology: true } ,function(err) {
     if (err) {
-        console.error(`Failed to connect to MongoDB with provided database URI`);
+        console.error(`Failed to connect ` + providedURI);
         console.error(err.stack);
         process.exit(1);
     }
-    console.log(`Connected to MongoDB with provided URI`);
+    console.log(`Connected ` + providedURI);
 });
 
 // Create Express app

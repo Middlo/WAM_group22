@@ -6,12 +6,13 @@ var Reminder = require('../models/Reminder');
 
 // Create a new event
 router.post('/', function(req, res, next) {
-    if(req.body.title || req.body.description || req.body.startDate ||  req.body.endDate){
+    if(req.body.title || req.body.description || req.body.startDate ||  req.body.endDate
+        || req.body.importanceLevel ){
             
         var event = new Event(req.body);
         event.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json(event);//json({"message" : 'Event Successfully created'});
+            res.status(201).json({"event" : event});//json({"message" : 'Event Successfully created'});
         });   
     } else {
         res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
@@ -26,9 +27,9 @@ router.get('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (events.length === 0)
-            res.status(200).json({"message" : 'There are no Events registered'});
+            res.status(200).json({"events": [], "message" : 'There are no Events registered'});
         else {
-            res.status(200).json({'events': events});
+            res.status(200).json({"events": events});
         }
     });
 });
@@ -102,10 +103,12 @@ router.put('/:eventId', function(req, res, next) {
             return res.status(404).json({"message": "Event not found"});
         }
 
-        if(req.body.title || req.body.description || req.body.startDate ||  req.body.endDate){
+        if(req.body.title || req.body.description || req.body.startDate ||  req.body.endDate
+            || req.body.importanceLevel ){
 
             event.title = req.body.title;
             event.description = req.body.description;
+            event.importanceLevel = req.body.importanceLevel;
             event.startDate = req.body.startDate;
             event.endDate = req.body.endDate;
             //event.hasReminder = req.body.hasReminder;
@@ -130,10 +133,11 @@ router.patch('/:eventId', function(req, res, next) {
         }
 
         if(req.body.title || req.body.description || req.body.startDate || 
-            req.body.endDate) {
+            req.body.endDate || req.body.importanceLevel ) {
 
             event.title = (req.body.title || event.title);
             event.description = (req.body.description || event.description);
+            event.importanceLevel = (req.body.importanceLevel || event.importanceLevel);
             event.startDate = (req.body.startDate || event.startDate);
             event.endDate = (req.body.endDate || event.endDate);
             //event.hasReminder = (req.body.hasReminder || event.hasReminder);
@@ -156,7 +160,7 @@ router.delete('/:eventId', function(req, res, next) {
         if (event === null) {
             return res.status(404).json({'message': 'Event is not found'});
         }
-        res.status(200).json({"message" : 'Event successfully removed'});
+        res.status(200).json({"message" : 'Success'});
     });
 });
 
@@ -178,7 +182,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.status(200).json({"message" :'All Events are successfully removed'});
+            res.status(200).json({"message" :'Success'});
         }
     });
 });
@@ -193,13 +197,14 @@ router.post('/:eventId/reminders', function(req, res, next) {
         if (event === null) {
             return res.status(404).json({'message': 'The Event is not registered'});
         }
-        if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+        if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.importanceLevel){
             var newReminder = new Reminder({
                 //_id: new mongoose.Types.ObjectId(),
                 topic: req.body.topic,
                 targerMoment: req.body.targerMoment,
                 remindBefore: req.body.remindBefore,
-                reminderFor: id
+                reminderFor: id,
+                importanceLevel: req.body.importanceLevel
             });
             
             newReminder.save(function(err,addedReminder){
@@ -274,12 +279,12 @@ router.patch('/:eventId/reminders/:reminderId', function(req, res, next) {
                 return res.status(404).json({'message': 'Reminder is not registered for the Event'});
             }
 
-            if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+            if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.importanceLevel){
 
-                foundReminder.topic = req.body.topic;
-                foundReminder.targetMoment = req.body.targetMoment;
-                foundReminder.remindBefore = req.body.remindBefore;
-                //foundReminder.reminder = req.body.reminder
+                foundReminder.topic = (req.body.topic || foundReminder.topic);
+                foundReminder.targetMoment = (req.body.targetMoment || foundReminder.targetMoment);
+                foundReminder.remindBefore = (req.body.remindBefore || foundReminder.remindBefore);
+                foundReminder.importanceLevel = (req.body.importanceLevel || foundReminder.importanceLevel);
 
                 foundReminder.save();
                 foundEvent.save();
@@ -310,12 +315,12 @@ router.put('/:eventId/reminders/:reminderId', function(req, res, next) {
                 return res.status(404).json({'message': 'Reminder is not registered for the Event'});
             }
 
-            if(req.body.topic || req.body.targetMoment || req.body.remindBefore){
+            if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.importanceLevel){
 
                 foundReminder.topic = req.body.topic;
                 foundReminder.targetMoment = req.body.targetMoment;
                 foundReminder.remindBefore = req.body.remindBefore;
-                //foundReminder.reminder = req.body.reminder
+                foundReminder.importanceLevel = req.body.importanceLevel
                 
                 foundReminder.save();
                 foundEvent.save();
@@ -368,7 +373,7 @@ router.delete('/:eventId/reminders', function(req, res, next) {
             Reminder.deleteMany({reminderFor : evtId}, function(err2, removedReminder) {
                 if (err2) { return next(err2); }
                 if(removedReminder)
-                    res.status(200).json('All Reminders are removed');
+                    res.status(200).json({"message" : 'All Reminders are removed'});
                 else
                     return res.status(204).json({'message': 'There are no Reminders to remove'});
                 

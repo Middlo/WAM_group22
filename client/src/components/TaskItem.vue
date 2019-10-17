@@ -1,118 +1,102 @@
 <template>
   <b-list-group-item class="mainCard">
-    Task title: {{ task.taskTitle }}
-    <b-button class="detailButton" variant="primary" @click="showTaskDetail(task._id)">Details</b-button>
     <b-button class="close" @click="$emit('delete-task', task._id)">&times;</b-button>
+    <p> Task: {{ task.taskTitle }} </p>
+    <b-button class="detailButton" variant="primary" @click="showTaskDetail(task._id)">Details</b-button>
     <div class="collapsable">
-      <b-card id="collapse1" class="firstCard" v-show="allowPart1 === task._id">
+      <b-container fluid id="collapse1" class="firstCard" v-show="allowPart1 === task._id">
+
+        <p class="firstDetail">Task Code : {{ task._id }}</p>
+        <b-row>
+          <b-col sm="2.2">
+            <label for="input-0">Title:</label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-input id="input-0" size="sm" v-model="editform.taskTitle" :placeholder="task.taskTitle"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col sm="2.3">
+            <label for="input-1">Description:</label>
+          </b-col>
+          <b-col sm="6">
+            <b-form-input id="input-1" size="sm" v-model="editform.taskDescription" :placeholder="task.taskDescription"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col sm="2.3">
+            <label for="input-2">Importance:</label>
+          </b-col>
+          <b-col sm="6">
+            <b-form-input id="input-2" size="sm" v-model="editform.importanceLevel" :placeholder="task.importanceLevel"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col sm="2.3">
+            <label for="input-3">Deadline:</label>
+          </b-col>
+          <b-col sm="6">
+            <b-form-input id="input-3" size="sm" required v-model="editform.deadline" :placeholder="task.deadline.substring(0,10)"></b-form-input>
+          </b-col>
+        </b-row>
+
         <div>
-          <p class="firstDetail">Task Code : {{ task._id }}</p>
-          <b-form id=form1 class="form">
-            <b-form-group
-              id="input-group-0"
-              label="Task Title:"
-              label-for="input-0"
-            >
-              <b-form-input
-                id="input-0"
-                v-model="editform.taskTitle"
-                :placeholder="task.taskTitle"
-              ></b-form-input>
-            </b-form-group>
-
-            <b-form-group
-              id="input-group-1"
-              label="Task Description:"
-              label-for="input-1"
-            >
-              <b-form-input
-                id="input-1"
-                v-model="editform.taskDescription"
-                :placeholder="task.taskDescription"
-              ></b-form-input>
-            </b-form-group>
-
-            <b-form-group
-              id="input-group-2"
-              label="Task Importance Level:"
-              label-for="input-2"
-            >
-              <b-form-input
-                id="input-2"
-                v-model="editform.importanceLevel"
-                :placeholder="task.importanceLevel"
-              ></b-form-input>
-            </b-form-group>
-
-            <b-form-group
-              id="input-group-3"
-              label="Task Deadline:"
-              label-for="input-3"
-            >
-              <b-form-input
-                id="input-3"
-                v-model="editform.deadline"
-                required
-                :placeholder="task.deadline.substring(0,10)"
-              ></b-form-input>
-            </b-form-group>
-          </b-form>
-          <div>
-            <b-button class="putButton" @click="putData (task._id, editform), $emit('task-content-changed', task._id)">Update Task Entirely</b-button>  |
-            <b-button class="patchButton" @click="patchData (task._id, editform), $emit('task-content-changed', task._id)">Update Task Partially</b-button>
-          </div>
-          <b-button class="reminderDetailBtn" @click="showRemDetail(task._id)">Reminder Details</b-button>
-          <b-card id="collapse1-inner" class="secondCard" v-show="allowPart2 === task._id">
-            <b-button class="createButton" @click="createTaskReminder(task, task._id), $emit('task-content-changed')">Create Reminder</b-button>
-            <div >
-              <b-list-group-item class="reminderDetail" v-for="reminder in reminders" v-bind:key="reminder._id">
-                <b-button class="close" @click="deleteTaskReminder(task._id, reminder._id), $emit('task-content-changed')">&times;</b-button>
-                <p class="secondDetail">Reminder ID : {{ reminder._id }}</p>
-
-                <b-form id=form2 class="form">
-                  <b-form-group
-                    id="input-group-a"
-                    label="Reminder Topic:"
-                    label-for="input-a"
-                  >
-                    <b-form-input
-                      id="input-a"
-                      v-model="editReminderForm.topic"
-                      :placeholder="reminder.topic"
-                    ></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group
-                    id="input-group-b"
-                    label="Reminder targer Moment:"
-                    label-for="input-b"
-                  >
-                    <b-form-input
-                      id="input-b"
-                      v-model="editReminderForm.targetMoment"
-                      :placeholder="reminder.targetMoment"
-                    ></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group
-                    id="input-group-c"
-                    label="Remind Before Minutes:"
-                    label-for="input-c"
-                  >
-                    <b-form-input
-                      id="input-c"
-                      v-model="editReminderForm.remindBefore"
-                      :placeholder=reminder.remindBefore
-                    ></b-form-input>
-                  </b-form-group>
-                </b-form>
-                <b-button class="putButton" @click="putRemData (task._id, reminder._id, editReminderForm), $emit('task-content-changed', task._id)">Update Reminder Entirely</b-button>  |
-                <b-button class="patchButton" @click="patchRemData (task._id, reminder._id, editReminderForm), $emit('task-content-changed', task._id)">Update Reminder Partially</b-button>
-              </b-list-group-item>
-            </div>
-          </b-card>
+          <b-button id="putButton" @click="putData (task._id, editform), $emit('task-content-changed', task._id)">Update Task Entirely</b-button>
+          <b-button id="patchButton" @click="patchData (task._id, editform), $emit('task-content-changed', task._id)">Update Task Partially</b-button>
         </div>
-      </b-card>
+        <b-button class="reminderDetailBtn" @click="showRemDetail(task._id)">Reminder Details</b-button>
+        <b-container fluid id="collapse1-inner" class="secondCard" v-show="allowPart2 === task._id">
+          <b-button class="createButton" @click="createTaskReminder(task, task._id), $emit('task-content-changed')">Create Reminder</b-button>
+
+          <b-list-group-item id="reminderDetail" v-for="reminder in reminders" v-bind:key="reminder._id">
+            <b-button class="close" @click="deleteTaskReminder(task._id, reminder._id), $emit('task-content-changed')">&times;</b-button>
+            <p class="secondDetail">Reminder ID : {{ reminder._id }}</p>
+
+            <b-row>
+              <b-col sm="2.2">
+                <label for="input-a">Topic:</label>
+              </b-col>
+              <b-col sm="6">
+                <b-form-input id="input-a" size="sm" v-model="editReminderForm.topic" :placeholder="reminder.topic"></b-form-input>
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col sm="2.2">
+                <label description="Reminder Target Moment" for="input-b">Target:</label>
+              </b-col>
+              <b-col sm="6">
+                <b-form-input id="input-b" size="sm" v-model="editReminderForm.targetMoment" :placeholder="reminder.targetMoment.substring(0,10)" ></b-form-input>
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col sm="2.2">
+                <label description="Remind Before Minutes" for="input-c">Minutes:</label>
+              </b-col>
+              <b-col sm="6">
+                <b-form-input id="input-c" size="sm" v-model="editReminderForm.remindBefore" :placeholder="reminder.remindBefore" ></b-form-input>
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col sm="2.2">
+                <label for="input-d">Importance: </label>
+              </b-col>
+              <b-col sm="6">
+                <b-form-input id="input-d" size="sm" v-model="editReminderForm.importanceLevel" :placeholder="reminder.importanceLevel" ></b-form-input>
+              </b-col>
+            </b-row>
+
+            <b-button id="putButton" @click="putRemData (task._id, reminder._id, editReminderForm), $emit('task-content-changed', task._id)">Update Reminder Entirely</b-button>
+            <b-button id="patchButton" @click="patchRemData (task._id, reminder._id, editReminderForm), $emit('task-content-changed', task._id)">Update Reminder Partially</b-button>
+          </b-list-group-item>
+
+        </b-container>
+      </b-container>
     </div>
   </b-list-group-item>
 </template>
@@ -142,7 +126,8 @@ export default {
       editReminderForm: {
         topic: '',
         targetMoment: '',
-        remindBefore: ''
+        remindBefore: '',
+        importanceLevel: ''
       }
     }
   },
@@ -183,8 +168,11 @@ export default {
     },
     createTaskReminder(task, evtID) {
       this.currentTaskID = evtID
+      var curDate = localStorage.getItem('selectedDate')
       var newReminder = {
         topic: 'To be Assigned',
+        targetMoment: curDate,
+        importanceLevel: task.importanceLevel,
         reminderFor: evtID
       }
 
@@ -337,13 +325,15 @@ img {
   margin-top: 20px;
   margin-bottom: 10px;
 }
-.reminderDetail{
+#reminderDetail{
   background-color: rgba(198, 218, 189, 0.979);
 }
-.putButton{
+#putButton{
   background-color: rgba(87, 61, 129, 0.979);
+  margin: 2px;
 }
-.patchButton{
+#patchButton{
   background-color: rgba(81, 98, 153, 0.979);
+  margin: 2px;
 }
 </style>

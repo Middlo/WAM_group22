@@ -1,10 +1,12 @@
 <template>
   <div class="events">
-    <h1>List of {{ events.length }} events</h1>
+    <h1 v-if="events.length === 0"> There are no events registered </h1>
+    <h1 v-else-if="events.length === 1"> There is one event </h1>
+    <h1 v-else > There are {{ events.length }} events </h1>
     <b-button type="button" class="createButton" @click="createEvent()">Create Event</b-button>
     <b-button class="deleteButton" v-show="events.length" @click="deleteAllEvents()">Delete All Events</b-button>
     <b-list-group>
-      <event-item v-for="event in events" :key="event._id" :event="event" @delete-event="deleteEvent" @event-content-changed="getEvents"></event-item>
+      <event-item v-for="event in events" :key="event._id" :event="event" @delete-event="deleteEvent" @event-content-changed="contentChanged" @evaluate-collapse="evaluateCollapse"></event-item>
     </b-list-group>
   </div>
 </template>
@@ -50,14 +52,19 @@ export default {
         })
     },
     createEvent() {
-      var tempYear = 2019
+      /* var tempYear = 2019
       var tempMonth = (this.getRandomInt(12) || 1)
       var tempDate = this.getRandomDay(tempMonth)
       var tempDay1 = tempYear + '-' + tempMonth + '-' + tempDate
+      */
+      var curDate = localStorage.getItem('selectedDate')
+
+      if (curDate === '') { curDate = (new Date()).substring(0, 10) }
+
       var randomEvent = {
         title: 'To be assigned',
-        startDate: new Date(tempDay1),
-        endDate: new Date(tempDay1) // for example
+        startDate: curDate,
+        endDate: curDate // for example
       }
       Api.post('/events', randomEvent)
         .then(response => {
@@ -67,6 +74,7 @@ export default {
           console.log(error)
         })
         .then(() => {
+          this.getEvents()
           // This code is always executed (after success or error).
         })
     },
@@ -94,6 +102,27 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    contentChanged() {
+      this.events = []
+      this.getEvents()
+    },
+    evaluateCollapse(eventId) {
+      /*
+      var storedEvent = localStorage.getItem('allowedEvent')
+      var displaying = localStorage.getItem('displaying')
+      console.log('clicked : ' + eventId + ', stored: ' + storedEvent)
+
+      if(displaying){
+        if(!(eventId === storedEvent)){
+        localStorage.setItem('allowedEvent', eventId)
+        //console.log('from main view')
+        this.contentChanged()
+      } else {
+        localStorage.setItem('allowedEvent', '')
+      }
+      } */
+
     }
   },
   components: {

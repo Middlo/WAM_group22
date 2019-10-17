@@ -1,10 +1,13 @@
 <template>
   <div class="calendars">
-    <h1>List of {{ calendars.length }} calendars</h1>
+    <h1 v-if="networkMsg"> {{ networkMsg }} </h1>
+    <h1 v-else-if="calendars.length === 0"> There are no calendars registered </h1>
+    <h1 v-else-if="calendars.length === 1"> There is one calendar </h1>
+    <h1 v-else > There are {{ calendars.length }} calendars </h1>
     <b-button type="button" class="createButton" @click="createCalendar()">Create Calendar</b-button>
     <b-button class="deleteButton" v-show="calendars.length" @click="deleteAllCalendars()">Delete All Calendars</b-button>
     <b-list-group>
-      <calendar-item v-for="calendar in calendars" :key="calendar._id" :calendar="calendar" @delete-calendar="deleteCalendar" @calendar-content-changed="getCalendars"></calendar-item>
+      <calendar-item v-for="calendar in calendars" :key="calendar._id" :calendar="calendar" @delete-calendar="deleteCalendar" @calendar-content-changed="contentChanged"></calendar-item>
     </b-list-group>
   </div>
 </template>
@@ -12,12 +15,14 @@
 <script>
 import { Api } from '@/Api'
 import CalendarItem from '@/components/CalendarItem'
+var networkMsg = ''
 
 export default {
   name: 'Calendars',
   data() {
     return {
-      calendars: []
+      calendars: [],
+      networkMsg
     }
   },
   mounted() {
@@ -27,16 +32,18 @@ export default {
     getCalendars() {
       Api.get('/calendars')
         .then(reponse => {
-          this.calendars = reponse.data.Calendars
+          this.calendars = reponse.data.calendars
         })
         .catch(error => {
           this.calendars = []
           console.log(error)
+          this.networkMsg = 'Check Connection to Database'
         })
         .then(() => {
           // This code is always executed (after success or error).
         })
     },
+
     deleteCalendar(id) {
       Api.delete(`/calendars/${id}`)
         .then(response => {
@@ -50,11 +57,15 @@ export default {
         })
     },
     createCalendar() {
-      var tempMonth = this.getRandomMonth()
-      var text = '2019-' + tempMonth + '-' + this.getRandomDay(tempMonth)
+      var curDate = localStorage.getItem('selectedDate')
+
+      if (curDate === '') { curDate = (new Date()).substring(0, 10) }
+
+      // var tempMonth = this.getRandomMonth()
+      // var text = '2019-' + tempMonth + '-' + this.getRandomDay(tempMonth)
 
       var randomCalendar = {
-        targetDate: text
+        targetDate: curDate
       }
       Api.post('/calendars', randomCalendar)
         .then(response => {
@@ -62,6 +73,10 @@ export default {
         })
         .catch(error => {
           console.log(error)
+        })
+        .then(() => {
+          this.getCalendars()
+          // This code is always executed (after success or error).
         })
     },
     getRandomInt(max) {
@@ -92,6 +107,10 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    contentChanged() {
+      this.calendars = []
+      this.getCalendars()
     }
   },
   components: {

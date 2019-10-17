@@ -1,4 +1,4 @@
-image: node:10-alpine
+image: node:latest
 
 # Cache modules in between jobs per-branch
 cache:
@@ -40,10 +40,10 @@ deploy:
   script:
     - apk update && apk add git curl
     - gem install dpl
-    - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
+    - dpl --provider=heroku --app=online-calendar22 --api-key=$HEROKU_API_KEY
   environment:
     name: production
-    url: https://$HEROKU_APP_NAME.herokuapp.com/
+    url: https://online-calendar22.herokuapp.com/
   only:
     refs:
       - master

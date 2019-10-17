@@ -1,10 +1,12 @@
 <template>
   <div class="queues">
-    <h1>List of {{ queues.length }} queues</h1>
+    <h1 v-if="queues.length === 0"> There are no queues registered </h1>
+    <h1 v-else-if="queues.length === 1"> There is one queue </h1>
+    <h1 v-else > There are {{ queues.length }} queues </h1>
     <b-button type="button" class="createButton" @click="createQueue()">Create Queue</b-button>
     <b-button class="deleteButton" v-show="queues.length" @click="deleteAllQueues()">Delete All Queues</b-button>
     <b-list-group>
-      <queue-item v-for="queue in queues" :key="queue._id" :queue="queue" @delete-queue="deleteQueue" @queue-content-changed="getQueues"></queue-item>
+      <queue-item v-for="queue in queues" :key="queue._id" :queue="queue" @delete-queue="deleteQueue" @queue-content-changed="contentChanged"></queue-item>
     </b-list-group>
   </div>
 </template>
@@ -55,10 +57,14 @@ export default {
       }
       Api.post('/queues', randomQueue)
         .then(response => {
-          this.queues.push(response.data)
+          console.log(response.data)
         })
         .catch(error => {
           console.log(error)
+        })
+        .then(() => {
+          this.getQueues()
+          // This code is always executed (after success or error).
         })
     },
     deleteAllQueues() {
@@ -71,6 +77,10 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    contentChanged() {
+      this.queues = []
+      this.getQueues()
     }
   },
   components: {

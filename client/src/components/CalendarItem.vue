@@ -1,43 +1,36 @@
 <template>
   <b-list-group-item class="mainCard">
     <img alt="Calendar" src="../assets/calendar.jpg">
-    {{ calendar._id }} is on {{ calendar.targetDate.substring(0,10) }}
-    <b-button class="detailButton" variant="primary" @click="showCalDetail(calendar._id, calendar.targetDate.substring(0,10))">Details</b-button>
     <b-button class="close" @click="$emit('delete-calendar', calendar._id)">&times;</b-button>
+    <p class="main-header">On {{ calendar.targetDate.substring(0,10) }} </p>
+    <b-button class="detailButton" variant="primary" @click="showCalDetail(calendar._id, calendar.targetDate.substring(0,10))">Details</b-button>
     <div class="collapsable">
-      <b-card id="collapse1" class="firstCard" v-show="allowedItem === calendar._id">
-        <div>
-          <p class="card-text3">Calendar Code: {{ calendar._id }}</p>
-          <b-form id=form1 class="form">
-            <b-form-group
-              id="input-group-1"
-              label="Calendar Date:"
-              label-for="input-1"
-            >
-              <b-form-input
-                id="input-1"
-                v-model="editform.targetDate"
-                required
-                :placeholder="calendar.targetDate.substring(0,10)"
-                ></b-form-input>
-            </b-form-group>
+      <b-container fluid id="collapse1" class="firstCard" align-v="start" v-show="allowedItem === calendar._id">
 
-            <b-form-group
-              id="input-group-2"
-              label="View type:"
-              label-for="input-2"
-            >
-              <b-form-input
-                id="input-2"
-                v-model="editform.viewType"
-                :placeholder="calendar.viewType"
-              ></b-form-input>
-            </b-form-group>
-          </b-form>
-          <b-button class="putButton" @click="putData (calendar._id, editform), $emit('calendar-content-changed', calendar._id)">Update Entirely</b-button>  |
-          <b-button class="patchButton" @click="patchData (calendar._id, editform), $emit('calendar-content-changed', calendar._id)">Update Partially</b-button>
-        </div>
-      </b-card>
+        <p class="card-text3">Calendar ID: {{ calendar._id }} </p>
+
+        <b-row>
+          <b-col sm="2">
+            <label for="input-1">Date:</label>
+          </b-col>
+          <b-col sm="6">
+            <b-form-input id="input-1" size="sm" v-model="editform.targetDate" required :placeholder="calendar.targetDate.substring(0,10)"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col sm="2">
+            <label size="sm" for="input-2">Type:</label>
+          </b-col>
+          <b-col sm="6">
+            <b-form-input id="input-2" autocomplete="on" size="sm" v-model="editform.viewType" :placeholder="calendar.viewType"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-button id="putButton" @click="putData (calendar._id, editform), $emit('calendar-content-changed', calendar._id)">Update Entirely</b-button>
+        <b-button id="patchButton" @click="patchData (calendar._id, editform), $emit('calendar-content-changed', calendar._id)">Update Partially</b-button>
+
+      </b-container>
     </div>
   </b-list-group-item>
 </template>
@@ -144,13 +137,20 @@ img {
   height: 25px;
   background-color: rgb(221, 35, 35);
 }
-.firstCard{
+#collapse1{
   background-color: rgba(218, 189, 189, 0.979);
+  margin:auto;
 }
-.putButton{
+#putButton{
   background-color: rgba(87, 61, 129, 0.979);
+  margin: 2px;
+
 }
-.patchButton{
+#patchButton{
   background-color: rgba(81, 98, 153, 0.979);
+  margin: 2px;
+}
+.main-header {
+  text-emphasis: none;
 }
 </style>

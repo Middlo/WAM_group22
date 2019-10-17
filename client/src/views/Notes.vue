@@ -1,10 +1,12 @@
 <template>
   <div class="notes">
-    <h1>List of {{ notes.length }} notes</h1>
+    <h1 v-if="notes.length === 0"> There are no notes registered </h1>
+    <h1 v-else-if="notes.length === 1"> There is one note </h1>
+    <h1 v-else > There are {{ notes.length }} notes </h1>
     <b-button type="button" class="createButton" @click="createNote()">Create Note</b-button>
     <b-button class="deleteButton" v-show="notes.length" @click="deleteAllNotes()">Delete All Notes</b-button>
     <b-list-group>
-      <note-item v-for="note in notes" :key="note._id" :note="note" @delete-note="deleteNote" @note-content-changed="getNotes"></note-item>
+      <note-item v-for="note in notes" :key="note._id" :note="note" @delete-note="deleteNote" @note-content-changed="contentChanged"></note-item>
     </b-list-group>
   </div>
 </template>
@@ -61,6 +63,10 @@ export default {
         .catch(error => {
           console.log(error)
         })
+        .then(() => {
+          this.getNotes()
+          // This code is always executed (after success or error).
+        })
     },
     deleteAllNotes() {
       Api.delete(`/notes/`)
@@ -72,6 +78,10 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    contentChanged() {
+      this.notes = []
+      this.getNotes()
     }
   },
   components: {

@@ -1,6 +1,6 @@
 <template>
   <b-list-group-item class="mainCard">
-    Queue ID is {{ queue._id }}
+    <p> Queue: {{ queue._id }} </p>
     <b-button class="detailButton" variant="primary" @click="showDetail(queue._id)">Details</b-button>
     <b-button class="close" @click="$emit('delete-queue', queue._id)">&times;</b-button>
     <div class="collapsable">
@@ -22,8 +22,8 @@
             </b-form-group>
 
           </b-form>
-          <b-button class="putButton" @click="putData (queue._id, editform), $emit('queue-content-changed', queue._id)">Update Entirely</b-button>  |
-          <b-button class="patchButton" @click="patchData (queue._id, editform), $emit('queue-content-changed', queue._id)">Update Partially</b-button>
+          <b-button id="putButton" @click="putData (queue._id, editform), $emit('queue-content-changed', queue._id)">Update Entirely</b-button>
+          <b-button id="patchButton" @click="patchData (queue._id, editform), $emit('queue-content-changed', queue._id)">Update Partially</b-button>
         </div>
       </b-card>
     </div>
@@ -131,13 +131,15 @@ img {
   height: 25px;
   background-color: rgb(221, 35, 35);
 }
-.firstCard{
+#collapse1{
   background-color: rgba(218, 189, 189, 0.979);
 }
-.putButton{
+#putButton{
   background-color: rgba(87, 61, 129, 0.979);
+  margin: 2px;
 }
-.patchButton{
+#patchButton{
   background-color: rgba(81, 98, 153, 0.979);
+  margin: 2px;
 }
 </style>

@@ -7,10 +7,10 @@ var Customer = require('../models/Customer');
 // Create a new reminder
 router.post('/', function(req, res, next) {
 
-    if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminderFor){
+    if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminderFor || req.body.importanceLevel){
 
         var reminder = new Reminder(req.body);
-        //
+        
         reminder._id = new mongoose.Types.ObjectId();
         
         reminder.save(function(err) {
@@ -29,9 +29,9 @@ router.get('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (reminders.length === 0)
-        res.status(200).json({"message" : 'There are no Reminders registered'});
+        res.status(200).json({"reminders": [], "message" : 'There are no Reminders registered'});
         else {
-            res.status(200).json({'reminders': reminders});
+            res.status(200).json({"reminders": reminders});
         }
     });
 });
@@ -69,12 +69,13 @@ router.put('/:reminderId', function(req, res, next) {
             return res.status(404).json({"message": "Reminder not found"});
         }
 
-        if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminderFor){
+        if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminderFor || req.body.importanceLevel){
 
             reminder.topic = req.body.topic;
             reminder.targetMoment = req.body.targetMoment;
             reminder.remindBefore = req.body.remindBefore;
             reminder.reminderFor = req.body.reminderFor;
+            reminder.importanceLevel = req.body.importanceLevel;
     
             reminder.save();
             res.status(200).json({"reminder" : reminder}); // json({"message" : 'Reminder successfully updated (put)', reminder});
@@ -94,12 +95,13 @@ router.patch('/:reminderId', function(req, res, next) {
             return res.status(404).json({"message": "Reminder is not found"});
         }
 
-        if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminderFor){
+        if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.reminderFor || req.body.importanceLevel){
 
             reminder.topic = (req.body.topic || reminder.topic);
             reminder.targetMoment = (req.body.targetMoment || reminder.targetMoment);
             reminder.remindBefore = (req.body.remindBefore || reminder.remindBefore);
             reminder.reminderFor = (req.body.reminderFor || reminder.reminderFor);
+            reminder.importanceLevel = (req.body.importanceLevel || reminder.importanceLevel);
     
             reminder.save();
             res.status(200).json({"reminder" : reminder}); // json({"message" : 'Reminder successfully updated (patch)', reminder});
@@ -141,7 +143,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.status(200).json({"message" :'All Reminders are removed'});
+            res.status(200).json({"message" :'Success'});
         }
     });
 });

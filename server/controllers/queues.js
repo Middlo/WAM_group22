@@ -10,25 +10,28 @@ router.post('/', function(req, res, next) {
         var queue = new Queue(req.body);
         queue.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json({"message" : 'Queue is Successfully created'});
+            res.status(201).json({"queue" : queue});
         });
     } else {
         res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
     }
 });
 
+/*
 // Return list of all queues
 router.get('/', function(req, res, next) {
     Queue.find(function(err, queues) {
         if (err) { 
             return next(err); 
         } else if (queues.length === 0)
-            res.status(200).json({"message" : 'There are no Queues registered'});
+            res.status(200).json({"queues": [], "message" : 'There are no Queues registered'});
         else {
-            res.status(200).json({'queues': queues});
+            res.status(200).json({"queues": queues});
         }
     });
 });
+*/
+
 
 // Return a queue with a given ID
 router.get('/:queueId', function(req, res, next) {
@@ -42,26 +45,31 @@ router.get('/:queueId', function(req, res, next) {
     });
 });
 
-/*
-if(sort){
-    find({}).sort().exec(function(err, queues){
-        if (err) {return next(err);}
-        else {
-            router.get('/', function(req, res, next) {
-                Queue.find(function(err, queues) {
-                    if (err) { 
-                        return next(err); 
-                    } else if (queues.length === 0)
-                        res.status(200).json({"message" : 'There are no Queues registered'});
-                    else {
-                        res.status(200).json({'queues': queues});
-                    }
-                });
-            });
-        }
-    })
-};
-*/
+
+// Return list of all queues with sort
+router.get('/', function(req, res, next) {
+    var queryInput = req.query;
+    
+    if(queryInput){
+        Queue.find({}).sort(queryInput).exec(function(err, sortedQueues){
+            if (err) {return next(err);}
+            else {
+                res.status(200).json({"queues": sortedQueues});
+            }
+        });
+    } else {
+        Queue.find(function(err, queues) {
+            if (err) { 
+                return next(err); 
+            } else if (queues.length === 0)
+                res.status(200).json({"queues": [], "message" : 'There are no Queues registered'});
+            else {
+                res.status(200).json({"queues": queues});
+            }
+        });
+    }
+});
+
 
 // Update a whole queue with a given ID
 router.put('/:queueId', function(req, res, next) {
@@ -113,7 +121,7 @@ router.delete('/:queueId', function(req, res, next) {
         if (queue === null) {
             return res.status(404).json({'message': 'Queue is not found'});
         }
-        res.status(200).json({"message" : 'Queue is successfully removed'});
+        res.status(200).json({"message" : 'Success'});
     });
 });
 
@@ -125,7 +133,7 @@ router.delete('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (queues.length === 0 && removable){
-            res.status(204).json({'message':'There are no Queues to be deleted'});
+            res.status(204).json({'message':'Success'});
         } else {
             removable = 0;
 
@@ -134,7 +142,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.status(200).json('All Queues are removed');
+            res.status(200).json({"message" : 'All Queues are removed'});
         }
     });
 });

@@ -1,10 +1,12 @@
 <template>
   <div class="reminders">
-    <h1>List of {{ reminders.length }} reminders</h1>
+    <h1 v-if="reminders.length === 0"> There are no reminders registered </h1>
+    <h1 v-else-if="reminders.length === 1"> There is one reminder </h1>
+    <h1 v-else > There are {{ reminders.length }} reminders </h1>
     <b-button type="button" class="createButton" @click="createReminder()">Create Reminder</b-button>
     <b-button class="deleteButton" v-show="reminders.length" @click="deleteAllReminders()">Delete All Reminders</b-button>
     <b-list-group>
-      <reminder-item v-for="reminder in reminders" :key="reminder._id" :reminder="reminder" @delete-reminder="deleteReminder" @reminder-content-changed="getReminders"></reminder-item>
+      <reminder-item v-for="reminder in reminders" :key="reminder._id" :reminder="reminder" @delete-reminder="deleteReminder" @reminder-content-changed="contentChanged"></reminder-item>
     </b-list-group>
   </div>
 </template>
@@ -50,8 +52,14 @@ export default {
         })
     },
     createReminder() {
+      var curDate = localStorage.getItem('selectedDate')
+
+      if (curDate === '') { curDate = (new Date()).substring(0, 10) }
+
       var randomReminder = {
-        elements: 'To be edited'
+        topic: 'To be edited',
+        targetMoment: curDate,
+        importanceLevel: ''
       }
       Api.post('/reminders', randomReminder)
         .then(response => {
@@ -59,6 +67,10 @@ export default {
         })
         .catch(error => {
           console.log(error)
+        })
+        .then(() => {
+          this.getReminders()
+          // This code is always executed (after success or error).
         })
     },
     deleteAllReminders() {
@@ -71,6 +83,10 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    contentChanged() {
+      this.reminders = []
+      this.getReminders()
     }
   },
   components: {

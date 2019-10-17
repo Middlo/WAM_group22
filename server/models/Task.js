@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var taskSchema = new Schema({
     //userID: { type: String, required: true },
     //_id: Schema.Types.ObjectId,
-    //userId: Schema.Types.ObjectId,
+    userId: Schema.Types.ObjectId,
     taskTitle: { type: String },
     taskDescription: { type: String },
     importanceLevel: { type: String },

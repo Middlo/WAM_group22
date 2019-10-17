@@ -8,6 +8,7 @@ router.post('/', function(req, res, next) {
     if(req.body.topic || req.body.textContent){
         var note = new Note(req.body);
         note.lastUpdated = new Date();
+        note.createdOn = new Date();
         note.save(function(err) {
             if (err) { return next(err); }
             res.status(201).json({"note" : note}); // json({"message" : 'Note is Successfully created'});
@@ -23,9 +24,9 @@ router.get('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (notes.length === 0)
-            res.status(200).json({"message" : 'There are no Notes registered'});
+            res.status(200).json({"notes": [], "message" : 'There are no Notes registered'});
         else {
-            res.status(200).json({'notes': notes});
+            res.status(200).json({"notes": notes});
         }
     });
 });
@@ -98,7 +99,7 @@ router.delete('/:noteId', function(req, res, next) {
         if (note === null) {
             return res.status(404).json({'message': 'Note is not found'});
         }
-        res.status(200).json({"message" : 'Note is successfully removed'});
+        res.status(200).json({"message" : 'Success'});
     });
 });
 
@@ -120,7 +121,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.status(200).json({"message" : 'All Notes are removed'});
+            res.status(200).json({"message" : 'Success'});
         }
     });
 });

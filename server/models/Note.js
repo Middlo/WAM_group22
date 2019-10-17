@@ -7,6 +7,7 @@ var noteSchema = new Schema({
     userId: Schema.Types.ObjectId,
     topic: { type: String },
     textContent: { type: String },
+    createdOn: { type: Date },
     lastUpdated: { type: Date, default: Date.now } // format example "2019-11-12T14:39:00.000Z"
 });
 

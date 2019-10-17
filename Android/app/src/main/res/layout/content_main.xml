@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <LinearLayout
+        android:id="@+id/calendarLayout"
+        android:layout_width="270dp"
+        android:layout_height="342dp"
+        android:background="@mipmap/ic_launcher_round"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/calendar" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/priorityQueue"
+        android:layout_width="141dp"
+        android:layout_height="342dp"
+        android:background="@color/colorAccent"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/calendarLayout"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/priorities"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <RelativeLayout
+
+        android:id="@+id/dashBoardLayout"
+        android:layout_width="285dp"
+        android:layout_height="222dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <Button
+            android:id="@+id/displayEvents"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/button_numbers_bgd"
+            android:text="@string/display_all_events"
+            android:textColor="#ffffff"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <Button
+            android:id="@+id/displayTasks"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/button_numbers_bgd"
+            android:text="@string/display_all_tasks"
+            android:textColor="#ffffff"
+            android:textAllCaps="false"
+            android:layout_below="@+id/displayEvents"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+        <Button
+            android:id="@+id/displayNotes"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/button_numbers_bgd"
+            android:text="@string/display_all_notes"
+            android:textColor="#ffffff"
+            android:textAllCaps="false"
+            android:layout_below="@+id/displayTasks"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+        <Button
+            android:id="@+id/displayReminders"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/button_numbers_bgd"
+            android:text="@string/display_all_reminders"
+            android:textColor="#ffffff"
+            android:textAllCaps="false"
+            android:layout_below="@+id/displayNotes"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </RelativeLayout>
+
+
+</android.support.constraint.ConstraintLayout>

@@ -1,66 +1,62 @@
 <template>
   <b-list-group-item class="mainCard">
-    Reminder for Entity ID {{ reminder.reminderFor }}
-    <b-button class="detailButton" variant="primary" @click="showDetail(reminder._id)">Details</b-button>
     <b-button class="close" @click="$emit('delete-reminder', reminder._id)">&times;</b-button>
+    <p> Reminder: {{ reminder.topic }} </p>
+    <b-button class="detailButton" variant="primary" @click="showDetail(reminder._id)">Details</b-button>
     <div class="collapsable">
-      <b-card id="collapse1" class="firstCard" v-show="allowedItem === reminder._id">
-        <div>
-          <p class="card-text3">Reminder Code: {{ reminder._id }}</p>
-          <b-form id=form1 class="form">
-            <b-form-group
-              id="input-group-1"
-              label="Reminder topic:"
-              label-for="input-1"
-            >
-              <b-form-input
-                id="input-1"
-                v-model="editform.topic"
-                :placeholder="reminder.topic"
-                ></b-form-input>
-            </b-form-group>
+      <b-container id="collapse1" class="firstCard" v-show="allowedItem === reminder._id">
 
-            <b-form-group
-              id="input-group-2"
-              label="Reminder target Moment:"
-              label-for="input-2"
-            >
-              <b-form-input
-                id="input-2"
-                v-model="editform.targetMoment"
-                :placeholder="reminder.targetMoment"
-                ></b-form-input>
-            </b-form-group>
+        <p class="card-text3">Reminder ID: {{ reminder._id }}</p>
 
-            <b-form-group
-              id="input-group-3"
-              label="Reminder to remind before:"
-              label-for="input-3"
-            >
-              <b-form-input
-                id="input-3"
-                v-model="editform.remindBefore"
-                :placeholder="reminder.remindBefore"
-                ></b-form-input>
-            </b-form-group>
+        <b-row>
+          <b-col sm="4">
+            <label for="input-1">Topic:</label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-input id="input-1" size="sm" v-model="editform.topic" :placeholder="reminder.topic"></b-form-input>
+          </b-col>
+        </b-row>
 
-            <b-form-group
-              id="input-group-4"
-              label="Reminder linked to Entity ID:"
-              label-for="input-4"
-            >
-              <b-form-input
-                id="input-4"
-                v-model="editform.reminderFor"
-                :placeholder="reminder.reminderFor"
-                ></b-form-input>
-            </b-form-group>
+        <b-row>
+          <b-col sm="4">
+            <label description="Reminder target Moment" for="input-2">Target:</label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-input id="input-2" size="sm" required v-model="editform.targetMoment" :placeholder="reminder.targetMoment.substring(0,10)"></b-form-input>
+          </b-col>
+        </b-row>
 
-          </b-form>
-          <b-button class="putButton" @click="putData (reminder._id, editform), $emit('reminder-content-changed', reminder._id)">Update Entirely</b-button>  |
-          <b-button class="patchButton" @click="patchData (reminder._id, editform), $emit('reminder-content-changed', reminder._id)">Update Partially</b-button>
-        </div>
-      </b-card>
+        <b-row>
+          <b-col sm="4">
+            <label description="Reminder to remind before" for="input-3">Minutes:</label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-input id="input-3" size="sm" v-model="editform.remindBefore" :placeholder="reminder.remindBefore"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col sm="4">
+            <label for="input-4">Importance:</label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-input id="input-4" size="sm" v-model="editform.importanceLevel" :placeholder="reminder.importanceLevel"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col sm="4">
+            <label for="input-5">Linked to:</label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-input id="input-5" size="sm" v-model="editform.reminderFor" :placeholder="reminder.reminderFor"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-button id="putButton" @click="putData (reminder._id, editform), $emit('reminder-content-changed', reminder._id)">Update Entirely</b-button>
+        <b-button id="patchButton" @click="patchData (reminder._id, editform), $emit('reminder-content-changed', reminder._id)">Update Partially</b-button>
+
+      </b-container>
     </div>
   </b-list-group-item>
 </template>
@@ -80,6 +76,7 @@ export default {
         topic: '',
         targetMoment: '',
         remindBefore: '',
+        importanceLevel: '',
         reminderFor: ''
       }
     }
@@ -169,13 +166,15 @@ img {
   height: 25px;
   background-color: rgb(221, 35, 35);
 }
-.firstCard{
+#collapse1{
   background-color: rgba(218, 189, 189, 0.979);
 }
-.putButton{
+#putButton{
   background-color: rgba(87, 61, 129, 0.979);
+  margin: 2px;
 }
-.patchButton{
+#patchButton{
   background-color: rgba(81, 98, 153, 0.979);
+  margin: 2px;
 }
 </style>

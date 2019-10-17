@@ -1,10 +1,12 @@
 <template>
   <div class="tasks">
-    <h1>List of {{ tasks.length }} tasks</h1>
+    <h1 v-if="tasks.length === 0"> There are no tasks registered </h1>
+    <h1 v-else-if="tasks.length === 1"> There is one task </h1>
+    <h1 v-else > There are {{ tasks.length }} tasks </h1>
     <b-button class="createButton" @click="createTask()">Create new Task</b-button>
     <b-button class="deleteButton" v-show="tasks.length" @click="deleteAllTasks()">Delete All Tasks</b-button>
     <b-list-group>
-      <task-item v-for="task in tasks" :key="task._id" :task="task" @delete-task="deleteTask" @task-content-changed="getTasks"></task-item>
+      <task-item v-for="task in tasks" :key="task._id" :task="task" @delete-task="deleteTask" @task-content-changed="contentChanged"></task-item>
     </b-list-group>
   </div>
 </template>
@@ -50,10 +52,14 @@ export default {
         })
     },
     createTask() {
+      var curDate = localStorage.getItem('selectedDate')
+
+      if (curDate === '') { curDate = (new Date()).substring(0, 10) }
+
       var randomTask = {
         taskTitle: 'Testing the task',
         importanceLevel: '1',
-        deadline: '2020-01-01'
+        deadline: curDate
       }
       // console.log(randomTask)
       Api.post('/tasks', randomTask)
@@ -64,6 +70,7 @@ export default {
           console.log(error)
         })
         .then(() => {
+          this.getTasks()
           // This code is always executed (after success or error).
         })
     },
@@ -77,6 +84,10 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    contentChanged() {
+      this.tasks = []
+      this.getTasks()
     }
   },
   components: {

@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Online Calendar</string>
+    <string name="btn_new_activity">New Activity</string>
+    <string name="btn_get_http">Get Camels</string>
+
+    <string name="action_settings">On progress</string>
+    <string name="title_feature1">Feature 1</string>
+    <string name="calendar">Calendar</string>
+    <string name="priorities">Priorities</string>
+    <string name="display_all_events">Display Events</string>
+    <string name="display_all_tasks">Display Tasks</string>
+    <string name="display_all_notes">Display Notes</string>
+    <string name="display_all_reminders">Display Reminders</string>
+    <string name="dashboard">DashBoard</string>
+    <string name="display_events">Display Events</string>
+    <string name="display_tasks">Display Tasks</string>
+    <string name="display_notes">Display Notes</string>
+    <string name="display_reminders">Display Reminders</string>
+
+</resources>

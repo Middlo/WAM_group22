@@ -1,129 +1,120 @@
 <template>
   <b-list-group-item class="mainCard">
     <img alt="Event" src="../assets/event.jpg">
-    Event title: {{ event.title }}
-    <b-button class="detailButton" variant="primary" @click="showDetail(event._id)">Details</b-button>
     <b-button class="close" @click="$emit('delete-event', event._id)">&times;</b-button>
+    <p> Event: {{ event.title }} </p>
+    <b-button class="detailButton" variant="primary" @click="showDetail(event._id), $emit('evaluate-collapse', event._id)">Details</b-button>
     <div class="collapsable">
-      <b-card id="collapse1" class="firstCard" v-show="allowPart1 === event._id">
+      <b-container id="collapse1" class="firstCard" align-v="start" v-show="allowPart1 === event._id">
+
+        <p id="firstDetail">Event Code : {{ event._id }}</p>
+        <b-row>
+          <b-col sm="3">
+            <label for="input-0">Title     :</label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-input id="input-0" size="sm" v-model="editform.title" :placeholder="event.title"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col sm="3">
+            <label for="input-1">Description:</label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-input id="input-1" size="sm" v-model="editform.description" :placeholder="event.description"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col sm="3">
+            <label description="Date" size="sm" for="input-2">Start:</label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-input id="input-2" size="sm" required v-model="editform.startDate" :placeholder="event.startDate.substring(0,10)"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col sm="3">
+            <label description="Date" for="input-3">End:</label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-input id="input-3" size="sm" required v-model="editform.endDate" :placeholder="event.endDate.substring(0,10)"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col sm="3">
+            <label for="input-4">Importance:</label>
+          </b-col>
+          <b-col sm="7">
+            <b-form-input id="input-4" size="sm" v-model="editform.importanceLevel" :placeholder="event.importanceLevel"></b-form-input>
+          </b-col>
+        </b-row>
         <div>
-          <p class="firstDetail">Event Code : {{ event._id }}</p>
-          <b-form id=form1 class="form">
-            <b-form-group
-              id="input-group-0"
-              label="Event Title:"
-              label-for="input-0"
-            >
-              <b-form-input
-                id="input-0"
-                v-model="editform.title"
-                :placeholder="event.title"
-              ></b-form-input>
-            </b-form-group>
-
-            <b-form-group
-              id="input-group-1"
-              label="Event Description:"
-              label-for="input-1"
-            >
-              <b-form-input
-                id="input-1"
-                v-model="editform.description"
-                :placeholder="event.description"
-              ></b-form-input>
-            </b-form-group>
-
-            <b-form-group
-              id="input-group-2"
-              label="Event Start Date:"
-              label-for="input-2"
-            >
-              <b-form-input
-                id="input-2"
-                v-model="editform.startDate"
-                required
-                :placeholder="event.startDate.substring(0,10)"
-              ></b-form-input>
-            </b-form-group>
-
-            <b-form-group
-              id="input-group-3"
-              label="Event End Date:"
-              label-for="input-3"
-            >
-              <b-form-input
-                id="input-3"
-                v-model="editform.endDate"
-                required
-                :placeholder="event.endDate.substring(0,10)"
-              ></b-form-input>
-            </b-form-group>
-          </b-form>
-          <div>
-            <b-button class="putButton" @click="putData (event._id, editform), $emit('event-content-changed', event._id)">Update Event Entirely</b-button>  |
-            <b-button class="patchButton" @click="patchData (event._id, editform), $emit('event-content-changed', event._id)">Update Event Partially</b-button>
-          </div>
-
-          <b-button class="reminderDetailBtn" @click="showRemDetail(event._id)">Reminder Details</b-button>
-          <b-card id="collapse1-inner" class="secondCard" v-show="allowPart2 === event._id">
-            <b-button class="createButton" @click="createEventReminder(event, event._id), $emit('event-content-changed', event._id)">Create Reminder</b-button>
-            <div>
-              <b-list-group-item class="reminderDetail" v-for="reminder in reminders" v-bind:key="reminder._id">
-                <b-button class="close" @click="deleteEventReminder(event._id, reminder._id), $emit('event-content-changed', event._id)">&times;</b-button>
-                <p class="secondDetail">Reminder ID : {{ reminder._id }}</p>
-
-                <b-form id=form2 class="form">
-                  <b-form-group
-                    id="input-group-a"
-                    label="Reminder Topic:"
-                    label-for="input-a"
-                  >
-                    <b-form-input
-                      id="input-a"
-                      v-model="editReminderForm.topic"
-                      :placeholder="reminder.topic"
-                    ></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group
-                    id="input-group-b"
-                    label="Reminder targer Moment:"
-                    label-for="input-b"
-                  >
-                    <b-form-input
-                      id="input-b"
-                      v-model="editReminderForm.targetMoment"
-                      :placeholder="reminder.targetMoment"
-                    ></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group
-                    id="input-group-c"
-                    label="Remind Before Minutes:"
-                    label-for="input-c"
-                  >
-                    <b-form-input
-                      id="input-c"
-                      v-model="editReminderForm.remindBefore"
-                      :placeholder=reminder.remindBefore
-                    ></b-form-input>
-                  </b-form-group>
-                </b-form>
-                <b-button class="putButton" @click="putRemData (event._id, reminder._id, editReminderForm), $emit('event-content-changed', event._id)">Update Reminder Entirely</b-button>  |
-                <b-button class="patchButton" @click="patchRemData (event._id, reminder._id, editReminderForm), $emit('event-content-changed', event._id)">Update Reminder Partially</b-button>
-              </b-list-group-item>
-            </div>
-          </b-card>
+          <b-button id="putButton" @click="putData (event._id, editform), $emit('event-content-changed', event._id)">Update Event Entirely</b-button>
+          <b-button id="patchButton" @click="patchData (event._id, editform), $emit('event-content-changed', event._id)">Update Event Partially</b-button>
         </div>
-      </b-card>
+
+        <b-button class="reminderDetailBtn" @click="showRemDetail(event._id)">Reminder Details</b-button>
+        <b-container id="collapse1-inner" class="secondCard" v-show="allowPart2 === event._id">
+          <b-button class="createButton" @click="createEventReminder(event, event._id), $emit('event-content-changed', event._id)">Create Reminder</b-button>
+
+          <b-list-group-item id="reminderDetail" v-for="reminder in reminders" v-bind:key="reminder._id">
+            <b-button class="close" @click="deleteEventReminder(event._id, reminder._id), $emit('event-content-changed', event._id)">&times;</b-button>
+            <p class="secondDetail">Reminder ID : {{ reminder._id }}</p>
+
+            <b-row>
+              <b-col sm="4">
+                <label  for="input-a">Topic:</label>
+              </b-col>
+              <b-col sm="7">
+                <b-form-input id="input-a" size="sm" v-model="editReminderForm.topic" :placeholder="reminder.topic"></b-form-input>
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col sm="4">
+                <label description="Reminder Target Moment" for="input-b">Target:</label>
+              </b-col>
+              <b-col sm="7">
+                <b-form-input id="input-b" size="sm" v-model="editReminderForm.targetMoment" :placeholder="reminder.targetMoment.substring(0,10)" ></b-form-input>
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col sm="4">
+                <label description="Remind Before Minutes" for="input-c">Minutes:</label>
+              </b-col>
+              <b-col sm="7">
+                <b-form-input id="input-c" size="sm" v-model="editReminderForm.remindBefore" :placeholder="reminder.remindBefore" ></b-form-input>
+              </b-col>
+            </b-row>
+
+            <b-row>
+              <b-col sm="4">
+                <label for="input-d">Importance: </label>
+              </b-col>
+              <b-col sm="7">
+                <b-form-input id="input-d" size="sm" v-model="editReminderForm.importanceLevel" :placeholder="reminder.importanceLevel" ></b-form-input>
+              </b-col>
+            </b-row>
+
+            <b-button id="putButton" @click="putRemData (event._id, reminder._id, editReminderForm), $emit('event-content-changed', event._id)">Update Reminder Entirely</b-button>
+            <b-button id="patchButton" @click="patchRemData (event._id, reminder._id, editReminderForm), $emit('event-content-changed', event._id)">Update Reminder Partially</b-button>
+
+          </b-list-group-item>
+        </b-container>
+      </b-container>
     </div>
   </b-list-group-item>
 </template>
 
 <script>
 import { Api } from '@/Api'
-var allowPart1 = ''
-var allowPart2 = ''
+var allowPart1 = '' // localStorage.getItem('allowedEvent')
+var allowPart2
 var currentEventID
 var remTrue = 0
 
@@ -142,12 +133,14 @@ export default {
         title: '',
         description: '',
         startDate: '',
-        endDate: ''
+        endDate: '',
+        importanceLevel: ''
       },
       editReminderForm: {
         topic: '',
         targetMoment: '',
-        remindBefore: ''
+        remindBefore: '',
+        importanceLevel: ''
       }
     }
   },
@@ -156,6 +149,8 @@ export default {
   },
   methods: {
     getEvents() {
+      // localStorage.setItem("displaying", this.allowPart1)
+      // console.log('displaying ' + this.allowPart1)
       Api.get('/events')
         .then(reponse => {
           this.events = reponse.data.events
@@ -169,8 +164,33 @@ export default {
         })
     },
     showDetail(evtID) {
+      /* if (typeof(Storage) !== "undefined") {
+        // Store
+        localStorage.setItem("lastname", "Eyuell")
+        // Retrieve
+        console.log('stored data is ' + localStorage.getItem("lastname"))
+      } else {
+        console.log("Sorry, your browser does not support Web Storage...")
+      } */
+      // console.log('testing')
+      // console.log('stored ' + allowPart1)
       this.currentEventID = evtID
       if (!this.allowPart1) { this.allowPart1 = evtID } else if (this.allowPart1 === evtID) { this.allowPart1 = '' } else { this.allowPart1 = evtID }
+      /* if (this.allowPart1 === evtID) {
+        localStorage.setItem('allowedEvent', '')
+        this.allowPart1 = ''
+        //console.log('same view has collapsed')
+      } else if(this.allowPart1 === ''){
+        this.allowPart1 = evtID
+      }/*else {
+        localStorage.setItem('allowedEvent', evtID)
+        //this.events = []
+        console.log('the other opened event should be closed now')
+        //this.events = this.getEvents()
+        this.allowPart1 = evtID
+      }
+      console.log('displaying ' + this.allowPart1)
+      localStorage.setItem("displaying", this.allowPart1) */
     },
     showRemDetail(evtID) {
       this.currentEventID = evtID
@@ -189,8 +209,11 @@ export default {
     },
     createEventReminder(event, evtID) {
       this.currentEventID = evtID
+      var curDate = localStorage.getItem('selectedDate')
       var newReminder = {
         topic: 'To be Assigned',
+        targetMoment: curDate,
+        importanceLevel: event.importanceLevel,
         reminderFor: evtID
       }
 
@@ -345,13 +368,24 @@ export default {
   margin-top: 20px;
   margin-bottom: 10px;
 }
-.reminderDetail{
+#reminderDetail{
   background-color: rgba(198, 218, 189, 0.979);
 }
-.putButton{
+#putButton{
   background-color: rgba(87, 61, 129, 0.979);
+  margin: 5px;
 }
-.patchButton{
+#patchButton{
   background-color: rgba(81, 98, 153, 0.979);
+  margin: 5px;
+}
+#firstDetail {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+}
+#collapse1{
+  margin:auto;
 }
 </style>

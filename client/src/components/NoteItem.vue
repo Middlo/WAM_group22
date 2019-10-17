@@ -1,43 +1,38 @@
 <template>
   <b-list-group-item class="mainCard">
-    {{ note._id }} is last updated on {{ note.lastUpdated.substring(0,10) }}
-    <b-button class="detailButton" variant="primary" @click="showDetail(note._id)">Details</b-button>
     <b-button class="close" @click="$emit('delete-note', note._id)">&times;</b-button>
+    <p> Note: {{ note.topic }} </p>
+    <b-button class="detailButton" variant="primary" @click="showDetail(note._id)">Details</b-button>
     <div class="collapsable">
-      <b-card id="collapse1" class="firstCard" v-show="allowedItem === note._id">
-        <div>
-          <p class="card-text3">Note Code: {{ note._id }}</p>
-          <b-form id=form1 class="form">
-            <b-form-group
-              id="input-group-1"
-              label="Note topic:"
-              label-for="input-1"
-            >
-              <b-form-input
-                id="input-1"
-                v-model="editform.topic"
-                required
-                :placeholder="note.topic"
-                ></b-form-input>
-            </b-form-group>
+      <b-container fluid id="collapse1" class="firstCard" v-show="allowedItem === note._id">
 
-            <b-form-group
-              id="input-group-2"
-              label="Text Content:"
-              label-for="input-2"
-            >
-              <b-form-input
-                id="input-2"
-                v-model="editform.textContent"
-                :placeholder="note.textContent"
-              ></b-form-input>
-            </b-form-group>
-            <p class="card-text3">Last Updated: {{ note.lastUpdated.substring(0,10) }}</p>
-          </b-form>
-          <b-button class="putButton" @click="putData (note._id, editform), $emit('note-content-changed', note._id)">Update Entirely</b-button>  |
-          <b-button class="patchButton" @click="patchData (note._id, editform), $emit('note-content-changed', note._id)">Update Partially</b-button>
-        </div>
-      </b-card>
+        <p class="card-text3">Note ID: {{ note._id }}</p>
+
+        <b-row>
+          <b-col sm="2.3">
+            <label for="input-1">Topic:</label>
+          </b-col>
+          <b-col sm="6">
+            <b-form-input id="input-1" size="sm" v-model="editform.topic" :placeholder="note.topic"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col sm="2.3">
+            <label for="input-2">Content:</label>
+          </b-col>
+          <b-col sm="6">
+            <b-form-input id="input-2" size="sm" v-model="editform.textContent" :placeholder="note.textContent"></b-form-input>
+          </b-col>
+        </b-row>
+
+        <p class="card-text3">Created on: {{ note.createdOn.substring(0,10) }}</p>
+        <p class="card-text4">Last Updated: {{ note.lastUpdated.substring(0,10) }}</p>
+
+        <b-button id="putButton" @click="putData (note._id, editform), $emit('note-content-changed', note._id)">Update Entirely</b-button>
+        <b-button id="patchButton" @click="patchData (note._id, editform), $emit('note-content-changed', note._id)">Update Partially</b-button>
+
+      </b-container>
     </div>
   </b-list-group-item>
 </template>
@@ -144,13 +139,15 @@ img {
   height: 25px;
   background-color: rgb(221, 35, 35);
 }
-.firstCard{
+#collapse1{
   background-color: rgba(218, 189, 189, 0.979);
 }
-.putButton{
+#putButton{
   background-color: rgba(87, 61, 129, 0.979);
+  margin: 2px;
 }
-.patchButton{
+#patchButton{
   background-color: rgba(81, 98, 153, 0.979);
+  margin: 2px;
 }
 </style>

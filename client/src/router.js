@@ -14,7 +14,7 @@ Vue.use(Router)
 
 export default new Router({
   mode: 'history',
-  base: process.env.GROUP_DB,
+  base: process.env.MONGODB_URI,
   routes: [
     {
       path: '/',

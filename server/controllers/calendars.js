@@ -9,7 +9,7 @@ router.post('/', function(req, res, next) {
         var calendar = new Calendar(req.body);
         calendar.save(function(err) {
             if (err) { return next(err); }
-            res.status(201).json(calendar);//json({"message" : 'Calendar is Successfully created'});
+            res.status(201).json({"calendar" : calendar}); // json({"message" : 'Calendar is Successfully created'});
         });
     } else {
         res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
@@ -22,7 +22,7 @@ router.get('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (calendars.length === 0)
-            res.status(200).json({"message" : 'There are no calendars registered'});
+            res.status(200).json({'calendars': [], "message" : 'There are no calendars registered'});
         else {
             res.status(200).json({'calendars': calendars});
         }
@@ -93,7 +93,7 @@ router.delete('/:calendarId', function(req, res, next) {
         if (calendar === null) {
             return res.status(404).json({'message': 'Calendar is not found'});
         }
-        res.status(200).json({"message" : 'Calendar is successfully removed'});
+        res.status(200).json({"message" : 'Success'});
     });
 });
 
@@ -114,7 +114,7 @@ router.delete('/', function(req, res, next) {
                     if (err) { return next(err); }
                 });
             }
-            res.status(200).json({"message" :'All Calendars are removed'});
+            res.status(200).json({"message" :'Success'});
         }
     });
 });
