@@ -12,9 +12,19 @@
     <string name="display_all_notes">Display Notes</string>
     <string name="display_all_reminders">Display Reminders</string>
     <string name="dashboard">DashBoard</string>
-    <string name="display_events">Display Events</string>
-    <string name="display_tasks">Display Tasks</string>
-    <string name="display_notes">Display Notes</string>
-    <string name="display_reminders">Display Reminders</string>
+    <string name="create_event">Create Event</string>
+    <string name="create_task">Create Task</string>
+    <string name="create_note">Create Note</string>
+    <string name="create_reminder">Create Reminder</string>
+    <string name="cancel">Cancel</string>
+    <string name="update_partially">Update Partially</string>
+    <string name="update_entirely">Update Entirely</string>
+    <string name="add_reminder">Add Reminder</string>
+    <string name="importance">Importance</string>
+    <string name="finish_date">Finish Date</string>
+    <string name="start_date">Start date</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
+    <string name="id">_id</string>
 
 </resources>

@@ -8,7 +8,7 @@
     android:background="#c7c4c3"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ScrollingActivity"
+    tools:context=".MainActivity"
     >
 
 

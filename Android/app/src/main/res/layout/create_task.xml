@@ -8,12 +8,10 @@
     android:background="#c7c4c3"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ScrollingActivity"
-    >
-
+    tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/entityID"
+        android:id="@+id/taskIDCrt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -26,10 +24,10 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/entityTitle"
+        android:id="@+id/taskTitleCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityID"
+        android:layout_below="@+id/taskIDCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
         android:text="Title"
@@ -38,15 +36,15 @@
         android:textSize="20sp" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editTitle"
+        android:id="@+id/editTitleCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityID">
+        android:layout_below="@+id/taskIDCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventTitle"
+            android:id="@+id/editTaskTitleCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""
@@ -62,10 +60,10 @@
         android:visibility="invisible" />
 
     <TextView
-        android:id="@+id/entityDescription"
+        android:id="@+id/taskDescriptionCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityTitle"
+        android:layout_below="@+id/taskTitleCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
         android:text="Description"
@@ -74,15 +72,15 @@
         android:textSize="20sp" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editDescr"
+        android:id="@+id/editDescrCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityTitle">
+        android:layout_below="@+id/taskTitleCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventDescr"
+            android:id="@+id/editTaskDescrCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""
@@ -90,69 +88,37 @@
     </android.support.design.widget.TextInputLayout>
 
     <TextView
-        android:id="@+id/entityStartD"
+        android:id="@+id/taskStartDCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityDescription"
+        android:layout_below="@+id/taskDescriptionCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Start date"
+        android:text="Deadline"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editStart"
+        android:id="@+id/editStartCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityDescription">
+        android:layout_below="@+id/taskDescriptionCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventStart"
+            android:id="@+id/editTaskStartCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""/>
     </android.support.design.widget.TextInputLayout>
 
-
-
     <TextView
-        android:id="@+id/entityFinishD"
+        android:id="@+id/taskImportanceCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityStartD"
-        android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Finish Date"
-        android:layout_marginTop="20dp"
-        android:textAllCaps="false"
-        android:textSize="20sp" />
-
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/editFinish"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityStartD">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventFinish"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:hint=""/>
-    </android.support.design.widget.TextInputLayout>
-
-
-
-    <TextView
-        android:id="@+id/entityImportance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/entityFinishD"
+        android:layout_below="@+id/taskStartDCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
         android:text="Importance"
@@ -160,84 +126,76 @@
         android:textAllCaps="false"
         android:textSize="20sp" />
 
-
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editImport"
+        android:id="@+id/editImportCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityFinishD">
+        android:layout_below="@+id/taskStartDCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventImport"
+            android:id="@+id/editTaskImportCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""/>
     </android.support.design.widget.TextInputLayout>
 
-
-
     <Button
-        android:id="@+id/reminderDetail"
+        android:id="@+id/addTaskReminderCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#519730"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/entityImportance"
-        android:text="Reminder Detail"
+        android:layout_below="@+id/taskImportanceCrt"
+        android:text="Add Reminder"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
-        android:visibility="visible"
-        android:onClick="displayEventReminder"/>
+        android:visibility="visible" />
 
     <Button
-        android:id="@+id/save"
+        android:id="@+id/taskPutCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#006400"
-        android:layout_toEndOf="@+id/closeView"
-        android:layout_toRightOf="@+id/closeView"
-        android:layout_below="@+id/reminderDetail"
+        android:layout_toEndOf="@+id/taskCloseCrt"
+        android:layout_toRightOf="@+id/taskCloseCrt"
+        android:layout_below="@+id/addTaskReminderCrt"
         android:text="Update Entirely"
         android:textAllCaps="false"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
-        android:visibility="visible"
-        android:onClick="putEvent"/>
+        android:visibility="visible"/>
 
     <Button
-        android:id="@+id/back"
+        android:id="@+id/taskPatchCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#483d8b"
-        android:layout_toStartOf="@+id/closeView"
-        android:layout_toLeftOf="@+id/closeView"
+        android:layout_toStartOf="@+id/taskCloseCrt"
+        android:layout_toLeftOf="@+id/taskCloseCrt"
         android:text="Update Partially"
-        android:layout_below="@+id/reminderDetail"
+        android:layout_below="@+id/addTaskReminderCrt"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textAllCaps="false"
-        android:visibility="visible"
-        android:onClick="patchEvent"/>
+        android:visibility="visible"/>
 
     <Button
-        android:id="@+id/closeView"
+        android:id="@+id/taskCloseCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         android:background="#FF0000"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/reminderDetail"
+        android:layout_below="@+id/addTaskReminderCrt"
         android:layout_marginTop="5dp"
         android:text="Cancel"
         android:textAllCaps="false"
-        android:visibility="visible"
-        android:onClick="dismissView"/>
-
+        android:visibility="visible" />
 
 </RelativeLayout>

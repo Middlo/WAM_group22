@@ -8,12 +8,11 @@
     android:background="#c7c4c3"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ScrollingActivity"
-    >
+    tools:context=".MainActivity">
 
 
     <TextView
-        android:id="@+id/entityID"
+        android:id="@+id/remindIDCrt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -26,27 +25,27 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/entityTitle"
+        android:id="@+id/remindTitleCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityID"
+        android:layout_below="@+id/remindIDCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Title"
+        android:text="Topic"
         android:layout_marginTop="15dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editTitle"
+        android:id="@+id/editTitleCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityID">
+        android:layout_below="@+id/remindIDCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventTitle"
+            android:id="@+id/editRemindTitleCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""
@@ -62,27 +61,27 @@
         android:visibility="invisible" />
 
     <TextView
-        android:id="@+id/entityDescription"
+        android:id="@+id/remindMomentCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityTitle"
+        android:layout_below="@+id/remindTitleCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Description"
+        android:text="targetMoment"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editDescr"
+        android:id="@+id/editMomentCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityTitle">
+        android:layout_below="@+id/remindTitleCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventDescr"
+            android:id="@+id/editRemindMomentCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""
@@ -90,69 +89,38 @@
     </android.support.design.widget.TextInputLayout>
 
     <TextView
-        android:id="@+id/entityStartD"
+        android:id="@+id/remindMinutesCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityDescription"
+        android:layout_below="@+id/remindMomentCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Start date"
+        android:text="Remind Before"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editStart"
+        android:id="@+id/editMinutesCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityDescription">
+        android:layout_below="@+id/remindMomentCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventStart"
+            android:id="@+id/editRemindMinutesCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""/>
     </android.support.design.widget.TextInputLayout>
 
-
-
+    
     <TextView
-        android:id="@+id/entityFinishD"
+        android:id="@+id/remindImportanceCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityStartD"
-        android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Finish Date"
-        android:layout_marginTop="20dp"
-        android:textAllCaps="false"
-        android:textSize="20sp" />
-
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/editFinish"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityStartD">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventFinish"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:hint=""/>
-    </android.support.design.widget.TextInputLayout>
-
-
-
-    <TextView
-        android:id="@+id/entityImportance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/entityFinishD"
+        android:layout_below="@+id/remindMinutesCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
         android:text="Importance"
@@ -162,79 +130,90 @@
 
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editImport"
+        android:id="@+id/editImportCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityFinishD">
+        android:layout_below="@+id/remindMinutesCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventImport"
+            android:id="@+id/editRemindImportCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""/>
     </android.support.design.widget.TextInputLayout>
 
 
-
-    <Button
-        android:id="@+id/reminderDetail"
+    <TextView
+        android:id="@+id/reminderFor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#519730"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/entityImportance"
-        android:text="Reminder Detail"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
-        android:visibility="visible"
-        android:onClick="displayEventReminder"/>
+        android:layout_below="@+id/remindImportanceCrt"
+        android:layout_toStartOf="@+id/Hdivider"
+        android:layout_toLeftOf="@+id/Hdivider"
+        android:text="Parent _id: "
+        android:layout_marginTop="20dp"
+        android:textAllCaps="false"
+        android:textSize="20sp" />
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/editReminderFor"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/Hdivider"
+        android:layout_toRightOf="@+id/Hdivider"
+        android:layout_below="@+id/remindImportanceCrt">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editTReminderFor"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:hint=""/>
+    </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/save"
+        android:id="@+id/remindPutCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#006400"
-        android:layout_toEndOf="@+id/closeView"
-        android:layout_toRightOf="@+id/closeView"
-        android:layout_below="@+id/reminderDetail"
-        android:text="Update Entirely"
+        android:layout_toEndOf="@+id/remindCloseCrt"
+        android:layout_toRightOf="@+id/remindCloseCrt"
+        android:layout_below="@+id/reminderFor"
+        android:text="@string/update_entirely"
         android:textAllCaps="false"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:visibility="visible"
-        android:onClick="putEvent"/>
+        android:layout_marginTop="10dp"
+        android:visibility="visible"/>
 
     <Button
-        android:id="@+id/back"
+        android:id="@+id/remindPatchCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#483d8b"
-        android:layout_toStartOf="@+id/closeView"
-        android:layout_toLeftOf="@+id/closeView"
-        android:text="Update Partially"
-        android:layout_below="@+id/reminderDetail"
+        android:layout_toStartOf="@+id/remindCloseCrt"
+        android:layout_toLeftOf="@+id/remindCloseCrt"
+        android:text="@string/update_partially"
+        android:layout_below="@+id/reminderFor"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
         android:textAllCaps="false"
-        android:visibility="visible"
-        android:onClick="patchEvent"/>
+        android:visibility="visible"/>
 
     <Button
-        android:id="@+id/closeView"
+        android:id="@+id/remindCloseCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         android:background="#FF0000"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/reminderDetail"
-        android:layout_marginTop="5dp"
-        android:text="Cancel"
+        android:layout_below="@+id/reminderFor"
+        android:layout_marginTop="10dp"
+        android:text="@string/cancel"
         android:textAllCaps="false"
         android:visibility="visible"
         android:onClick="dismissView"/>

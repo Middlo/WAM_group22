@@ -8,45 +8,43 @@
     android:background="#c7c4c3"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ScrollingActivity"
-    >
-
+    tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/entityID"
+        android:id="@+id/entityIDCrt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
         android:textStyle="bold"
         android:background="#008000"
-        android:text="_id"
+        android:text="@string/id"
         android:layout_marginTop="10dp"
         android:textAllCaps="false"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/entityTitle"
+        android:id="@+id/entityTitleCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityID"
+        android:layout_below="@+id/entityIDCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Title"
+        android:text="@string/title"
         android:layout_marginTop="15dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editTitle"
+        android:id="@+id/editTitleCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityID">
+        android:layout_below="@+id/entityIDCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventTitle"
+            android:id="@+id/editEventTitleCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""
@@ -62,27 +60,27 @@
         android:visibility="invisible" />
 
     <TextView
-        android:id="@+id/entityDescription"
+        android:id="@+id/entityDescriptionCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityTitle"
+        android:layout_below="@+id/entityTitleCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Description"
+        android:text="@string/description"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editDescr"
+        android:id="@+id/editDescrCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityTitle">
+        android:layout_below="@+id/entityTitleCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventDescr"
+            android:id="@+id/editEventDescrCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""
@@ -90,154 +88,141 @@
     </android.support.design.widget.TextInputLayout>
 
     <TextView
-        android:id="@+id/entityStartD"
+        android:id="@+id/entityStartDCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityDescription"
+        android:layout_below="@+id/entityDescriptionCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Start date"
+        android:text="@string/start_date"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editStart"
+        android:id="@+id/editStartCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityDescription">
+        android:layout_below="@+id/entityDescriptionCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventStart"
+            android:id="@+id/editEventStartCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""/>
     </android.support.design.widget.TextInputLayout>
-
-
 
     <TextView
-        android:id="@+id/entityFinishD"
+        android:id="@+id/entityFinishDCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityStartD"
+        android:layout_below="@+id/entityStartDCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Finish Date"
+        android:text="@string/finish_date"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
 
-
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editFinish"
+        android:id="@+id/editFinishCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityStartD">
+        android:layout_below="@+id/entityStartDCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventFinish"
+            android:id="@+id/editEventFinishCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""/>
     </android.support.design.widget.TextInputLayout>
-
-
 
     <TextView
-        android:id="@+id/entityImportance"
+        android:id="@+id/entityImportanceCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/entityFinishD"
+        android:layout_below="@+id/entityFinishDCrt"
         android:layout_toStartOf="@+id/Hdivider"
         android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Importance"
+        android:text="@string/importance"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
 
-
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editImport"
+        android:id="@+id/editImportCrt"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
         android:layout_toRightOf="@+id/Hdivider"
-        android:layout_below="@+id/entityFinishD">
+        android:layout_below="@+id/entityFinishDCrt">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editEventImport"
+            android:id="@+id/editEventImportCrt"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:hint=""/>
     </android.support.design.widget.TextInputLayout>
-
-
 
     <Button
-        android:id="@+id/reminderDetail"
+        android:id="@+id/addEventReminderCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#519730"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/entityImportance"
-        android:text="Reminder Detail"
+        android:layout_below="@+id/entityImportanceCrt"
+        android:text="@string/add_reminder"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
-        android:visibility="visible"
-        android:onClick="displayEventReminder"/>
+        android:visibility="visible" />
 
     <Button
-        android:id="@+id/save"
+        android:id="@+id/putEventCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#006400"
-        android:layout_toEndOf="@+id/closeView"
-        android:layout_toRightOf="@+id/closeView"
-        android:layout_below="@+id/reminderDetail"
-        android:text="Update Entirely"
+        android:layout_toEndOf="@+id/closeViewCrt"
+        android:layout_toRightOf="@+id/closeViewCrt"
+        android:layout_below="@+id/addEventReminderCrt"
+        android:text="@string/update_entirely"
         android:textAllCaps="false"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
-        android:visibility="visible"
-        android:onClick="putEvent"/>
+        android:visibility="visible"/>
 
     <Button
-        android:id="@+id/back"
+        android:id="@+id/patchEventCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#483d8b"
-        android:layout_toStartOf="@+id/closeView"
-        android:layout_toLeftOf="@+id/closeView"
-        android:text="Update Partially"
-        android:layout_below="@+id/reminderDetail"
+        android:layout_toStartOf="@+id/closeViewCrt"
+        android:layout_toLeftOf="@+id/closeViewCrt"
+        android:text="@string/update_partially"
+        android:layout_below="@+id/addEventReminderCrt"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textAllCaps="false"
-        android:visibility="visible"
-        android:onClick="patchEvent"/>
+        android:visibility="visible"/>
 
     <Button
-        android:id="@+id/closeView"
+        android:id="@+id/closeViewCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         android:background="#FF0000"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/reminderDetail"
+        android:layout_below="@+id/addEventReminderCrt"
         android:layout_marginTop="5dp"
-        android:text="Cancel"
+        android:text="@string/cancel"
         android:textAllCaps="false"
-        android:visibility="visible"
-        android:onClick="dismissView"/>
-
+        android:visibility="visible" />
 
 </RelativeLayout>

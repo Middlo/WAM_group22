@@ -21,6 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ScrollingActivity" />
+
         <activity android:name="se.chalmers.cse.dit341.group22.SecondActivity"
             android:parentActivityName="se.chalmers.cse.dit341.group22.MainActivity">
             <meta-data
