@@ -28,6 +28,8 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -78,7 +80,8 @@ public class ScrollingActivity extends AppCompatActivity {
     public String dataSize = "dataSize";
 
     public static final String TIME_REGEX = "^([1-9]|0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$";
-    public static final String DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
+    //public static final String DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
+    public static final String DATE_REGEX = "((?:19|20)\\d\\d)-(0?[1-9]|1[012])-([12][0-9]|3[01]|0?[1-9])";
     public static final String NUM_REGEX = "^\\d+$";
 
     private final int APPLY = 0;    //for saving data
@@ -321,9 +324,7 @@ public class ScrollingActivity extends AppCompatActivity {
         if(eventOnDisplay != null){
             boolean reminderFound = false;
             String eventId = eventOnDisplay.getId();
-            //System.out.println("event id: " + eventId);
             for(Reminder foundReminder : reminders){
-                //System.out.println("parent reminder : " + foundReminder.getReminderFor());
                 if(foundReminder.getReminderFor() != null && foundReminder.getReminderFor().equals(eventId)){
                     reminderFound = true;
                     dismissView(view);
@@ -384,12 +385,28 @@ public class ScrollingActivity extends AppCompatActivity {
 
         String eventStart = null;
         if(editStart.getText() != null){
+            String inputText = editStart.getEditableText().toString().trim();
+
+            if (!patchCorrection(inputText)){
+                editStart.setError("Update input");
+                return;
+            }
+
+            editStart.setError(null);
             eventStart = editStart.getText().toString();
             dataExists = true;
+
         }
 
         String eventFinish = null;
         if(editFinish.getText() != null){
+            String inputText = editFinish.getEditableText().toString().trim();
+
+            if (!patchCorrection(inputText)){
+                editFinish.setError("Update input");
+                return;
+            }
+            editFinish.setError(null);
             eventFinish = editFinish.getText().toString();
             dataExists = true;
         }
@@ -399,6 +416,7 @@ public class ScrollingActivity extends AppCompatActivity {
             eventImport = editImport.getText().toString();
             dataExists = true;
         }
+
 
         if(dataExists){
             HashMap<String, String> newData = new HashMap<>();
@@ -423,11 +441,13 @@ public class ScrollingActivity extends AppCompatActivity {
         } else {
             displayError("There is no new Input to Update");
         }
+
     }
 
     public void putEvent (android.view.View view){
         boolean dataExists = false;
         boolean shouldContinue = true;
+        boolean correctionNeeded = true;
 
         String eventTitle = null;
         if(editTitle.getText() != null){
@@ -443,9 +463,17 @@ public class ScrollingActivity extends AppCompatActivity {
 
         String eventStart = null;
         if(editStart.getText() != null){
+
+            String inputText = editStart.getEditableText().toString().trim();
+
+            if (!putCorrection(inputText)){
+                editStart.setError("Update input");
+                return;
+            }
+
+            editStart.setError(null);
             eventStart = editStart.getText().toString();
             dataExists = true;
-            editStart.setError(null);
         } else {
             shouldContinue = false;
             editStart.setError("Should have a date");
@@ -453,6 +481,13 @@ public class ScrollingActivity extends AppCompatActivity {
 
         String eventFinish = null;
         if(editFinish.getText() != null){
+
+            String inputText = editFinish.getEditableText().toString().trim();
+
+            if (!putCorrection(inputText)){
+                editFinish.setError("Update input");
+                return;
+            }
             eventFinish = editFinish.getText().toString();
             dataExists = true;
             editFinish.setError(null);
@@ -611,6 +646,14 @@ public class ScrollingActivity extends AppCompatActivity {
 
         String taskDeadline = null;
         if(editTaskDeadline.getText() != null){
+            String inputText = editTaskDeadline.getEditableText().toString().trim();
+
+            if (!patchCorrection(inputText)){
+                editTaskDeadline.setError("Update input");
+                return;
+            }
+
+            editTaskDeadline.setError(null);
             taskDeadline = editTaskDeadline.getText().toString();
             dataExists = true;
         }
@@ -662,6 +705,13 @@ public class ScrollingActivity extends AppCompatActivity {
 
         String taskDeadline = null;
         if(editTaskDeadline.getText() != null){
+            String inputText = editTaskDeadline.getEditableText().toString().trim();
+
+            if (!putCorrection(inputText)){
+                editTaskDeadline.setError("Update input");
+                return;
+            }
+
             taskDeadline = editTaskDeadline.getText().toString();
             dataExists = true;
             editTaskDeadline.setError(null);
@@ -767,6 +817,14 @@ public class ScrollingActivity extends AppCompatActivity {
 
         String remMoment = null;
         if(editRemindMoment.getText() != null){
+            String inputText = editRemindMoment.getEditableText().toString().trim();
+
+            if (!patchCorrection(inputText)){
+                editRemindMoment.setError("Update input");
+                return;
+            }
+
+            editRemindMoment.setError(null);
             remMoment = editRemindMoment.getText().toString();
             dataExists = true;
         }
@@ -817,6 +875,13 @@ public class ScrollingActivity extends AppCompatActivity {
 
         String remMoment = null;
         if(editRemindMoment.getText() != null){
+            String inputText = editRemindMoment.getEditableText().toString().trim();
+
+            if (!putCorrection(inputText)){
+                editRemindMoment.setError("Update input");
+                return;
+            }
+
             remMoment = editRemindMoment.getText().toString();
             dataExists = true;
             editRemindMoment.setError(null);
@@ -1199,7 +1264,9 @@ public class ScrollingActivity extends AppCompatActivity {
                                 if(success){
                                     displayMsg("Updated Successfully");
                                     getEntity(entityName);
-                                    dialog.dismiss();;
+                                    if(dialog != null)
+                                        dialog.dismiss();
+                                    finish();
                                 } else {
                                     displayError(singleEntity + " is not created successfully");
                                 }
@@ -1396,12 +1463,89 @@ public class ScrollingActivity extends AppCompatActivity {
         if(date!= null){
             String input = date.toString();
             String year = input.substring(30);
-            String dateTxt = input.substring(4,11);
-            return dateTxt + year;
+            String month = getMonth(input.substring(4,7));
+            String dateTxt = input.substring(8,10);
+            System.out.println(year + "-" + month + "-" + dateTxt);
+            return year + "-" + month + "-" + dateTxt;
         } else {
             displayError("Correction needed on Entity with Empty Date");
             return "";
         }
 
     }
+
+    private String getMonth(String input){
+        switch (input){
+            case "Jan":
+                return "01";
+
+            case "Feb":
+                return "02";
+
+            case "Mar":
+                return "03";
+
+            case "Apr":
+                return "04";
+
+            case "May":
+                return "05";
+
+            case "Jun":
+                return "06";
+
+            case "Jul":
+                return "07";
+
+            case "Aug":
+                return "08";
+
+            case "Sep":
+                return "09";
+
+            case "Oct":
+                return "10";
+
+            case "Nov":
+                return "11";
+
+            default:
+                return "12";
+        }
+    }
+
+
+    public boolean patchCorrection(String input){
+        if(input.equals(""))
+            return true;
+        else if (!input.matches(DATE_REGEX))
+            return false;
+        else
+            return dateExists(input);
+    }
+
+    public boolean putCorrection(String input){
+        if(input.equals(""))
+            return false;
+        else if (!input.matches(DATE_REGEX))
+            return false;
+        else
+            return dateExists(input);
+    }
+
+
+    public boolean dateExists (String dateInput){
+        int yearNum = Integer.parseInt(dateInput.substring(0,dateInput.indexOf("-")));
+        String newString = dateInput.substring((dateInput.indexOf("-")) + 1);
+        int monthNum = Integer.parseInt(newString.substring(0,newString.indexOf("-")));
+        int dateNum = Integer.parseInt(newString.substring((newString.indexOf("-")) + 1));
+
+        int numberOfDays = YearMonth.of(yearNum, monthNum).lengthOfMonth();
+
+        if(dateNum > numberOfDays)
+            return false;
+        else
+            return true;
+    }
+
 }
