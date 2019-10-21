@@ -133,16 +133,16 @@ router.delete('/', function(req, res, next) {
         if (err) { 
             return next(err); 
         } else if (queues.length === 0 && removable){
-            res.status(204).json({'message':'Success'});
+            res.status(204).json({'message':'There are no queues to be deleted'});
         } else {
             removable = 0;
 
             for(var i = 0; i < queues.length; i++ ){
-                Queue.findByIdAndRemove({_id : queues[i].id}, function(err, queue){
+                Queue.findByIdAndRemove({_id : queues[i]._id}, function(err, queue){
                     if (err) { return next(err); }
                 });
             }
-            res.status(200).json({"message" : 'All Queues are removed'});
+            res.status(200).json({"message" : 'Success'});
         }
     });
 });

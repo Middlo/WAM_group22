@@ -9,19 +9,19 @@
         <p class="card-text3">Note ID: {{ note._id }}</p>
 
         <b-row>
-          <b-col sm="2.3">
+          <b-col sm="3">
             <label for="input-1">Topic:</label>
           </b-col>
-          <b-col sm="6">
+          <b-col sm="7">
             <b-form-input id="input-1" size="sm" v-model="editform.topic" :placeholder="note.topic"></b-form-input>
           </b-col>
         </b-row>
 
         <b-row>
-          <b-col sm="2.3">
+          <b-col sm="3">
             <label for="input-2">Content:</label>
           </b-col>
-          <b-col sm="6">
+          <b-col sm="7">
             <b-form-input id="input-2" size="sm" v-model="editform.textContent" :placeholder="note.textContent"></b-form-input>
           </b-col>
         </b-row>

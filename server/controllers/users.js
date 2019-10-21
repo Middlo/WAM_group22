@@ -122,7 +122,7 @@ router.delete('/', function(req, res, next) {
             removable = 0;
 
             for(var i = 0; i < users.length; i++ ){
-                User.findByIdAndRemove({_id : users[i].id}, function(err, user){
+                User.findByIdAndRemove({_id : users[i]._id}, function(err, user){
                     if (err) { return next(err); }
                 });
             }

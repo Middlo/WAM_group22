@@ -12,9 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +21,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,26 +28,21 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
-import se.chalmers.cse.dit341.group22.model.Calendar;
 import se.chalmers.cse.dit341.group22.model.Event;
-import se.chalmers.cse.dit341.group22.model.Note;
 import se.chalmers.cse.dit341.group22.model.Reminder;
 import se.chalmers.cse.dit341.group22.model.Task;
-
 
 public class MainActivity extends AppCompatActivity {
 
     // Field for parameter name
     public static final String HTTP_PARAM = "httpResponse";
 
+    private AlertDialog dialog;
     private ArrayList<Event> events;
     private ArrayList<Task> tasks;
     private ArrayList<Reminder> reminders;
@@ -63,6 +55,25 @@ public class MainActivity extends AppCompatActivity {
     private TextInputEditText editStart;
     private TextInputEditText editFinish;
     private TextInputEditText editImport;
+
+    private TextInputEditText editEventTitleCrt;
+    private TextInputEditText editEventDescrCrt;
+    private TextInputEditText editEventStartCrt;
+    private TextInputEditText editEventFinishCrt;
+    private TextInputEditText editEventImportCrt;
+
+    private TextInputEditText editTaskTitleCrt;
+    private TextInputEditText editTaskDescrCrt;
+    private TextInputEditText editTaskStartCrt;
+    private TextInputEditText editTaskImportCrt;
+
+    private TextInputEditText editRemindTitleCrt;
+    private TextInputEditText editRemindMomentCrt;
+    private TextInputEditText editRemindMinutesCrt;
+    private TextInputEditText editRemindImportCrt;
+    private TextInputEditText editTReminderFor;
+
+    private int dataCounter = 0;
 
     private Event eventOnDisplay = null;
     private Task taskOnDisplay = null;
@@ -114,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //mEdit.putString("events", "");
                 //mEdit.apply();
-                //getEntity("events");
+                getEntity("events");
 
                 if(events.size() > 0){
                     //System.out.println("stored for scroll is " + sharedPreferences.getString("reminders", ""));
@@ -124,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
                 } else if(connectionExists){
                     displayError("There are no Events to Display");
                 } else {
-                    displayMsg("Fetching data...");
                     getData();
                 }
             }
@@ -136,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //mEdit.putString("tasks", "");
                 //mEdit.apply();
-                //getEntity("tasks");
+                getEntity("tasks");
 
                 if(tasks.size() > 0){
                     //System.out.println("stored for scroll is " + sharedPreferences.getString("reminders", ""));
@@ -159,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //mEdit.putString("reminders", "");
                 //mEdit.apply();
-                //getEntity("reminders");
+                getEntity("reminders");
 
                 if(reminders.size() > 0){
                     //System.out.println("stored for scroll is " + sharedPreferences.getString("reminders", ""));
@@ -198,8 +208,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_events:
                 HashMap<String, String> newEvent = new HashMap<>();
                 newEvent.put("title", "To be assigned");
-                newEvent.put("startDate", (new Date()).toString().substring(0,11));
-                newEvent.put("endDate", (new Date()).toString().substring(0,11));
+                newEvent.put("startDate", convertDateFormat(new Date()));
+                newEvent.put("endDate", convertDateFormat(new Date()));
 
                 createEntity("events", newEvent);
 
@@ -207,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_tasks:
                 HashMap<String, String> newTask = new HashMap<>();
                 newTask.put("taskTitle", "To be assigned");
-                newTask.put("deadline", (new Date()).toString().substring(0,11));
+                newTask.put("deadline", convertDateFormat(new Date()));
 
                 createEntity("tasks", newTask);
 
@@ -215,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_reminders:
                 HashMap<String, String> newReminder = new HashMap<>();
                 newReminder.put("topic", "To be given");
-                newReminder.put("targetMoment", (new Date()).toString().substring(0,11));
+                newReminder.put("targetMoment", convertDateFormat(new Date()));
 
                 createEntity("reminders", newReminder);
 
@@ -230,129 +240,262 @@ public class MainActivity extends AppCompatActivity {
 
     //open
     private void openAddEventActivity(Event event) {
-        // Make an intent to start next activity.
-        //Intent i = new Intent(ScrollingActivity.this, DisplayAddDate.class);
-        //startActivity(i);
+
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
         View newEventView = getLayoutInflater().inflate(R.layout.create_event,null);
         mBuilder.setCancelable(true);
-
 
         TextView id = (TextView) newEventView.findViewById(R.id.entityIDCrt);
         String text = "Event id: " + event.getId();
         id.setText(text);
 
-        TextInputEditText editEventTitleCrt = (TextInputEditText) newEventView.findViewById(R.id.editEventTitleCrt);
+        editEventTitleCrt = (TextInputEditText) newEventView.findViewById(R.id.editEventTitleCrt);
         if(!event.getTitle().equals(""))
             editEventTitleCrt.setHint(event.getTitle());
 
-        TextInputEditText editEventDescrCrt = (TextInputEditText) newEventView.findViewById(R.id.editEventDescrCrt);
+        editEventDescrCrt = (TextInputEditText) newEventView.findViewById(R.id.editEventDescrCrt);
         if(event.getDescription() != null)
             editEventDescrCrt.setHint(event.getDescription());
 
-        TextInputEditText editEventStartCrt = (TextInputEditText) newEventView.findViewById(R.id.editEventStartCrt);
+        editEventStartCrt = (TextInputEditText) newEventView.findViewById(R.id.editEventStartCrt);
         if(event.getStartDate() != null)
-            editEventStartCrt.setHint(event.getStartDate().toString().substring(0,11));
+            editEventStartCrt.setHint(convertDateFormat(event.getStartDate()));
 
-        TextInputEditText editEventFinishCrt = (TextInputEditText) newEventView.findViewById(R.id.editEventFinishCrt);
+        editEventFinishCrt = (TextInputEditText) newEventView.findViewById(R.id.editEventFinishCrt);
         if(event.getEndDate() != null)
-            editEventFinishCrt.setHint(event.getEndDate().toString().substring(0,11));
+            editEventFinishCrt.setHint(convertDateFormat(event.getEndDate()));
 
-        TextInputEditText editEventImportCrt = (TextInputEditText) newEventView.findViewById(R.id.editEventImportCrt);
+        editEventImportCrt = (TextInputEditText) newEventView.findViewById(R.id.editEventImportCrt);
         if(event.getImportanceLevel() != null)
             editEventImportCrt.setHint(event.getImportanceLevel());
 
+        eventOnDisplay = event;
+
         mBuilder.setView(newEventView);
-        final AlertDialog dialog = mBuilder.create();
+        dialog = mBuilder.create();
         dialog.show();
+    }
+
+
+    public void patchEvent (android.view.View view){
+        boolean dataExists = false;
+
+        String eventTitle = null;
+        if(editEventTitleCrt.getText() != null){
+            eventTitle = editEventTitleCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String eventDesc = null;
+        if(editEventDescrCrt.getText() != null){
+            eventDesc = editEventDescrCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String eventStart = null;
+        if(editEventStartCrt.getText() != null){
+            eventStart = editEventStartCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String eventFinish = null;
+        if(editEventFinishCrt.getText() != null){
+            eventFinish = editEventFinishCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String eventImport = null;
+        if(editEventImportCrt.getText() != null){
+            eventImport = editEventImportCrt.getText().toString();
+            dataExists = true;
+        }
+
+        if(dataExists){
+            HashMap<String, String> newData = new HashMap<>();
+            if(eventTitle != null)
+                newData.put("title", eventTitle);
+
+            if(eventDesc != null)
+                newData.put("description", eventDesc);
+
+            if(eventStart != null)
+                newData.put("startDate", eventStart);
+
+            if(eventFinish != null)
+                newData.put("endDate", eventFinish);
+
+            if(eventImport != null)
+                newData.put("importanceLevel", eventImport);
+
+            patchEntity("events", eventOnDisplay.getId(), newData);
+
+            eventOnDisplay = null;
+        } else {
+            displayError("There is no new Input to Update");
+        }
+    }
+
+    public void putEvent (android.view.View view){
+        boolean dataExists = false;
+        boolean shouldContinue = true;
+
+        String eventTitle = null;
+        if(editEventTitleCrt.getText() != null){
+            eventTitle = editEventTitleCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String eventDesc = null;
+        if(editEventDescrCrt.getText() != null){
+            eventDesc = editEventDescrCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String eventStart = null;
+        if(editEventStartCrt.getText() != null){
+            eventStart = editEventStartCrt.getText().toString();
+            dataExists = true;
+            editEventStartCrt.setError(null);
+        } else {
+            shouldContinue = false;
+            editEventStartCrt.setError("Should have a date");
+        }
+
+        String eventFinish = null;
+        if(editEventFinishCrt.getText() != null){
+            eventFinish = editEventFinishCrt.getText().toString();
+            dataExists = true;
+            editEventFinishCrt.setError(null);
+        } else {
+            shouldContinue = false;
+            editEventFinishCrt.setError("Should have a date");
+        }
+
+        String eventImport = null;
+        if(editEventImportCrt.getText() != null){
+            eventImport = editEventImportCrt.getText().toString();
+            dataExists = true;
+        }
+
+        if(dataExists && shouldContinue){
+            HashMap<String, String> newData = new HashMap<>();
+            if(eventTitle != null)
+                newData.put("title", eventTitle);
+            else
+                newData.put("title", "");
+
+            if(eventDesc != null)
+                newData.put("description", eventDesc);
+            else
+                newData.put("description", "");
+
+
+            newData.put("startDate", eventStart);
+
+            newData.put("endDate", eventFinish);
+
+            if(eventImport != null)
+                newData.put("importanceLevel", eventImport);
+            else
+                newData.put("importanceLevel", "");
+
+            putEntity("events", eventOnDisplay.getId(), newData);
+
+            eventOnDisplay = null;
+        } else {
+            displayError("There is Input error");
+        }
+    }
+
+
+    public void deleteEvent (View view){
+        deleteAnEntity("events", eventOnDisplay.getId());
+        events.remove(eventOnDisplay);
     }
 
 
     //open
     private void openAddTaskActivity(Task task) {
-        // Make an intent to start next activity.
-        //Intent i = new Intent(ScrollingActivity.this, DisplayAddDate.class);
-        //startActivity(i);
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
         View newTaskView = getLayoutInflater().inflate(R.layout.create_task,null);
         mBuilder.setCancelable(true);
-
 
         TextView id = (TextView) newTaskView.findViewById(R.id.taskIDCrt);
         String text = "Task id: " + task.getId();
         id.setText(text);
 
-        TextInputEditText editTaskTitleCrt = (TextInputEditText) newTaskView.findViewById(R.id.editTaskTitleCrt);
+        editTaskTitleCrt = (TextInputEditText) newTaskView.findViewById(R.id.editTaskTitleCrt);
         if(!task.getTaskTitle().equals(""))
             editTaskTitleCrt.setHint(task.getTaskTitle());
 
-        TextInputEditText editTaskDescrCrt = (TextInputEditText) newTaskView.findViewById(R.id.editTaskDescrCrt);
+        editTaskDescrCrt = (TextInputEditText) newTaskView.findViewById(R.id.editTaskDescrCrt);
         if(task.getTaskDescription() != null)
             editTaskDescrCrt.setHint(task.getTaskDescription());
 
-        TextInputEditText editTaskStartCrt = (TextInputEditText) newTaskView.findViewById(R.id.editTaskStartCrt);
+        editTaskStartCrt = (TextInputEditText) newTaskView.findViewById(R.id.editTaskStartCrt);
         if(task.getDeadline() != null)
-            editTaskStartCrt.setHint(task.getDeadline().toString().substring(0,11));
+            editTaskStartCrt.setHint(convertDateFormat(task.getDeadline()));
 
-        TextInputEditText editTaskImportCrt = (TextInputEditText) newTaskView.findViewById(R.id.editTaskImportCrt);
+        editTaskImportCrt = (TextInputEditText) newTaskView.findViewById(R.id.editTaskImportCrt);
         if(task.getImportanceLevel() != null)
             editTaskImportCrt.setHint(task.getImportanceLevel());
 
+        taskOnDisplay = task;
+
         mBuilder.setView(newTaskView);
-        final AlertDialog dialog = mBuilder.create();
+        dialog = mBuilder.create();
         dialog.show();
     }
 
 
-    private void openAddReminderActivity(Reminder reminder) {
+    private void openAddReminderActivity(String remID) {
+        Reminder reminder = null;
 
-        //Toast.makeText(getApplicationContext(),"Display is under progress", Toast.LENGTH_LONG).show();
+        for(Reminder rem: reminders){
+            if(rem.getId().equals(remID))
+                reminder = rem;
+        }
 
-        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
-        View newReminderView = getLayoutInflater().inflate(R.layout.create_reminder,null);
-        mBuilder.setCancelable(true);
+        if(reminder != null){
+            final AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
+            View newReminderView = getLayoutInflater().inflate(R.layout.create_reminder,null);
+            mBuilder.setCancelable(true);
 
-        TextView id = (TextView) newReminderView.findViewById(R.id.remindIDCrt);
-        String text = "Reminder id: " + reminder.getId();
-        id.setText(text);
+            TextView id = (TextView) newReminderView.findViewById(R.id.remindIDCrt);
+            String text = "Reminder id: " + reminder.getId();
+            id.setText(text);
 
-        TextInputEditText editRemindTitleCrt = (TextInputEditText) newReminderView.findViewById(R.id.editRemindTitleCrt);
-        if(!reminder.getTopic().equals(""))
-            editRemindTitleCrt.setHint(reminder.getTopic());
+            editRemindTitleCrt = (TextInputEditText) newReminderView.findViewById(R.id.editRemindTitleCrt);
+            if(!reminder.getTopic().equals(""))
+                editRemindTitleCrt.setHint(reminder.getTopic());
 
-        TextInputEditText editRemindMomentCrt = (TextInputEditText) newReminderView.findViewById(R.id.editRemindMomentCrt);
-        if(reminder.getTargetMoment() != null)
-            editRemindMomentCrt.setHint(reminder.getTargetMoment().toString().substring(0,11));
+            editRemindMomentCrt = (TextInputEditText) newReminderView.findViewById(R.id.editRemindMomentCrt);
+            if(reminder.getTargetMoment() != null)
+                editRemindMomentCrt.setHint(convertDateFormat(reminder.getTargetMoment()));
 
-        TextInputEditText editRemindMinutesCrt = (TextInputEditText) newReminderView.findViewById(R.id.editRemindMinutesCrt);
-        if(reminder.getRemindBefore() != null)
-            editRemindMinutesCrt.setHint(reminder.getRemindBefore());
+            editRemindMinutesCrt = (TextInputEditText) newReminderView.findViewById(R.id.editRemindMinutesCrt);
+            if(reminder.getRemindBefore() != null)
+                editRemindMinutesCrt.setHint(reminder.getRemindBefore());
 
-        TextInputEditText editRemindImportCrt = (TextInputEditText) newReminderView.findViewById(R.id.editRemindImportCrt);
-        if(reminder.getImportanceLevel() != null)
-            editRemindImportCrt.setHint(reminder.getImportanceLevel());
+            editRemindImportCrt = (TextInputEditText) newReminderView.findViewById(R.id.editRemindImportCrt);
+            if(reminder.getImportanceLevel() != null)
+                editRemindImportCrt.setHint(reminder.getImportanceLevel());
 
-        TextInputEditText editTReminderFor = (TextInputEditText) newReminderView.findViewById(R.id.editTReminderFor);
-        if(reminder.getReminderFor() != null)
-            editTReminderFor.setHint(reminder.getReminderFor());
+            editTReminderFor = (TextInputEditText) newReminderView.findViewById(R.id.editTReminderFor);
+            if(reminder.getReminderFor() != null)
+                editTReminderFor.setHint(reminder.getReminderFor());
 
-        mBuilder.setView(newReminderView);
-        final AlertDialog dialog = mBuilder.create();
-        dialog.show();
+            reminderOnDisplay = reminder;
+
+            mBuilder.setView(newReminderView);
+            dialog = mBuilder.create();
+            dialog.show();
+        } else {
+            displayMsg("Success");
+        }
 
     }
 
-    /*
-    public void onClickNewActivity (View view) {
-        TextView mEventView = findViewById(R.id.dashboardText);
-
-        // Starts a new activity, providing the text from my HTTP text field as an input
-        Intent intent = new Intent(this, SecondActivity.class);
-        intent.putExtra(HTTP_PARAM, mEventView.getText().toString());
-        startActivity(intent);
-    }
-
-     */
 
     /*
     public void onClickGetEvents (View view) {
@@ -499,6 +642,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getData(){
+        if(dataCounter == 0)
+            displayMsg("Fetching data...");
+
         mEdit.putString("events", "");
         mEdit.putString("tasks", "");
         mEdit.putString("reminders", "");
@@ -548,7 +694,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 connectionExists = true;
 
-                                if(!dataArray.equals("[]")){
+                                if(dataArray != null ){
                                     System.out.println("Response is: "+ dataArray);
                                     mEdit.putString(entityName, dataArray);
                                     mEdit.apply();
@@ -583,6 +729,10 @@ public class MainActivity extends AppCompatActivity {
                                     break;
 
                                 default:
+                                    if(dataCounter++ == 0){
+                                        displayMsg("Data fetched");
+                                    }
+
                                     Reminder[] foundReminders = gson.fromJson(dataArray, Reminder[].class);
 
                                     reminders.clear();
@@ -662,12 +812,13 @@ public class MainActivity extends AppCompatActivity {
                                 switch (entityName){
                                     case "events":
                                         try{
-                                            Event foundEvents = gson.fromJson(dataArray, Event.class);
+                                            Event foundEvent = gson.fromJson(dataArray, Event.class);
 
-                                            if(foundEvents.getId() != null){
+                                            if(foundEvent.getId() != null){
                                                 success = true;
-                                                eventResult = foundEvents;
-                                                openAddEventActivity(foundEvents);
+                                                eventResult = foundEvent;
+                                                getEntity(entityName);
+                                                openAddEventActivity(foundEvent);
                                                 //displayMsg("Event created successfully");
                                             } else {
                                                 displayMsg("Event is not created");
@@ -683,6 +834,7 @@ public class MainActivity extends AppCompatActivity {
                                         if(foundTasks.getId() != null){
                                             success = true;
                                             taskResult =  foundTasks;
+                                            getEntity(entityName);
                                             openAddTaskActivity(foundTasks);
                                             //displayMsg("Task created successfully");
                                         } else {
@@ -690,14 +842,16 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                         break;
 
-
                                     default:
-                                        Reminder foundReminders = gson.fromJson(dataArray, Reminder.class);
+                                        Reminder foundReminder = gson.fromJson(dataArray, Reminder.class);
 
-                                        if(foundReminders.getId() != null){
+                                        if(foundReminder.getId() != null){
+                                            //displayMsg("new Rem is " + foundReminder.getId());
                                             success = true;
-                                            reminderResult = foundReminders;
-                                            openAddReminderActivity(foundReminders);
+                                            reminderResult = foundReminder;
+                                            reminders.add(foundReminder);
+                                            getEntity(entityName);
+                                            openAddReminderActivity(foundReminder.getId());
                                             //displayMsg("Reminder created successfully");
                                         } else {
                                             displayMsg("Reminder is not created");
@@ -705,8 +859,92 @@ public class MainActivity extends AppCompatActivity {
                                         break;
                                 }
 
+                                if(!success){
+                                    displayError(singleEntity + " is not created");
+                                }
+
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                displayError("Error! " + error.toString());
+                                //mTaskView.setText("Error! " + error.toString());
+                            }
+                        });
+
+                // The request queue makes sure that HTTP requests are processed in the right order.
+                queue.add(jsonObjectRequest);
+            } else {
+                displayError("Request body is empty");
+            }
+
+        } else {
+            displayError("Wrong entity name");
+        }
+
+    }
+
+    public void patchEntity(String entityName, String objectID, HashMap reqBody){
+
+        if(entityName.equals("tasks") || entityName.equals("events") || entityName.equals("reminders") ){
+            if(reqBody != null){
+                String url = getString(R.string.server_url) + "/api/" + entityName + "/" + objectID;
+
+                JSONObject parameters = new JSONObject(reqBody);
+
+                // This uses Volley (Threading and a request queue is automatically handled in the background)
+                RequestQueue queue = Volley.newRequestQueue(this);
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.PATCH, url, parameters, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                // GSON allows to parse a JSON string/JSONObject directly into a user-defined class
+                                Gson gson = new Gson();
+
+                                String dataArray = null;
+
+                                String singleEntity = entityName.substring(0,(entityName.length() - 1));
+                                try {
+                                    dataArray = response.getString(singleEntity);
+                                } catch (JSONException e) {
+                                    Log.e(this.getClass().toString(), e.getMessage());
+                                }
+
+                                boolean success = false;
+
+                                switch (entityName){
+
+                                    case "events":
+                                        Event foundEvents = gson.fromJson(dataArray, Event.class);
+
+                                        if(foundEvents.getId() != null){
+                                            success = true;
+                                        }
+                                        break;
+
+                                    case "tasks":
+                                        Task foundTasks = gson.fromJson(dataArray, Task.class);
+
+                                        if(foundTasks.getId() != null){
+                                            success = true;
+                                        }
+                                        break;
+
+                                    default:
+                                        Reminder foundReminders = gson.fromJson(dataArray, Reminder.class);
+
+                                        if(foundReminders.getId()!= null){
+                                            success = true;
+                                        }
+                                        break;
+                                }
+
                                 if(success){
+                                    displayMsg("Updated Successfully");
                                     getEntity(entityName);
+                                    dialog.dismiss();
                                 } else {
                                     displayError(singleEntity + " is not created successfully");
                                 }
@@ -733,16 +971,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void patchEntity(String entityName, String objectID, Object reqBody){
+
+    public void putEntity(String entityName, String objectID, HashMap reqBody){
 
         if(entityName.equals("tasks") || entityName.equals("events") || entityName.equals("notes") || entityName.equals("reminders") ){
             if(reqBody != null){
                 String url = getString(R.string.server_url) + "/api/" + entityName + "/" + objectID;
 
+                JSONObject parameters = new JSONObject(reqBody);
+
                 // This uses Volley (Threading and a request queue is automatically handled in the background)
                 RequestQueue queue = Volley.newRequestQueue(this);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                        (Request.Method.PATCH, url, null, new Response.Listener<JSONObject>() {
+                        (Request.Method.PUT, url, parameters, new Response.Listener<JSONObject>() {
 
                             @Override
                             public void onResponse(JSONObject response) {
@@ -761,115 +1002,36 @@ public class MainActivity extends AppCompatActivity {
                                 boolean success = false;
 
                                 switch (entityName){
-                                    case "tasks":
-                                        Task[] foundTasks = gson.fromJson(dataArray, Task[].class);
 
-                                        if(foundTasks[0].getId() != null){
+                                    case "events":
+                                        Event foundEvents = gson.fromJson(dataArray, Event.class);
+
+                                        if(foundEvents.getId() != null){
                                             success = true;
                                         }
                                         break;
 
-                                    case "events":
-                                        Event[] foundEvents = gson.fromJson(dataArray, Event[].class);
+                                    case "tasks":
+                                        Task foundTasks = gson.fromJson(dataArray, Task.class);
 
-                                        if(foundEvents[0].getId() != null){
+                                        if(foundTasks.getId() != null){
                                             success = true;
                                         }
                                         break;
 
                                     default:
-                                        Reminder[] foundReminders = gson.fromJson(dataArray, Reminder[].class);
+                                        Reminder foundReminders = gson.fromJson(dataArray, Reminder.class);
 
-                                        if(foundReminders[0].getId()!= null){
+                                        if(foundReminders.getId() != null){
                                             success = true;
                                         }
                                         break;
                                 }
 
                                 if(success){
+                                    displayMsg("Updated Successfully");
                                     getEntity(entityName);
-                                } else {
-                                    displayError(singleEntity + " is not created successfully");
-                                }
-
-                            }
-                        }, new Response.ErrorListener() {
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                displayError("Error! " + error.toString());
-                                //mTaskView.setText("Error! " + error.toString());
-                            }
-                        });
-
-                // The request queue makes sure that HTTP requests are processed in the right order.
-                queue.add(jsonObjectRequest);
-            } else {
-                displayError("Request body is empty");
-            }
-
-        } else {
-            displayError("Wrong entity name");
-        }
-
-    }
-
-
-    public void putEntity(String entityName, String objectID, Object reqBody){
-
-        if(entityName.equals("tasks") || entityName.equals("events") || entityName.equals("notes") || entityName.equals("reminders") ){
-            if(reqBody != null){
-                String url = getString(R.string.server_url) + "/api/" + entityName + "/" + objectID;
-
-                // This uses Volley (Threading and a request queue is automatically handled in the background)
-                RequestQueue queue = Volley.newRequestQueue(this);
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                        (Request.Method.PUT, url, null, new Response.Listener<JSONObject>() {
-
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                // GSON allows to parse a JSON string/JSONObject directly into a user-defined class
-                                Gson gson = new Gson();
-
-                                String dataArray = null;
-
-                                String singleEntity = entityName.substring(0,(entityName.length() - 1));
-                                try {
-                                    dataArray = response.getString(singleEntity);
-                                } catch (JSONException e) {
-                                    Log.e(this.getClass().toString(), e.getMessage());
-                                }
-
-                                boolean success = false;
-
-                                switch (entityName){
-                                    case "tasks":
-                                        Task[] foundTasks = gson.fromJson(dataArray, Task[].class);
-
-                                        if(foundTasks[0].getId() != null){
-                                            success = true;
-                                        }
-                                        break;
-
-                                    case "events":
-                                        Event[] foundEvents = gson.fromJson(dataArray, Event[].class);
-
-                                        if(foundEvents[0].getId() != null){
-                                            success = true;
-                                        }
-                                        break;
-
-                                    default:
-                                        Reminder[] foundReminders = gson.fromJson(dataArray, Reminder[].class);
-
-                                        if(foundReminders[0].getId() != null){
-                                            success = true;
-                                        }
-                                        break;
-                                }
-
-                                if(success){
-                                    getEntity(entityName);
+                                    dialog.dismiss();
                                 } else {
                                     displayError(singleEntity + " is not created successfully");
                                 }
@@ -899,7 +1061,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void deleteAnEntity(String entityName, String objectID){
 
-        if(entityName.equals("tasks") || entityName.equals("events") || entityName.equals("notes") || entityName.equals("reminders") ){
+        if(entityName.equals("tasks") || entityName.equals("events") || entityName.equals("reminders") ){
 
             String url = getString(R.string.server_url) + "/api/" + entityName + "/" + objectID;
 
@@ -924,9 +1086,15 @@ public class MainActivity extends AppCompatActivity {
                             String foundMessage = gson.fromJson(dataArray, String.class);
 
                             if(foundMessage.equals("Success")){
+                                displayMsg("Updated Successfully");
                                 getEntity(entityName);
+                                if(dialog != null)
+                                    dialog.dismiss();
+                                eventOnDisplay = null;
+                                taskOnDisplay = null;
+                                reminderOnDisplay = null;
                             } else {
-                                displayError(objectID + " is not deleted successfully");
+                                displayError(objectID + " is not deleted");
                             }
 
                         }
@@ -948,7 +1116,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+/*
     public void deleteAllEntity(String entityName){
 
         if(entityName.equals("tasks") || entityName.equals("events") || entityName.equals("notes") || entityName.equals("reminders") ){
@@ -1001,7 +1169,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //open the displayAddDate activity without any message
+ */
+
+    //open the activity without any message
     private void displayEvent(Event event) {
 
         //Event event = events.get(0);
@@ -1028,18 +1198,20 @@ public class MainActivity extends AppCompatActivity {
 
         editStart = (TextInputEditText) newEventView.findViewById(R.id.editEventStart);
         if(event.getStartDate() != null)
-            editStart.setHint(event.getStartDate().toString().substring(0,11));
+            editStart.setHint(convertDateFormat(event.getStartDate()));
 
         editFinish = (TextInputEditText) newEventView.findViewById(R.id.editEventFinish);
         if(event.getEndDate() != null)
-            editFinish.setHint(event.getEndDate().toString().substring(0,11));
+            editFinish.setHint(convertDateFormat(event.getEndDate()));
 
         editImport = (TextInputEditText) newEventView.findViewById(R.id.editEventImport);
         if(event.getImportanceLevel() != null)
             editImport.setHint(event.getImportanceLevel());
 
+        eventOnDisplay = event;
+
         mBuilder.setView(newEventView);
-        final AlertDialog dialog = mBuilder.create();
+        dialog = mBuilder.create();
         dialog.show();
     }
 
@@ -1062,18 +1234,158 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void putEvent (android.view.View view){
 
+    public void addEventReminder(View view){
+        Event event = eventOnDisplay;
+        dismissView(view);
+
+        HashMap<String, String> newData = new HashMap<>();
+
+        newData.put("topic", event.getTitle());
+        newData.put("targetMoment", convertDateFormat(event.getStartDate()));
+        newData.put("reminderFor", event.getId());
+
+        createEntity("reminders", newData);
+        eventOnDisplay = null;
     }
 
-    public void patchEvent (View view){
 
+    public void addTaskReminder(View view){
+        Task task = taskOnDisplay;
+        dismissView(view);
+
+        HashMap<String, String> newData = new HashMap<>();
+
+        newData.put("topic", task.getTaskTitle());
+        newData.put("targetMoment", convertDateFormat(task.getDeadline()));
+        newData.put("reminderFor", task.getId());
+
+        createEntity("reminders", newData);
+        taskOnDisplay = null;
     }
+
+
+    public void patchTask (android.view.View view){
+        boolean dataExists = false;
+
+        String taskTitle = null;
+        if(editTaskTitleCrt.getText() != null){
+            taskTitle = editTaskTitleCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String taskDesc = null;
+        if(editTaskDescrCrt.getText() != null){
+            taskDesc = editTaskDescrCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String taskDeadline = null;
+        if(editTaskStartCrt.getText() != null){
+            taskDeadline = editTaskStartCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String taskImport = null;
+        if(editTaskImportCrt.getText() != null){
+            taskImport = editTaskImportCrt.getText().toString();
+            dataExists = true;
+        }
+
+        if(dataExists){
+            HashMap<String, String> newData = new HashMap<>();
+            if(taskTitle != null)
+                newData.put("taskTitle", taskTitle);
+
+            if(taskDesc != null)
+                newData.put("taskDescription", taskDesc);
+
+            if(taskDeadline != null)
+                newData.put("deadline", taskDeadline);
+
+            if(taskImport != null)
+                newData.put("importanceLevel", taskImport);
+
+            patchEntity("tasks", taskOnDisplay.getId(), newData);
+
+            taskOnDisplay = null;
+        } else {
+            displayError("There is Input error");
+        }
+    }
+
+
+    public void putTask (android.view.View view){
+        boolean dataExists = false;
+        boolean shouldContinue = true;
+
+
+        String taskTitle = null;
+        if(editTaskTitleCrt.getText() != null){
+            taskTitle = editTaskTitleCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String taskDesc = null;
+        if(editTaskDescrCrt.getText() != null){
+            taskDesc = editTaskDescrCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String taskDeadline = null;
+        if(editTaskStartCrt.getText() != null){
+            taskDeadline = editTaskStartCrt.getText().toString();
+            dataExists = true;
+            editTaskStartCrt.setError(null);
+        } else {
+            shouldContinue = false;
+            editTaskStartCrt.setError("Should have a date");
+        }
+
+        String taskImport = null;
+        if(editTaskImportCrt.getText() != null){
+            taskImport = editTaskImportCrt.getText().toString();
+            dataExists = true;
+        }
+
+
+        if(dataExists && shouldContinue){
+            HashMap<String, String> newData = new HashMap<>();
+            if(taskTitle != null)
+                newData.put("taskTitle", taskTitle);
+            else
+                newData.put("taskTitle", "");
+
+            if(taskDesc != null)
+                newData.put("taskDescription", taskDesc);
+            else
+                newData.put("taskDescription", "");
+
+            newData.put("deadline", taskDeadline);
+
+            if(taskImport != null)
+                newData.put("importanceLevel", taskImport);
+            else
+                newData.put("importanceLevel", "");
+
+            putEntity("tasks", taskOnDisplay.getId(), newData);
+
+            taskOnDisplay = null;
+        } else {
+            displayError("There is Input error");
+        }
+    }
+
+
+    public void deleteTask (View view){
+        deleteAnEntity("tasks", taskOnDisplay.getId());
+        tasks.remove(taskOnDisplay);
+    }
+
 
     public void dismissView (View view){
-        finish();
-        //Intent i = new Intent(view.getContext(), ScrollingActivity.class);
-        //startActivity(i);
+        dialog.cancel();
+        dialog.dismiss();
     }
 
 
@@ -1095,7 +1407,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextInputEditText editRemindMoment = (TextInputEditText) newReminderiew.findViewById(R.id.editRemindMoment);
         if(reminder.getTargetMoment() != null)
-            editRemindMoment.setHint(reminder.getTargetMoment().toString().substring(0,11));
+            editRemindMoment.setHint(convertDateFormat(reminder.getTargetMoment()));
 
         TextInputEditText editRemindMinutes = (TextInputEditText) newReminderiew.findViewById(R.id.editRemindMinutes);
         if(reminder.getRemindBefore() != null)
@@ -1106,56 +1418,161 @@ public class MainActivity extends AppCompatActivity {
             editRemindImport.setHint(reminder.getImportanceLevel());
 
         TextView parent = (TextView) newReminderiew.findViewById(R.id.reminderFor);
-        String text2 = "Parent id: " + reminder.getReminderFor();
+        String text1 = reminder.getReminderFor();
+        String text2 = "Parent id: ";
+        if(text1 != null)
+            text2 = text2 + text1;
+        else
+            text2 = text2 + "              ";
+
         parent.setText(text2);
 
         mBuilder.setView(newReminderiew);
-        final AlertDialog dialog = mBuilder.create();
+        dialog = mBuilder.create();
         dialog.show();
 
     }
 
 
-   /* //after saving button
-    public void patchEvent(android.view.View v){
-        if(!validateDate() | !validateStart() | !validateFinish() | !validateImportance()){
-            return;
+    public void patchReminder (android.view.View view){
+        boolean dataExists = false;
+
+        String remTitle = null;
+        if(editRemindTitleCrt.getText() != null){
+            remTitle = editRemindTitleCrt.getText().toString();
+            dataExists = true;
         }
 
-        if(editTitle.)
-        String newTitle = editTitle;
-        editDescr;
-        editStart;
-        editFinish;
-        editImport;
+        String remMoment = null;
+        if(editRemindMomentCrt.getText() != null){
+            remMoment = editRemindMomentCrt.getText().toString();
+            dataExists = true;
+        }
 
-        String forward = date + " " + approvedSt + " " + approvedFn + " ";
+        String remMinute = null;
+        if(editRemindMinutesCrt.getText() != null){
+            remMinute = editRemindMinutesCrt.getText().toString();
+            dataExists = true;
+        }
 
-        finish();
-        Intent i = new Intent(v.getContext(), ScrollingActivity.class);
-        i.putExtra("Reply", forward);
-        startActivity(i);
-    }*/
+        String remImport = null;
+        if(editRemindImportCrt.getText() != null){
+            remImport = editRemindImportCrt.getText().toString();
+            dataExists = true;
+        }
 
+        String remParent = null;
+        if(editTReminderFor.getText() != null){
+            remParent = editTReminderFor.getText().toString();
+            dataExists = true;
+        }
 
-    /*//YearMonth yearMonth = YearMonth.of(year,month);
-    public boolean validateDate(){
+        if(dataExists){
+            HashMap<String, String> newData = new HashMap<>();
+            if(remTitle != null)
+                newData.put("topic", remTitle);
 
-        String inputText = editStart.getEditableText().toString().trim();
+            if(remMoment != null)
+                newData.put("targetMoment", remMoment);
 
-        if(inputText.isEmpty()){
-            editStart.setError("Field is empty");
-            return false;
-        } else if (!inputText.matches(DATE_REGEX)){
-            editDate.setError("Use valid format YYYY-MM-DD");
-            return false;
-        } else if (!dateExists(inputText)){
-            editDate.setError("Invalid date");
-            return false;
+            if(remMinute != null)
+                newData.put("remindBefore", remMinute);
+
+            if(remImport != null)
+                newData.put("importanceLevel", remImport);
+
+            if(remParent != null)
+                newData.put("reminderFor", remParent);
+
+            patchEntity("reminders", reminderOnDisplay.getId(), newData);
+
+            reminderOnDisplay = null;
         } else {
-            editDate.setError(null);
-            date = inputText;
-            return true;
+            displayError("There is no new Input to Update");
         }
-    }*/
+    }
+
+    public void putReminder (android.view.View view){
+        boolean dataExists = false;
+        boolean shouldContinue = true;
+
+        String remTitle = null;
+        if(editRemindTitleCrt.getText() != null){
+            remTitle = editRemindTitleCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String remMoment = null;
+        if(editRemindMomentCrt.getText() != null){
+            remMoment = editRemindMomentCrt.getText().toString();
+            dataExists = true;
+            editRemindMomentCrt.setError(null);
+        } else {
+            shouldContinue = false;
+            editRemindMomentCrt.setError("Should have a date");
+        }
+
+        String remMinute = null;
+        if(editRemindMinutesCrt.getText() != null){
+            remMinute = editRemindMinutesCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String remImport = null;
+        if(editRemindImportCrt.getText() != null){
+            remImport = editRemindImportCrt.getText().toString();
+            dataExists = true;
+        }
+
+        String remParent = null;
+        if(editTReminderFor.getText() != null){
+            remParent = editTReminderFor.getText().toString();
+            dataExists = true;
+        }
+
+        if(dataExists && shouldContinue){
+            HashMap<String, String> newData = new HashMap<>();
+            if(remTitle != null)
+                newData.put("topic", remTitle);
+            else
+                newData.put("topic", "");
+
+            newData.put("targetMoment", remMoment);
+
+            if(remMinute != null)
+                newData.put("remindBefore", remMinute);
+            else
+                newData.put("remindBefore", "");
+
+            if(remImport != null)
+                newData.put("importanceLevel", remImport);
+            else
+                newData.put("importanceLevel", "");
+
+            if(remParent != null)
+                newData.put("reminderFor", remParent);
+            else
+                newData.put("reminderFor", "");
+
+            putEntity("reminders", reminderOnDisplay.getId(), newData);
+
+            reminderOnDisplay = null;
+        } else {
+            displayError("There is Input error");
+        }
+    }
+
+
+    public void deleteReminder (View view){
+        deleteAnEntity("reminders", reminderOnDisplay.getId());
+        reminders.remove(reminderOnDisplay);
+    }
+
+
+    private String convertDateFormat(Date date){
+        String input = date.toString();
+        String year = input.substring(30);
+        String dateTxt = input.substring(4,11);
+        return dateTxt + year;
+    }
 }

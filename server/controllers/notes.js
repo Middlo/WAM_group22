@@ -117,7 +117,7 @@ router.delete('/', function(req, res, next) {
             removable = 0;
 
             for(var i = 0; i < notes.length; i++ ){
-                Note.findByIdAndRemove({_id : notes[i].id}, function(err, note){
+                Note.findByIdAndRemove({_id : notes[i]._id}, function(err, note){
                     if (err) { return next(err); }
                 });
             }

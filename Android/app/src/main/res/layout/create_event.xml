@@ -17,9 +17,10 @@
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
         android:textStyle="bold"
+        android:layout_below="@+id/exitView"
         android:background="#008000"
         android:text="@string/id"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:textAllCaps="false"
         android:textSize="18sp" />
 
@@ -179,41 +180,44 @@
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:onClick="addEventReminder"/>
 
     <Button
         android:id="@+id/putEventCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#006400"
-        android:layout_toEndOf="@+id/closeViewCrt"
-        android:layout_toRightOf="@+id/closeViewCrt"
+        android:layout_toStartOf="@+id/deleteEvent"
+        android:layout_toLeftOf="@+id/deleteEvent"
         android:layout_below="@+id/addEventReminderCrt"
         android:text="@string/update_entirely"
         android:textAllCaps="false"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        android:onClick="putEvent"/>
 
     <Button
         android:id="@+id/patchEventCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#483d8b"
-        android:layout_toStartOf="@+id/closeViewCrt"
-        android:layout_toLeftOf="@+id/closeViewCrt"
+        android:layout_toEndOf="@+id/deleteEvent"
+        android:layout_toRightOf="@+id/deleteEvent"
         android:text="@string/update_partially"
         android:layout_below="@+id/addEventReminderCrt"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textAllCaps="false"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        android:onClick="patchEvent"/>
 
     <Button
-        android:id="@+id/closeViewCrt"
+        android:id="@+id/deleteEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
@@ -221,8 +225,22 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/addEventReminderCrt"
         android:layout_marginTop="5dp"
-        android:text="@string/cancel"
+        android:text="Delete Event"
         android:textAllCaps="false"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:onClick="deleteEvent"/>
+
+    <Button
+        android:id="@+id/exitView"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="#FF0000"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="x"
+        android:textAllCaps="true"
+        android:visibility="visible"
+        android:onClick="dismissView"/>
 
 </RelativeLayout>

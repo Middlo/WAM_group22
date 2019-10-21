@@ -18,9 +18,10 @@
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
         android:textStyle="bold"
+        android:layout_below="@+id/exitView"
         android:background="#008000"
         android:text="_id"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:textAllCaps="false"
         android:textSize="18sp" />
 
@@ -37,7 +38,7 @@
         android:textSize="20sp" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editTitle"
+        android:id="@+id/editTTitle"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
@@ -157,6 +158,25 @@
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
+        android:visibility="visible"
+        android:onClick="displayTaskReminder"/>
+
+
+    <Button
+        android:id="@+id/addReminder"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/taskImportance"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_toEndOf="@+id/taskRemDetail"
+        android:layout_toRightOf="@+id/taskRemDetail"
+        android:background="#519730"
+        android:onClick="addTaskReminder"
+        android:text="+"
+        android:textAllCaps="true"
+        android:textSize="20sp"
         android:visibility="visible" />
 
     <Button
@@ -164,34 +184,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#006400"
-        android:layout_toEndOf="@+id/taskClose"
-        android:layout_toRightOf="@+id/taskClose"
+        android:layout_toStartOf="@+id/deleteTask"
+        android:layout_toLeftOf="@+id/deleteTask"
         android:layout_below="@+id/taskRemDetail"
         android:text="Update Entirely"
         android:textAllCaps="false"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        android:onClick="putTask"/>
 
     <Button
         android:id="@+id/taskPatch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#483d8b"
-        android:layout_toStartOf="@+id/taskClose"
-        android:layout_toLeftOf="@+id/taskClose"
+        android:layout_toEndOf="@+id/deleteTask"
+        android:layout_toRightOf="@+id/deleteTask"
         android:text="Update Partially"
         android:layout_below="@+id/taskRemDetail"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textAllCaps="false"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        android:onClick="patchTask"/>
 
     <Button
-        android:id="@+id/taskClose"
+        android:id="@+id/deleteTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
@@ -199,8 +221,21 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/taskRemDetail"
         android:layout_marginTop="5dp"
-        android:text="Cancel"
+        android:text="Delete Task"
         android:textAllCaps="false"
+        android:visibility="visible"
+        android:onClick="deleteTask"/>
+
+    <Button
+        android:id="@+id/exitView"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="#FF0000"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="x"
+        android:textAllCaps="true"
         android:visibility="visible"
         android:onClick="dismissView"/>
 

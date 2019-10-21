@@ -17,9 +17,10 @@
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
         android:textStyle="bold"
+        android:layout_below="@+id/exitView"
         android:background="#008000"
         android:text="_id"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:textAllCaps="false"
         android:textSize="18sp" />
 
@@ -152,41 +153,44 @@
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:onClick="addTaskReminder"/>
 
     <Button
         android:id="@+id/taskPutCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#006400"
-        android:layout_toEndOf="@+id/taskCloseCrt"
-        android:layout_toRightOf="@+id/taskCloseCrt"
+        android:layout_toStartOf="@+id/deleteTask"
+        android:layout_toLeftOf="@+id/deleteTask"
         android:layout_below="@+id/addTaskReminderCrt"
         android:text="Update Entirely"
         android:textAllCaps="false"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        android:onClick="putTask"/>
 
     <Button
         android:id="@+id/taskPatchCrt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#483d8b"
-        android:layout_toStartOf="@+id/taskCloseCrt"
-        android:layout_toLeftOf="@+id/taskCloseCrt"
+        android:layout_toEndOf="@+id/deleteTask"
+        android:layout_toRightOf="@+id/deleteTask"
         android:text="Update Partially"
         android:layout_below="@+id/addTaskReminderCrt"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textAllCaps="false"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        android:onClick="patchTask"/>
 
     <Button
-        android:id="@+id/taskCloseCrt"
+        android:id="@+id/deleteTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
@@ -194,8 +198,22 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/addTaskReminderCrt"
         android:layout_marginTop="5dp"
-        android:text="Cancel"
+        android:text="Delete Task"
         android:textAllCaps="false"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:onClick="deleteTask"/>
+
+    <Button
+        android:id="@+id/exitView"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="#FF0000"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="x"
+        android:textAllCaps="true"
+        android:visibility="visible"
+        android:onClick="dismissView"/>
 
 </RelativeLayout>

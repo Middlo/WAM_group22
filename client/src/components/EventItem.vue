@@ -59,7 +59,7 @@
 
         <b-button class="reminderDetailBtn" @click="showRemDetail(event._id)">Reminder Details</b-button>
         <b-container id="collapse1-inner" class="secondCard" v-show="allowPart2 === event._id">
-          <b-button class="createButton" @click="createEventReminder(event, event._id), $emit('event-content-changed', event._id)">Create Reminder</b-button>
+          <b-button v-show="reminders.length < 1" class="createButton" @click="createEventReminder(event, event._id), $emit('event-content-changed', event._id)">Create Reminder</b-button>
 
           <b-list-group-item id="reminderDetail" v-for="reminder in reminders" v-bind:key="reminder._id">
             <b-button class="close" @click="deleteEventReminder(event._id, reminder._id), $emit('event-content-changed', event._id)">&times;</b-button>
@@ -365,6 +365,7 @@ export default {
   background-color: rgba(198, 218, 189, 0.979);
 }
 .reminderDetailBtn{
+  background-color: rgba(81, 151, 48, 0.979);
   margin-top: 20px;
   margin-bottom: 10px;
 }

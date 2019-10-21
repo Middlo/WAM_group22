@@ -110,6 +110,10 @@ router.delete('/:taskId', function(req, res, next) {
         if (err) { return next(err); }
         if (task === null) {
             return res.status(404).json({'message': 'Task is not found'});
+        } else {
+            Reminder.findOneAndRemove({reminderFor : task._id}, function(err, foundReminder){
+                if (err) { return next(err); }
+            });
         }
         res.status(200).json({"message" : 'Success'});
     });
@@ -129,7 +133,11 @@ router.delete('/', function(req, res, next) {
             removable = 0;
 
             for(var i = 0; i < tasks.length; i++ ){
-                Task.findByIdAndRemove({_id : tasks[i].id}, function(err, task){
+                Reminder.findOneAndRemove({reminderFor : tasks[i]._id}, function(err, foundReminder){
+                    if (err) { return next(err); }
+                });
+
+                Task.findByIdAndRemove({_id : tasks[i]._id}, function(err, task){
                     if (err) { return next(err); }
                 });
             }

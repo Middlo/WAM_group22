@@ -139,7 +139,7 @@ router.delete('/', function(req, res, next) {
             removable = 0;
 
             for(var i = 0; i < reminders.length; i++ ){
-                Reminder.findByIdAndRemove({_id : reminders[i].id}, function(err, reminder){
+                Reminder.findByIdAndRemove({_id : reminders[i]._id}, function(err, reminder){
                     if (err) { return next(err); }
                 });
             }

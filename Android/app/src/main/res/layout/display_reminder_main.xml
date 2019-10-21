@@ -17,10 +17,11 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
+        android:layout_below="@+id/exitView"
         android:textStyle="bold"
         android:background="#008000"
         android:text="_id"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:textAllCaps="false"
         android:textSize="18sp" />
 
@@ -162,13 +163,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#006400"
-        android:layout_toEndOf="@+id/remindClose"
-        android:layout_toRightOf="@+id/remindClose"
+        android:layout_toStartOf="@+id/deleteReminder"
+        android:layout_toLeftOf="@+id/deleteReminder"
         android:layout_below="@+id/reminderFor"
         android:text="Update Entirely"
         android:textAllCaps="false"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:visibility="visible"/>
 
@@ -177,19 +178,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#483d8b"
-        android:layout_toStartOf="@+id/remindClose"
-        android:layout_toLeftOf="@+id/remindClose"
+        android:layout_toEndOf="@+id/deleteReminder"
+        android:layout_toRightOf="@+id/deleteReminder"
         android:text="Update Partially"
         android:layout_below="@+id/reminderFor"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textAllCaps="false"
         android:visibility="visible"/>
 
     <Button
-        android:id="@+id/remindClose"
+        android:id="@+id/deleteReminder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
@@ -197,8 +198,21 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/reminderFor"
         android:layout_marginTop="5dp"
-        android:text="Cancel"
+        android:text="Delete Reminder"
         android:textAllCaps="false"
+        android:visibility="visible"
+        android:onClick="deleteReminder"/>
+
+    <Button
+        android:id="@+id/exitView"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="#FF0000"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="x"
+        android:textAllCaps="true"
         android:visibility="visible"
         android:onClick="dismissView"/>
 

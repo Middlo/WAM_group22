@@ -5,15 +5,16 @@ var Event = require('../models/Event');
 var Reminder = require('../models/Reminder');
 
 // Create a new event
-router.post('/', function(req, res, next) {
+router.post('/', async function(req, res, next) {
     if(req.body.title || req.body.description || req.body.startDate ||  req.body.endDate
         || req.body.importanceLevel ){
-            
-        var event = new Event(req.body);
-        event.save(function(err) {
-            if (err) { return next(err); }
-            res.status(201).json({"event" : event});//json({"message" : 'Event Successfully created'});
-        });   
+            var event = new Event(req.body);
+            try{
+                var savedEvent = await event.save();
+                res.status(201).json({"event" : savedEvent});
+            } catch (err){
+                return next(err);
+            }
     } else {
         res.status(400).json({"message":'The request data does not have valid keys or is empty.'});
     }
@@ -22,16 +23,18 @@ router.post('/', function(req, res, next) {
 
 
 // Return list of all events
-router.get('/', function(req, res, next) {
-    Event.find(function(err, events) {
-        if (err) { 
-            return next(err); 
-        } else if (events.length === 0)
+router.get('/', async function(req, res, next) {
+    try{
+        var events = await Event.find();
+
+        if (events.length === 0)
             res.status(200).json({"events": [], "message" : 'There are no Events registered'});
         else {
             res.status(200).json({"events": events});
         }
-    });
+    } catch (err) {
+        return next(err);
+    }
 });
 
 /*
@@ -159,7 +162,12 @@ router.delete('/:eventId', function(req, res, next) {
         if (err) { return next(err); }
         if (event === null) {
             return res.status(404).json({'message': 'Event is not found'});
+        } else {
+            Reminder.findOneAndRemove({reminderFor : id}, function(err, foundReminders){
+                if (err) { return next(err); }
+            });
         }
+        
         res.status(200).json({"message" : 'Success'});
     });
 });
@@ -178,7 +186,11 @@ router.delete('/', function(req, res, next) {
             removable = 0;
 
             for(var i = 0; i < events.length; i++ ){
-                Event.findByIdAndRemove({_id : events[i].id}, function(err, event){
+                Reminder.findOneAndRemove({reminderFor : events[i]._id}, function(err, foundReminder){
+                    if (err) { return next(err); }
+                });
+
+                Event.findByIdAndRemove({_id : events[i]._id}, function(err, event){
                     if (err) { return next(err); }
                 });
             }
@@ -197,11 +209,11 @@ router.post('/:eventId/reminders', function(req, res, next) {
         if (event === null) {
             return res.status(404).json({'message': 'The Event is not registered'});
         }
-        if(req.body.topic || req.body.targetMoment || req.body.remindBefore || req.body.importanceLevel){
+        if(req.body.topic || req.body.remindBefore || req.body.importanceLevel){
             var newReminder = new Reminder({
                 //_id: new mongoose.Types.ObjectId(),
                 topic: req.body.topic,
-                targerMoment: req.body.targerMoment,
+                targerMoment: event.startDate,
                 remindBefore: req.body.remindBefore,
                 reminderFor: id,
                 importanceLevel: req.body.importanceLevel
