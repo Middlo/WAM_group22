@@ -23,7 +23,6 @@
     <string name="importance">Importance</string>
     <string name="finish_date">Finish Date</string>
     <string name="start_date">Start date</string>
-    <string name="description">Description</string>
     <string name="title">Title</string>
     <string name="id">_id</string>
     <string name="remove_all_tasks">Remove all Tasks</string>
