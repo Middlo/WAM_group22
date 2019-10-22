@@ -51,12 +51,6 @@ public class MainActivity extends AppCompatActivity {
     private String selectedDate;
     private String todaysDate = new Date().toString();
 
-    private TextInputEditText editTitle;
-    private TextInputEditText editDescr;
-    private TextInputEditText editStart;
-    private TextInputEditText editFinish;
-    private TextInputEditText editImport;
-
     private TextInputEditText editEventTitleCrt;
     private TextInputEditText editEventDescrCrt;
     private TextInputEditText editEventStartCrt;
