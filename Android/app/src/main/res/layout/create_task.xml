@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,6 +8,10 @@
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/taskIDCrt"
@@ -19,7 +22,7 @@
         android:textStyle="bold"
         android:layout_below="@+id/exitView"
         android:background="#008000"
-        android:text="_id"
+        android:text="@string/id"
         android:layout_marginTop="0dp"
         android:textAllCaps="false"
         android:textSize="18sp" />
@@ -30,8 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/taskIDCrt"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Title"
+        android:text="@string/title"
         android:layout_marginTop="15dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -41,7 +43,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/taskIDCrt">
 
         <android.support.design.widget.TextInputEditText
@@ -66,8 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/taskTitleCrt"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Description"
+        android:text="@string/description"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -77,7 +77,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/taskTitleCrt">
 
         <android.support.design.widget.TextInputEditText
@@ -94,8 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/taskDescriptionCrt"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Deadline"
+        android:text="@string/deadline"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -105,7 +103,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/taskDescriptionCrt">
 
         <android.support.design.widget.TextInputEditText
@@ -121,8 +118,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/taskStartDCrt"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Importance"
+        android:text="@string/importance"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -132,7 +128,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/taskStartDCrt">
 
         <android.support.design.widget.TextInputEditText
@@ -149,9 +144,8 @@
         android:background="#519730"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/taskImportanceCrt"
-        android:text="Add Reminder"
+        android:text="@string/add_reminder"
         android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:visibility="visible"
         android:onClick="addTaskReminder"/>
@@ -162,12 +156,10 @@
         android:layout_height="wrap_content"
         android:background="#006400"
         android:layout_toStartOf="@+id/deleteTask"
-        android:layout_toLeftOf="@+id/deleteTask"
         android:layout_below="@+id/addTaskReminderCrt"
-        android:text="Update Entirely"
+        android:text="@string/update_entirely"
         android:textAllCaps="false"
         android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:visibility="visible"
         android:onClick="putTask"/>
@@ -178,11 +170,9 @@
         android:layout_height="wrap_content"
         android:background="#483d8b"
         android:layout_toEndOf="@+id/deleteTask"
-        android:layout_toRightOf="@+id/deleteTask"
-        android:text="Update Partially"
+        android:text="@string/update_partially"
         android:layout_below="@+id/addTaskReminderCrt"
         android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textAllCaps="false"
@@ -198,7 +188,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/addTaskReminderCrt"
         android:layout_marginTop="5dp"
-        android:text="Delete Task"
+        android:text="@string/delete_task"
         android:textAllCaps="false"
         android:visibility="visible"
         android:onClick="deleteTask"/>
@@ -208,12 +198,11 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:background="#FF0000"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="x"
+        android:text="@string/exit"
         android:textAllCaps="true"
         android:visibility="visible"
         android:onClick="dismissView"/>
-
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

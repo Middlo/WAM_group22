@@ -126,8 +126,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //mEdit.putString("events", "");
-                //mEdit.apply();
                 getEntity("events");
 
                 if(events.size() > 0){
@@ -147,8 +145,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //mEdit.putString("tasks", "");
-                //mEdit.apply();
                 getEntity("tasks");
 
                 if(tasks.size() > 0){
@@ -170,8 +166,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //mEdit.putString("reminders", "");
-                //mEdit.apply();
                 getEntity("reminders");
 
                 if(reminders.size() > 0){
@@ -234,7 +228,12 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             default:    //
-                return true;
+                if(tasks.size() > 0)
+                    deleteAllEntity("tasks");
+                else
+                    displayMsg("There are no Tasks to Delete");
+
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -423,7 +422,6 @@ public class MainActivity extends AppCompatActivity {
             else
                 newData.put("description", "");
 
-
             newData.put("startDate", eventStart);
 
             newData.put("endDate", eventFinish);
@@ -531,150 +529,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
-    public void onClickGetEvents (View view) {
-        // Get the text view in which we will show the result.
-        final TextView mEventView = findViewById(R.id.dashboardText);
-
-        String url = getString(R.string.server_url) + "/api/events";
-
-        // This uses Volley (Threading and a request queue is automatically handled in the background)
-        RequestQueue queue = Volley.newRequestQueue(this);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // GSON allows to parse a JSON string/JSONObject directly into a user-defined class
-                        Gson gson = new Gson();
-
-                        String dataArray = null;
-
-                        try {
-                            dataArray = response.getString("events");
-                        } catch (JSONException e) {
-                            Log.e(this.getClass().toString(), e.getMessage());
-                        }
-
-                        StringBuilder eventString = new StringBuilder();
-                        eventString.append("This is the list of my events: \n");
-
-                        Event[] events = gson.fromJson(dataArray, Event[].class);
-
-                        //for (Event current : events) {
-                          //  eventString.append("Event is " + current.color + " at "
-                            //        + current.position + "\n");
-                        //}
-
-                        mEventView.setText(eventString.toString());
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mEventView.setText("Error! " + error.toString());
-                    }
-                });
-
-        // The request queue makes sure that HTTP requests are processed in the right order.
-        queue.add(jsonObjectRequest);
-    }
-
-     */
-
-    /*
-    public void getText(){
-        final TextView textView = (TextView) findViewById(R.id.dashboardText);
-        // ...
-
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="https://online-calendar22.herokuapp.com/api/events";
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        textView.setText("Response is: "+ response.substring(0,500));
-                        System.out.println("Response is: "+ response.substring(0,500));
-
-                        try {
-                            readEventsFromJson(response);
-                            System.out.println("Events are " + events.size());
-                        } catch (Exception e) {
-                            Log.e(this.getClass().toString(), e.getMessage());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                textView.setText("That didn't work!");
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-
-    }
-
-     */
-
-    public void getEvents(){
-
-        // Get the text view in which we will show the result.
-        //final TextView mEventView = findViewById(R.id.dashboardText);
-
-        String url = getString(R.string.server_url) + "/api/events";
-
-        // This uses Volley (Threading and a request queue is automatically handled in the background)
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // GSON allows to parse a JSON string/JSONObject directly into a user-defined class
-                        Gson gson = new Gson();
-
-                        String dataArray = null;
-
-                        try {
-                            dataArray = response.getString("events");
-                        } catch (JSONException e) {
-                            Log.e(this.getClass().toString(), e.getMessage());
-                        }
-
-                        StringBuilder eventString = new StringBuilder();
-                        eventString.append("This is the list of my events: \n");
-
-                        Event[] foundEvents = gson.fromJson(dataArray, Event[].class);
-
-                        events = null;
-                        for (Event current : foundEvents) {
-
-                            events.add(current);
-                            eventString.append("Event id: " + current.getId() + " with title "
-                                    + current.getTitle() + " and start Date " + current.getStartDate() + "\n");
-                        }
-
-                        //mEventView.setText(eventString.toString());
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //mEventView.setText("Error! " + error.toString());
-                    }
-                });
-
-        // The request queue makes sure that HTTP requests are processed in the right order.
-        queue.add(jsonObjectRequest);
-
-    }
-
     public void getData(){
         if(dataCounter == 0)
             displayMsg("Fetching data...");
@@ -699,7 +553,7 @@ public class MainActivity extends AppCompatActivity {
 
         events = gson.fromJson(input, new TypeToken<ArrayList<Event>>(){}.getType());
 
-    }//Eyuell
+    }
 
     public void getEntity(String entityName){
 
@@ -1150,10 +1004,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-/*
+
     public void deleteAllEntity(String entityName){
 
-        if(entityName.equals("tasks") || entityName.equals("events") || entityName.equals("notes") || entityName.equals("reminders") ){
+        if(entityName.equals("tasks") || entityName.equals("events") || entityName.equals("reminders") ){
 
             String url = getString(R.string.server_url) + "/api/" + entityName;
 
@@ -1180,7 +1034,7 @@ public class MainActivity extends AppCompatActivity {
                             if(foundMessage.equals("Success")){
                                 getEntity(entityName);
                             } else {
-                                displayError(" Deleting all is not successful");
+                                displayError(" Not Successful");
                             }
 
                         }
@@ -1202,52 +1056,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
- */
-
-    //open the activity without any message
-    private void displayEvent(Event event) {
-
-        //Event event = events.get(0);
-        // Make an intent to start next activity.
-        //Intent i = new Intent(ScrollingActivity.this, DisplayAddDate.class);
-        //startActivity(i);
-        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
-        View newEventView = getLayoutInflater().inflate(R.layout.display_event_main,null);
-        mBuilder.setCancelable(true);
-
-        //TextView header = (TextView) newEventView.findViewById(R.id.headerTxt);
-
-        TextView id = (TextView) newEventView.findViewById(R.id.entityID);
-        String text = "Event id: " + event.getId();
-        id.setText(text);
-
-        editTitle = (TextInputEditText) newEventView.findViewById(R.id.editEventTitle);
-        if(!event.getTitle().equals(""))
-            editTitle.setHint(event.getTitle());
-
-        editDescr = (TextInputEditText) newEventView.findViewById(R.id.editEventDescr);
-        if(event.getDescription() != null)
-            editDescr.setHint(event.getDescription());
-
-        editStart = (TextInputEditText) newEventView.findViewById(R.id.editEventStart);
-        if(event.getStartDate() != null)
-            editStart.setHint(convertDateFormat(event.getStartDate()));
-
-        editFinish = (TextInputEditText) newEventView.findViewById(R.id.editEventFinish);
-        if(event.getEndDate() != null)
-            editFinish.setHint(convertDateFormat(event.getEndDate()));
-
-        editImport = (TextInputEditText) newEventView.findViewById(R.id.editEventImport);
-        if(event.getImportanceLevel() != null)
-            editImport.setHint(event.getImportanceLevel());
-
-        eventOnDisplay = event;
-
-        mBuilder.setView(newEventView);
-        dialog = mBuilder.create();
-        dialog.show();
-    }
 
 
     public void displayEventReminder (View view){

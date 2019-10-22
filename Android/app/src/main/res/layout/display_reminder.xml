@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,6 +9,9 @@
     android:padding="16dp"
     tools:context=".ScrollingActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/remindID"
@@ -20,7 +22,7 @@
         android:textStyle="bold"
         android:layout_below="@+id/exitView"
         android:background="#008000"
-        android:text="_id"
+        android:text="@string/id"
         android:layout_marginTop="0dp"
         android:textAllCaps="false"
         android:textSize="18sp" />
@@ -31,8 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/remindID"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Topic"
+        android:text="@string/topic"
         android:layout_marginTop="15dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -42,7 +43,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/remindID">
 
         <android.support.design.widget.TextInputEditText
@@ -67,8 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/remindTitle"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Moment"
+        android:text="@string/moment"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -78,7 +77,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/remindTitle">
 
         <android.support.design.widget.TextInputEditText
@@ -95,8 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/remindMoment"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Remind min"
+        android:text="@string/remind_min"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -106,7 +103,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/remindMoment">
 
         <android.support.design.widget.TextInputEditText
@@ -123,8 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/remindMinutes"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Importance"
+        android:text="@string/importance"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -135,7 +130,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/remindMinutes">
 
         <android.support.design.widget.TextInputEditText
@@ -152,7 +146,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/remindImportance"
         android:layout_centerHorizontal="true"
-        android:text="Parent _id: "
+        android:text="@string/parent_id"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="17sp" />
@@ -164,12 +158,10 @@
         android:layout_height="wrap_content"
         android:background="#006400"
         android:layout_toStartOf="@+id/deleteReminder"
-        android:layout_toLeftOf="@+id/deleteReminder"
         android:layout_below="@+id/reminderFor"
-        android:text="Update Entirely"
+        android:text="@string/update_entirely"
         android:textAllCaps="false"
         android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:visibility="visible"
         android:onClick="putReminder"/>
@@ -180,11 +172,9 @@
         android:layout_height="wrap_content"
         android:background="#483d8b"
         android:layout_toEndOf="@+id/deleteReminder"
-        android:layout_toRightOf="@+id/deleteReminder"
-        android:text="Update Partially"
+        android:text="@string/update_partially"
         android:layout_below="@+id/reminderFor"
         android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textAllCaps="false"
@@ -200,7 +190,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/reminderFor"
         android:layout_marginTop="5dp"
-        android:text="Delete Reminder"
+        android:text="@string/delete_reminder"
         android:textAllCaps="false"
         android:visibility="visible"
         android:onClick="deleteReminder"/>
@@ -210,13 +200,12 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:background="#FF0000"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="x"
+        android:text="@string/exit"
         android:textAllCaps="true"
         android:visibility="visible"
         android:onClick="dismissView"/>
+    </RelativeLayout>
 
-
-</RelativeLayout>
+</ScrollView>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,6 +11,9 @@
     tools:context=".ScrollingActivity"
     >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/entityID"
@@ -21,7 +24,7 @@
         android:textStyle="bold"
         android:layout_below="@+id/exitView"
         android:background="#008000"
-        android:text="_id"
+        android:text="@string/id"
         android:layout_marginTop="0dp"
         android:textAllCaps="false"
         android:textSize="18sp" />
@@ -32,8 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/entityID"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Title"
+        android:text="@string/title"
         android:layout_marginTop="15dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -43,7 +45,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/entityID">
 
         <android.support.design.widget.TextInputEditText
@@ -68,8 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/entityTitle"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Description"
+        android:text="@string/description"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -79,7 +79,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/entityTitle">
 
         <android.support.design.widget.TextInputEditText
@@ -96,8 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/entityDescription"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Start date"
+        android:text="@string/start_date"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -107,7 +105,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/entityDescription">
 
         <android.support.design.widget.TextInputEditText
@@ -125,8 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/entityStartD"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Finish Date"
+        android:text="@string/finish_date"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -137,7 +133,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/entityStartD">
 
         <android.support.design.widget.TextInputEditText
@@ -155,8 +150,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/entityFinishD"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
-        android:text="Importance"
+        android:text="@string/importance"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textSize="20sp" />
@@ -167,7 +161,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/entityFinishD">
 
         <android.support.design.widget.TextInputEditText
@@ -186,9 +179,8 @@
         android:background="#519730"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/entityImportance"
-        android:text="Reminder Detail"
+        android:text="@string/reminder_detail"
         android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:visibility="visible"
         android:onClick="displayEventReminder"/>
@@ -200,12 +192,10 @@
         android:layout_below="@+id/entityImportance"
         android:layout_marginTop="20dp"
         android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
         android:layout_toEndOf="@+id/reminderDetail"
-        android:layout_toRightOf="@+id/reminderDetail"
         android:background="#519730"
         android:onClick="addEventReminder"
-        android:text="+"
+        android:text="@string/add"
         android:textAllCaps="true"
         android:textSize="20sp"
         android:visibility="visible" />
@@ -216,13 +206,11 @@
         android:layout_height="wrap_content"
         android:background="#006400"
         android:layout_toStartOf="@+id/deleteEvent"
-        android:layout_toLeftOf="@+id/deleteEvent"
         android:layout_below="@+id/reminderDetail"
-        android:text="Update Entirely"
+        android:text="@string/update_entirely"
         android:textAllCaps="false"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
         android:visibility="visible"
         android:onClick="putEvent"/>
 
@@ -232,11 +220,9 @@
         android:layout_height="wrap_content"
         android:background="#483d8b"
         android:layout_toEndOf="@+id/deleteEvent"
-        android:layout_toRightOf="@+id/deleteEvent"
-        android:text="Update Partially"
+        android:text="@string/update_partially"
         android:layout_below="@+id/reminderDetail"
         android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textAllCaps="false"
@@ -252,7 +238,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/reminderDetail"
         android:layout_marginTop="5dp"
-        android:text="Delete Event"
+        android:text="@string/delete_event"
         android:textAllCaps="false"
         android:visibility="visible"
         android:onClick="deleteEvent"/>
@@ -262,13 +248,12 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:background="#FF0000"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="x"
+        android:text="@string/exit"
         android:textAllCaps="true"
         android:visibility="visible"
         android:onClick="dismissView"/>
 
-
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

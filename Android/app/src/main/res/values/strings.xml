@@ -26,5 +26,20 @@
     <string name="description">Description</string>
     <string name="title">Title</string>
     <string name="id">_id</string>
+    <string name="remove_all_tasks">Remove all Tasks</string>
+    <string name="delete_event">Delete Event</string>
+    <string name="reminder_detail">Reminder Detail</string>
+    <string name="add">+</string>
+    <string name="exit">x</string>
+    <string name="topic">Topic</string>
+    <string name="date">Date</string>
+    <string name="min">Min</string>
+    <string name="parent_id">Parent _id:</string>
+    <string name="delete_reminder">Delete Reminder</string>
+    <string name="deadline">Deadline</string>
+    <string name="delete_task">Delete Task</string>
+    <string name="moment">Moment</string>
+    <string name="remind_min">Remind min</string>
+    <string name="description">Description</string>
 
 </resources>

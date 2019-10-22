@@ -80,7 +80,6 @@ public class ScrollingActivity extends AppCompatActivity {
     public String dataSize = "dataSize";
 
     public static final String TIME_REGEX = "^([1-9]|0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$";
-    //public static final String DATE_REGEX = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))";
     public static final String DATE_REGEX = "((?:19|20)\\d\\d)-(0?[1-9]|1[012])-([12][0-9]|3[01]|0?[1-9])";
     public static final String NUM_REGEX = "^\\d+$";
 
@@ -101,7 +100,7 @@ public class ScrollingActivity extends AppCompatActivity {
         //setSupportActionBar(toolbar);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        //sharedPreferences = getSharedPreferences(preferences1, MODE_PRIVATE);
+
         mEdit = sharedPreferences.edit();
 
         events = new ArrayList<>(); //data in the app
@@ -948,72 +947,6 @@ public class ScrollingActivity extends AppCompatActivity {
         finish();
     }
 
-    /**
-     * reads data from shared preferences of the device
-     * */
-    /*
-    public void readFromData(){
-
-        LocalDate today = LocalDate.now();
-
-        int savedSize = sharedPreferences.getInt(dataSize,0);
-
-        if (savedSize > 0){
-            String firstDate = sharedPreferences.getString(startDate,"");
-
-            if(firstDate.equals(""))
-                firstDate = thisMonthFirstDay(today + "");
-
-
-            LocalDate begin = LocalDate.parse(firstDate);
-
-            long duration = ChronoUnit.DAYS.between(begin, today) + 1;
-
-            for(int i = 0; i < duration; i ++){
-                LocalDate day = begin.plusDays(i);
-                String foundData = sharedPreferences.getString((day + ""),"");
-                if(foundData.length() > 0){
-                    addToSheets(foundData);
-                }
-            }
-        }
-    }
-
-     */
-
-
-    /**
-     * Depending on temporary or permanent saving mode, data is saved on the
-     * shared preferences of the device
-     * */
-    /*
-    public void saveData(int savingType){
-        String infoString;
-        String strDate;
-
-        if(timeSheets.size() != 0){
-            Collections.sort(timeSheets);
-            int size = timeSheets.size();
-            mEdit.putInt(dataSize,size);
-
-            for(int i = 0; i < size; i++){
-                TimeSheet sheet = timeSheets.get(i);
-                if(i == 0){
-                    strDate = sheet.getDate();
-                    mEdit.putString(startDate,strDate);
-                }
-
-                infoString = sheet.toString();
-
-                mEdit.putString(sheet.getDate(),infoString);
-                mEdit.apply();
-            }
-            if(savingType == COMMIT)
-                mEdit.commit();
-        }
-    }
-
-     */
 
 
     public void createEntity(String entityName, HashMap reqBody){

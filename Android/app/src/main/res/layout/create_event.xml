@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,6 +9,9 @@
     android:padding="16dp"
     tools:context=".MainActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <TextView
         android:id="@+id/entityIDCrt"
         android:layout_width="match_parent"
@@ -30,7 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/entityIDCrt"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
         android:text="@string/title"
         android:layout_marginTop="15dp"
         android:textAllCaps="false"
@@ -41,7 +42,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/entityIDCrt">
 
         <android.support.design.widget.TextInputEditText
@@ -66,7 +66,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/entityTitleCrt"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
         android:text="@string/description"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
@@ -77,7 +76,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/entityTitleCrt">
 
         <android.support.design.widget.TextInputEditText
@@ -94,7 +92,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/entityDescriptionCrt"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
         android:text="@string/start_date"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
@@ -105,7 +102,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/entityDescriptionCrt">
 
         <android.support.design.widget.TextInputEditText
@@ -121,7 +117,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/entityStartDCrt"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
         android:text="@string/finish_date"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
@@ -132,7 +127,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/entityStartDCrt">
 
         <android.support.design.widget.TextInputEditText
@@ -148,7 +142,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/entityFinishDCrt"
         android:layout_toStartOf="@+id/Hdivider"
-        android:layout_toLeftOf="@+id/Hdivider"
         android:text="@string/importance"
         android:layout_marginTop="20dp"
         android:textAllCaps="false"
@@ -159,7 +152,6 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/Hdivider"
-        android:layout_toRightOf="@+id/Hdivider"
         android:layout_below="@+id/entityFinishDCrt">
 
         <android.support.design.widget.TextInputEditText
@@ -178,7 +170,6 @@
         android:layout_below="@+id/entityImportanceCrt"
         android:text="@string/add_reminder"
         android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:visibility="visible"
         android:onClick="addEventReminder"/>
@@ -189,12 +180,10 @@
         android:layout_height="wrap_content"
         android:background="#006400"
         android:layout_toStartOf="@+id/deleteEvent"
-        android:layout_toLeftOf="@+id/deleteEvent"
         android:layout_below="@+id/addEventReminderCrt"
         android:text="@string/update_entirely"
         android:textAllCaps="false"
         android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:visibility="visible"
         android:onClick="putEvent"/>
@@ -205,11 +194,9 @@
         android:layout_height="wrap_content"
         android:background="#483d8b"
         android:layout_toEndOf="@+id/deleteEvent"
-        android:layout_toRightOf="@+id/deleteEvent"
         android:text="@string/update_partially"
         android:layout_below="@+id/addEventReminderCrt"
         android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textAllCaps="false"
@@ -225,7 +212,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/addEventReminderCrt"
         android:layout_marginTop="5dp"
-        android:text="Delete Event"
+        android:text="@string/delete_event"
         android:textAllCaps="false"
         android:visibility="visible"
         android:onClick="deleteEvent"/>
@@ -235,12 +222,11 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:background="#FF0000"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="x"
+        android:text="@string/exit"
         android:textAllCaps="true"
         android:visibility="visible"
         android:onClick="dismissView"/>
-
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>
